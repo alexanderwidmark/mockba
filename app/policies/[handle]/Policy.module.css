@@ -1,0 +1,145 @@
+.section {
+  padding: 7vh 4vw 10vh;
+  border-bottom: 1px solid var(--rule);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--mono-2);
+  margin-bottom: 26px;
+}
+
+.heading {
+  font-size: clamp(18px, 2.1vw, 30px);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  font-weight: 500;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 30px;
+}
+
+/**
+ * The policy text is authored in the Shopify admin, so its markup is not ours.
+ * Everything it can emit is brought into the document's register here: mono
+ * type throughout, hairline rules, square corners, and no italics — Shopify's
+ * editor emits <em> freely and the brand does not use it anywhere.
+ */
+.body {
+  max-width: 760px;
+  font-size: 13.5px;
+  line-height: 1.9;
+  color: var(--body);
+}
+
+.body :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink);
+  font-weight: 600;
+  margin: 34px 0 12px;
+  padding-top: 18px;
+  border-top: 1px solid var(--hairline);
+}
+
+.body :is(h1, h2, h3, h4, h5, h6):first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.body p {
+  margin: 0 0 18px;
+}
+
+.body :is(ul, ol) {
+  margin: 0 0 18px;
+  padding-left: 20px;
+}
+
+.body li {
+  margin-bottom: 8px;
+}
+
+.body :is(strong, b) {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.body :is(em, i, cite) {
+  font-style: normal;
+  color: var(--ink);
+}
+
+.body a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.body a:hover {
+  border-bottom-color: var(--ink);
+}
+
+.body hr {
+  border: none;
+  border-top: 1px solid var(--hairline);
+  margin: 26px 0;
+}
+
+.body table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12px;
+}
+
+.body :is(td, th) {
+  border: 1px solid var(--hairline);
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.body img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Wide content scrolls inside itself; the page never scrolls sideways. */
+.body :is(pre, table) {
+  display: block;
+  overflow-x: auto;
+}
+
+.register {
+  display: flex;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--hairline);
+  border-left: 1px solid var(--hairline);
+  margin-top: 40px;
+  max-width: 760px;
+}
+
+.registerItem {
+  border-right: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  padding: 11px 15px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--mono-2);
+}
+
+.registerItem:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.current {
+  color: var(--ink);
+  background: var(--plate);
+}
