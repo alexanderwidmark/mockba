@@ -92,6 +92,22 @@ server-only:
   permalink from the spec stays available as `permalinkUrl` for single-item
   validation but is not what the site uses.
 
+## Checking the content model
+
+```
+node scripts/verify-content-model.mjs
+```
+
+Runs the site's own query against the store and reports, key by key, what is
+present. It reads the query straight out of `lib/shopify/query.ts`, so the check
+and the site can never drift apart.
+
+It catches the failures that are silent in a browser — a `source` reference that
+did not resolve, a `colour_map` missing a blank that the Colour option offers, a
+`print_aspect` that is not in `w/h` form, variants with no SKU, inventory that
+reports null on every variant. In each of those the page still renders and the
+field is simply blank.
+
 ## Shopify content model
 
 The contract is in `README.md`. In short: series = collection with `mockba`
