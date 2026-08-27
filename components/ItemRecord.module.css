@@ -91,7 +91,9 @@
 .command {
   font-size: clamp(24px, 2.9vw, 42px);
   line-height: 1.14;
-  letter-spacing: -0.02em;
+  /* See ItemCard: negative tracking is for sentence case, not capitals. */
+  letter-spacing: 0;
+  text-transform: uppercase;
   font-weight: 500;
   margin-bottom: 8px;
 }

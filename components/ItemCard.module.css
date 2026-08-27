@@ -57,7 +57,11 @@
 .title {
   font-size: 17px;
   line-height: 1.25;
-  letter-spacing: -0.01em;
+  /* Set in capitals. The display sizes carry negative tracking for sentence
+     case; capitals in a monospace face need that pulled back to zero or the
+     letterforms collide. */
+  letter-spacing: 0;
+  text-transform: uppercase;
   font-weight: 500;
   margin-bottom: 6px;
 }
