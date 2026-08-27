@@ -41,12 +41,21 @@ if (!TOKEN) {
   process.exit(1);
 }
 
-/* The query is read from the site's own module so the two can never drift. */
+/* The query is read from the site's own module so the two can never drift.
+   Anchored on the /* GraphQL *\/ marker: the file's doc comment contains
+   backticks of its own, so the first backtick in the file is not the query. */
 const querySource = readFileSync(new URL('../lib/shopify/query.ts', import.meta.url), 'utf8');
-const SERIES_QUERY = querySource.slice(
-  querySource.indexOf('`') + 1,
-  querySource.lastIndexOf('`'),
-);
+const marker = querySource.indexOf('/* GraphQL */');
+if (marker === -1) {
+  console.error('Could not locate the query in lib/shopify/query.ts.');
+  process.exit(1);
+}
+const open = querySource.indexOf('`', marker);
+const SERIES_QUERY = querySource.slice(open + 1, querySource.lastIndexOf('`'));
+if (!SERIES_QUERY.trimStart().startsWith('query Series')) {
+  console.error('Extracted text is not the series query:\n' + SERIES_QUERY.slice(0, 120));
+  process.exit(1);
+}
 
 const PRODUCT_METAFIELDS = [
   'command',
