@@ -65,10 +65,15 @@ export default function ItemRecord({ item, series, live, preorder }: Props) {
   const sellable = live && inStock;
   const price = variant?.price || item.price;
 
+  const currency = (variant?.currency || item.currency || 'USD').toLowerCase();
+
+  // A tracked count of 0 on a sellable variant means inventory is not tracked,
+  // not that the shelf is empty. Stating "0 units recorded" beside "available"
+  // reads as a contradiction, so the clause is dropped.
   const stockLabel = !variant
     ? 'no variant recorded'
     : variant.available
-      ? `available${variant.qty != null ? ` · ${variant.qty} units recorded` : ''}`
+      ? `available${variant.qty ? ` · ${variant.qty} units recorded` : ''}`
       : 'sold out in this size';
 
   const ctaLabel = sellable
@@ -84,10 +89,10 @@ export default function ItemRecord({ item, series, live, preorder }: Props) {
           : 'Register interest in this item';
 
   const priceCaption = sellable
-    ? `${(variant?.currency || item.currency || 'USD').toLowerCase()} · ${variant?.title ?? ''}`
+    ? `${currency} · ${variant?.title ?? ''}`
     : preorder
-      ? 'usd · charged when the series is issued'
-      : 'usd test price · not yet fixed';
+      ? `${currency} · charged when the series is issued`
+      : `${currency} test price · not yet fixed`;
 
   /* Choosing a blank resets size to that colour's first available size and
      clears any acknowledgement. */

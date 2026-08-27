@@ -4,9 +4,10 @@ import styles from './Catalogue.module.css';
 
 export default function Catalogue({ series, live }: { series: Series; live: boolean }) {
   const hero = series.products[0];
+  const currency = (hero?.currency || 'USD').toLowerCase();
   const priceNote = hero?.price
-    ? `usd test price · ${hero.price} stated · public price not yet fixed`
-    : 'usd test price · public price not yet fixed';
+    ? `${currency} test price · ${hero.price} stated · public price not yet fixed`
+    : `${currency} test price · public price not yet fixed`;
 
   return (
     <section id="drop" className={styles.section}>
