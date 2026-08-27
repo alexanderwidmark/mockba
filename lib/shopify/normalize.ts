@@ -2,9 +2,14 @@
  * Storefront response -> the models the pages render.
  *
  * Ported from the design prototype's data layer. The rules that matter:
- *  - `colour_map` carries a garment + ink pair per blank, so one work ships on
- *    several blanks with no deploy. `garment_color` / `print_ink` are the
- *    fallbacks when the map is absent.
+ *  - `colour_map` carries a garment hex per blank, so one work ships on several
+ *    blanks with no deploy. `garment_color` is the fallback when the map is
+ *    absent.
+ *  - Blanks come from the product's own colour option. A product that declares
+ *    none has none: the site does not invent a blank, and the item record shows
+ *    no blank selector.
+ *  - The accession number is composed from `sku_base`, the blank and the size.
+ *    The variant SKU belongs to the fulfilment integration and is not shown.
  *  - Product image 1 is the garment plate as photographed. A variant may carry
  *    its own image; when it does, choosing a blank changes the plate.
  *  - The archive source and the MOCKBA intervention stay separate fields
@@ -46,8 +51,14 @@ function readSource(node: RawProduct): Record<string, string> {
   return out;
 }
 
-function readColourMap(node: RawProduct, fallbackGarment: string, fallbackInk: string): Colour[] {
-  let map: Record<string, { garment?: string; ink?: string }> = {};
+/**
+ * The blanks this item actually ships on. The product's colour option is the
+ * authority; `colour_map` only supplies each blank's hex. When the store
+ * declares no colour option and carries no map, the answer is none — an empty
+ * list, never an invented default.
+ */
+function readColourMap(node: RawProduct, fallbackGarment: string): Colour[] {
+  let map: Record<string, { garment?: string }> = {};
   try {
     map = JSON.parse(mfv(node.metafields, 'colour_map', '{}')) || {};
   } catch {
@@ -56,11 +67,23 @@ function readColourMap(node: RawProduct, fallbackGarment: string, fallbackInk: s
   const opt = (node.options || []).find((o) => /colour|color/i.test(o.name));
   const declared = optionNames(opt);
   const names = declared.length ? declared : Object.keys(map);
-  const resolved = names.length ? names : ['Black'];
-  return resolved.map((name) => {
+  return names.map((name) => {
     const rec = map[name] || {};
-    return { name, garment: rec.garment || fallbackGarment, ink: rec.ink || fallbackInk };
+    return { name, garment: rec.garment || fallbackGarment };
   });
+}
+
+/**
+ * The accession number: the stem from the content model, then the blank and the
+ * size. 'MAC-4' + Black + S -> 'MAC-4-BL-S'; with no blank, 'MAC-4-S'. Falls
+ * back to the fulfilment SKU so the field is never blank.
+ */
+function accessionFor(base: string, colourName: string, size: string, sku: string): string {
+  if (!base) return sku;
+  const parts = [base];
+  if (colourName) parts.push(colourName.slice(0, 2).toUpperCase());
+  if (size) parts.push(size);
+  return parts.join('-');
 }
 
 /** The values of one product option, in the order Shopify holds them. */
@@ -89,8 +112,10 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
   const price = node.priceRange?.minVariantPrice ?? null;
   const img = node.images?.edges?.[0] ?? null;
   const fallbackGarment = mfv(node.metafields, 'garment_color', '#1A1A18');
-  const fallbackInk = mfv(node.metafields, 'print_ink', '#F1EDE3');
-  const colours = readColourMap(node, fallbackGarment, fallbackInk);
+  const colours = readColourMap(node, fallbackGarment);
+  const colourOption = (node.options || []).find((o) => /colour|color/i.test(o.name));
+  const hasBlankOption = optionNames(colourOption).length > 0;
+  const skuBase = mfv(node.metafields, 'sku_base');
   const sizeOpt = (node.options || []).find((o) => /size/i.test(o.name));
   const declaredSizes = optionNames(sizeOpt);
   const sizeValues = declaredSizes.length ? declaredSizes : SIZES;
@@ -101,17 +126,17 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
 
   const variants: Variant[] = (node.variants?.edges ?? []).map((e) => {
     const v = e.node;
-    const colourName = optValue(v, /colour|color/i) || colours[0].name;
-    const colour = colours.find((c) => c.name === colourName) || colours[0];
+    const colourName = optValue(v, /colour|color/i) || colours[0]?.name || '';
+    const colour = colours.find((c) => c.name === colourName) ?? colours[0] ?? null;
+    const size = optValue(v, /size/i);
     return {
       id: v.id,
       numericId: String(v.id).split('/').pop() ?? '',
       title: v.title,
       sku: v.sku || '',
-      size: optValue(v, /size/i),
+      size,
       colourName,
-      garmentColor: colour.garment,
-      printInk: colour.ink,
+      garmentColor: colour?.garment ?? fallbackGarment,
       available: Boolean(v.availableForSale),
       qty: v.quantityAvailable ?? null,
       priceAmount: v.price ? v.price.amount : (price?.amount ?? '0'),
@@ -119,6 +144,7 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
       price: v.price ? formatMoney(v.price.amount, v.price.currencyCode) : '',
       image: v.image?.url || image,
       imageAlt: v.image?.altText || imageAlt,
+      accession: accessionFor(skuBase, colourName, size, v.sku || ''),
     };
   });
 
@@ -140,9 +166,8 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
     imageAlt,
     // First-paint / card mockup values: the default variant's colour.
     garmentColor: first ? first.garmentColor : fallbackGarment,
-    printInk: first ? first.printInk : fallbackInk,
-    garmentName: first ? first.colourName : colours[0].name,
-    printAspect: mfv(node.metafields, 'print_aspect', '3/4'),
+    garmentName: first ? first.colourName : (colours[0]?.name ?? ''),
+    hasBlankOption,
     colours,
     sizeValues,
     sizes: sizeValues.length
@@ -150,7 +175,9 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
       : 'XS–3XL',
     variants,
     defaultVariantId: first ? first.id : null,
-    sku: first && first.sku ? first.sku : (String(node.id).split('/').pop() ?? ''),
+    sku: first?.sku ?? '',
+    skuBase,
+    accession: first?.accession ?? skuBase,
     sourceTitle: src.original_title || '',
     artist,
     sourceShort: artist.split('&')[0].trim().split(' ').pop() ?? artist,

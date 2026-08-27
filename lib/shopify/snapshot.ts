@@ -157,8 +157,7 @@ function specToCollection(entry: SpecEntry): RawCollection {
             { key: 'role', value: 'hero graphic', reference: null },
             { key: 'colour_map', value: JSON.stringify(colourMap), reference: null },
             { key: 'garment_color', value: it.colours[0].garment, reference: null },
-            { key: 'print_ink', value: it.colours[0].ink, reference: null },
-            { key: 'print_aspect', value: it.printAspect, reference: null },
+            { key: 'sku_base', value: it.skuBase, reference: null },
             {
               key: 'source',
               value: `gid://shopify/Metaobject/${it.source.id}`,

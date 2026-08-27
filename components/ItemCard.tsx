@@ -34,7 +34,7 @@ export default function ItemCard({
 
       <div className={styles.body}>
         <div className={styles.accession}>
-          Item {item.no} · {item.sku}
+          Item {item.no} · {item.accession}
         </div>
         <h3 className={styles.title}>{item.title}</h3>
         <div className={styles.contradiction}>{item.secondary}</div>
@@ -44,8 +44,12 @@ export default function ItemCard({
           <span>{item.sourceShort}</span>
           <span className={styles.metaKey}>year</span>
           <span>{item.year}</span>
-          <span className={styles.metaKey}>blanks</span>
-          <span>{item.colours.map((c) => c.name).join(' · ')}</span>
+          {item.hasBlankOption ? (
+            <>
+              <span className={styles.metaKey}>blanks</span>
+              <span>{item.colours.map((c) => c.name).join(' · ')}</span>
+            </>
+          ) : null}
           <span className={styles.metaKey}>stock</span>
           <span>{stockLine(item)}</span>
         </div>

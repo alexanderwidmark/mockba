@@ -81,7 +81,7 @@ export default function TitleBlock({
             <span>
               Item {hero.no} · {hero.title}
             </span>
-            <span>{hero.sku}</span>
+            <span>{hero.accession}</span>
           </div>
         </div>
       </div>

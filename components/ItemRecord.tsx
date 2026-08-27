@@ -43,12 +43,7 @@ export default function ItemRecord({ item, series, live, preorder }: Props) {
 
   /* Everything below is derived per render, never stored. */
   const colour = useMemo(
-    () =>
-      item.colours.find((c) => c.name === colourName) ?? {
-        name: colourName,
-        garment: item.garmentColor,
-        ink: item.printInk,
-      },
+    () => item.colours.find((c) => c.name === colourName) ?? null,
     [item, colourName],
   );
 
@@ -140,7 +135,7 @@ export default function ItemRecord({ item, series, live, preorder }: Props) {
         email,
         itemNo: item.no,
         itemTitle: item.title,
-        sku: variant?.sku || item.sku,
+        sku: variant?.accession || item.accession,
         variantTitle: variant?.title ?? '',
         seriesTitle: series.title,
         price,
@@ -166,7 +161,7 @@ export default function ItemRecord({ item, series, live, preorder }: Props) {
       <div className={styles.grid}>
         <div className={styles.platePanel}>
           <div className={styles.fig}>
-            Fig. {item.no} — recto, {colour.name} cotton
+            Fig. {item.no} — recto{colour ? `, ${colour.name} cotton` : ''}
           </div>
 
           {/* One sticky wrapper holds plate and caption together. */}
@@ -185,28 +180,32 @@ export default function ItemRecord({ item, series, live, preorder }: Props) {
 
         <div className={styles.record}>
           <div className={styles.accession}>
-            Item record {item.no} / {total} · {variant?.sku || item.sku}
+            Item record {item.no} / {total} · {variant?.accession || item.accession}
           </div>
 
           <h1 className={styles.command}>{item.title}</h1>
           <div className={styles.contradiction}>{item.secondary}</div>
 
           <div className={styles.variants}>
-            <div className={styles.optionLabel}>Blank</div>
-            <div className={styles.chips}>
-              {item.colours.map((c) => (
-                <button
-                  type="button"
-                  key={c.name}
-                  onClick={() => pickColour(c.name)}
-                  aria-pressed={c.name === colourName}
-                  className={`${styles.chip} ${c.name === colourName ? styles.chipSelected : ''}`}
-                >
-                  <span className={styles.swatch} style={{ background: c.garment }} />
-                  <span>{c.name}</span>
-                </button>
-              ))}
-            </div>
+            {item.hasBlankOption ? (
+              <>
+                <div className={styles.optionLabel}>Blank</div>
+                <div className={styles.chips}>
+                  {item.colours.map((c) => (
+                    <button
+                      type="button"
+                      key={c.name}
+                      onClick={() => pickColour(c.name)}
+                      aria-pressed={c.name === colourName}
+                      className={`${styles.chip} ${c.name === colourName ? styles.chipSelected : ''}`}
+                    >
+                      <span className={styles.swatch} style={{ background: c.garment }} />
+                      <span>{c.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : null}
 
             <div className={styles.sizeHeader}>
               <div className={styles.optionLabel} style={{ marginBottom: 0 }}>
@@ -277,7 +276,8 @@ export default function ItemRecord({ item, series, live, preorder }: Props) {
               <div className={styles.panelEyebrow}>Register of interest</div>
               <div className={styles.panelPrompt}>
                 State an address and the entry is recorded against{' '}
-                {variant?.sku || item.sku}. You will be notified when the series is issued.
+                {variant?.accession || item.accession}. You will be notified when the series
+                is issued.
               </div>
               <form className={styles.field} onSubmit={onRegister}>
                 <input
@@ -342,7 +342,7 @@ export default function ItemRecord({ item, series, live, preorder }: Props) {
             <span className={styles.metaKey}>origin</span>
             <span>{item.origin}</span>
             <span className={styles.metaKey}>accession</span>
-            <span>{variant?.sku || item.sku}</span>
+            <span>{variant?.accession || item.accession}</span>
             <span className={styles.metaKey}>variant</span>
             <span>{variant?.title ?? ''}</span>
             <span className={styles.metaKey}>series</span>

@@ -98,9 +98,13 @@ const PRODUCT_FIELDS = [
     type: 'json',
     description: 'Per-blank garment and ink hex: {"Black":{"garment":"#1A1A18","ink":"#F1EDE3"}}. The garment hex draws the swatch in the blank selector.',
   },
-  { key: 'garment_color', name: 'Garment colour', type: 'single_line_text_field', description: 'Hex fallback when colour_map is absent.' },
-  { key: 'print_ink', name: 'Print ink', type: 'single_line_text_field', description: 'Hex of the printed ink. Production reference; the site does not render it.' },
-  { key: 'print_aspect', name: 'Print aspect', type: 'single_line_text_field', description: "Source poster orientation as w/h, e.g. '3/2'. Production reference; the site does not render it." },
+  { key: 'garment_color', name: 'Garment colour', type: 'single_line_text_field', description: 'Hex fallback when colour_map is absent. Draws the swatch in the blank selector.' },
+  {
+    key: 'sku_base',
+    name: 'Accession stem',
+    type: 'single_line_text_field',
+    description: "The item's own identifier, e.g. 'MAC-4'. The site composes the accession number from this plus the blank and the size. The variant SKU belongs to the fulfilment integration and is never shown.",
+  },
   /* `source` is appended once the metaobject definition id is known. */
 ];
 

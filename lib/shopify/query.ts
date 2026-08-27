@@ -8,7 +8,11 @@
  *
  * Product metafields, namespace `mockba`:
  *   command, contradiction, mechanism, role, colour_map (json),
- *   garment_color, print_ink, print_aspect, source (-> metaobject `source`)
+ *   garment_color, sku_base, source (-> metaobject `source`)
+ *
+ * `sku_base` is the accession stem, e.g. 'MAC-4'. The variant SKU belongs to
+ * the fulfilment integration and is not an accession number, so the site
+ * composes one from the stem, the blank and the size instead of showing it.
  *
  * Product image 1 is the garment plate. A variant may carry its own image; when
  * it does, choosing a blank changes the plate.
@@ -88,8 +92,7 @@ export const SERIES_QUERY = /* GraphQL */ `
                 { namespace: "mockba", key: "role" }
                 { namespace: "mockba", key: "colour_map" }
                 { namespace: "mockba", key: "garment_color" }
-                { namespace: "mockba", key: "print_ink" }
-                { namespace: "mockba", key: "print_aspect" }
+                { namespace: "mockba", key: "sku_base" }
                 { namespace: "mockba", key: "source" }
               ]
             ) {

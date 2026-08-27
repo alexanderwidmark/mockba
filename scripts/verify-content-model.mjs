@@ -64,8 +64,7 @@ const PRODUCT_METAFIELDS = [
   'role',
   'colour_map',
   'garment_color',
-  'print_ink',
-  'print_aspect',
+  'sku_base',
   'source',
 ];
 
@@ -176,9 +175,8 @@ async function run(handle) {
     const names = (p.options ?? []).map((o) => o.name);
     const colourOpt = (p.options ?? []).find((o) => /colour|color/i.test(o.name));
     const sizeOpt = (p.options ?? []).find((o) => /size/i.test(o.name));
-    console.log(`  [${tick(Boolean(colourOpt))}] a colour option exists   (options: ${names.join(', ')})`);
+    console.log(`  [${colourOpt ? '  ok  ' : ' none '}] colour option   (options: ${names.join(', ')})`);
     console.log(`  [${tick(Boolean(sizeOpt))}] a size option exists`);
-    if (!colourOpt) note(scope, 'no Colour option on the product');
     if (!sizeOpt) note(scope, 'no Size option on the product');
     if (colourOpt && colourOpt.name !== 'Colour') {
       note(scope, `colour option is named "${colourOpt.name}"; the contract says "Colour"`);
@@ -200,22 +198,24 @@ async function run(handle) {
       }
     }
 
-    const aspect = mf('print_aspect')?.value;
-    if (aspect && !/^\d+(\.\d+)?\s*\/\s*\d+(\.\d+)?$/.test(aspect)) {
-      note(scope, `print_aspect "${aspect}" is not in w/h form; the print area will fall back to 3/4`);
-    }
 
     const img = p.images?.edges?.[0]?.node;
     console.log(`  [${tick(Boolean(img?.url))}] product image 1 (the archive scan)`);
     if (!img?.url) note(scope, 'no product image — the garment plate will print nothing');
     else if (!img.altText) note(scope, 'image 1 has no alt text; it should carry the original title');
 
+    const base = mf('sku_base')?.value;
+    console.log(`  [${tick(Boolean(base))}] accession stem${base ? `   ${base}` : ''}`);
+    if (!base) {
+      note(scope, 'sku_base is empty — the accession falls back to the fulfilment SKU');
+    }
+
     const variants = (p.variants?.edges ?? []).map((e) => e.node);
     const withSku = variants.filter((v) => v.sku).length;
     console.log(`  [${tick(variants.length > 0)}] ${variants.length} variants, ${withSku} with a SKU`);
     if (!variants.length) note(scope, 'no variants');
     if (variants.length && withSku < variants.length) {
-      note(scope, `${variants.length - withSku} variants have no SKU; the accession number falls back to the product id`);
+      note(scope, `${variants.length - withSku} variants have no fulfilment SKU`);
     }
     if (variants.length && variants.every((v) => v.quantityAvailable === null)) {
       note(scope, 'quantityAvailable is null on every variant — inventory scope missing, or inventory is untracked');

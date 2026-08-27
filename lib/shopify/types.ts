@@ -48,10 +48,8 @@ export type RawCollection = {
 
 export type Colour = {
   name: string;
-  /** Blank colour, hex. Drives the silhouette and the ink simulation. */
+  /** Blank colour, hex. Drives the swatch in the blank selector. */
   garment: string;
-  /** Print ink colour, hex. */
-  ink: string;
 };
 
 export type Variant = {
@@ -62,12 +60,13 @@ export type Variant = {
   size: string;
   colourName: string;
   garmentColor: string;
-  printInk: string;
   available: boolean;
   qty: number | null;
   /** The plate for this blank. Falls back to product image 1. */
   image: string;
   imageAlt: string;
+  /** Composed from sku_base, the blank and the size. Not the fulfilment SKU. */
+  accession: string;
   priceAmount: string;
   currency: string;
   price: string;
@@ -95,16 +94,20 @@ export type Item = {
   image: string;
   imageAlt: string;
   garmentColor: string;
-  printInk: string;
   garmentName: string;
-  /** Kept from the content model; the plate is no longer composited locally. */
-  printAspect: string;
+  /** Whether the store itself declares blanks. False = no blank selector. */
+  hasBlankOption: boolean;
   colours: Colour[];
   sizeValues: string[];
   sizes: string;
   variants: Variant[];
   defaultVariantId: string | null;
+  /** The fulfilment SKU. Owned by the print integration; never displayed. */
   sku: string;
+  /** The accession stem from the content model, e.g. 'MAC-4'. */
+  skuBase: string;
+  /** The default variant's accession number. */
+  accession: string;
   /* Archive source — recorded separately from the MOCKBA intervention. */
   sourceTitle: string;
   artist: string;
