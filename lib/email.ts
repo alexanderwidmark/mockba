@@ -7,9 +7,9 @@ import { Resend } from 'resend';
  * acknowledgement in the same register as the rest of the document.
  */
 
-const KEY = process.env.RESEND_API_KEY ?? '';
-const FROM = process.env.MAIL_FROM ?? 'Office of Public Information <office@mockba.org>';
-const OFFICE = process.env.MAIL_TO ?? '';
+const KEY = process.env.RESEND_KEY ?? '';
+const FROM = process.env.MAIL_FROM ?? 'MOCKBA Art Collective <hello@mockba.org>';
+const OFFICE = process.env.MAIL_TO ?? 'hello@mockba.org';
 
 export const mailConfigured = (): boolean => Boolean(KEY && OFFICE);
 
@@ -19,7 +19,7 @@ const client = () => (KEY ? new Resend(KEY) : null);
 async function send(to: string, subject: string, text: string, replyTo?: string) {
   const resend = client();
   if (!resend) {
-    console.warn('[mockba] RESEND_API_KEY not set; mail not sent.');
+    console.warn('[mockba] RESEND_KEY not set; mail not sent.');
     return false;
   }
   const { error } = await resend.emails.send({

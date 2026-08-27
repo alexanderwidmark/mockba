@@ -26,18 +26,18 @@ handle costs that series its freshness and nothing else.
 
 | variable | effect |
 |---|---|
-| `SHOPIFY_STORE_DOMAIN` | `xxx.myshopify.com`. With a token, flips the site to sellable. |
+| `SHOPIFY_STORE_DOMAIN` | Defaults to `ebupet-y0.myshopify.com`. With a token, flips the site to sellable. |
 | `SHOPIFY_STOREFRONT_TOKEN` | Storefront API public access token. Read-only, but the query runs server-side; nothing is exposed to the browser. |
 | `SHOPIFY_API_VERSION` | Defaults to `2025-01`. |
 | `SHOPIFY_SERIES_HANDLES` | Collection handles, newest first, comma separated. The series index appears once there are two. |
-| `RESEND_API_KEY` | Register of interest and correspondence. |
-| `MAIL_FROM` | Sender; the domain must be verified in Resend. |
-| `MAIL_TO` | Where the office receives entries. |
+| `RESEND_KEY` | Register of interest and correspondence. |
+| `MAIL_FROM` | Defaults to `MOCKBA Art Collective <hello@mockba.org>`; the domain must be verified in Resend. |
+| `MAIL_TO` | Defaults to `hello@mockba.org`. |
 | `CTA_MODE` | `notify` (default) or `preorder`. |
 | `SITE_URL` | Canonical origin, used for metadata. |
 
 Without `SHOPIFY_*` the item record registers interest instead of selling.
-Without `RESEND_*` the register says it is not open rather than claiming an
+Without `RESEND_KEY` the register says it is not open rather than claiming an
 entry was made.
 
 ## Routes
@@ -77,7 +77,8 @@ original title as alt text.
 
 ## Deployment
 
-Vercel. Set the environment variables above in the project, including for
+Vercel. Only `SHOPIFY_STOREFRONT_TOKEN` and `RESEND_KEY` have to be set; the
+rest default. Set them in the project, including for
 Preview if previews should read the live store. `revalidate` is 5 minutes; a
 Shopify webhook hitting an on-demand revalidation route can be added later — the
 fetches are already tagged `series:{handle}`.

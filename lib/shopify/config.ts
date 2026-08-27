@@ -6,7 +6,7 @@
  * NEXT_PUBLIC_ prefix: the browser never talks to Shopify directly.
  */
 
-export const SHOPIFY_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN ?? '';
+export const SHOPIFY_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN ?? 'ebupet-y0.myshopify.com';
 export const SHOPIFY_TOKEN = process.env.SHOPIFY_STOREFRONT_TOKEN ?? '';
 export const SHOPIFY_API_VERSION = process.env.SHOPIFY_API_VERSION ?? '2025-01';
 

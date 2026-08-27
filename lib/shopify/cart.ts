@@ -2,7 +2,7 @@ import 'server-only';
 
 import { cookies } from 'next/headers';
 
-import { SHOPIFY_TOKEN, isLive, storefrontEndpoint } from './config';
+import { SHOPIFY_DOMAIN, SHOPIFY_TOKEN, isLive, storefrontEndpoint } from './config';
 import { formatMoney } from './normalize';
 
 /**
@@ -294,7 +294,7 @@ export async function removeLine(lineId: string): Promise<Cart | null> {
 
 /** The validation shortcut from the spec. Not used by the site's own CTA. */
 export function permalinkUrl(variantId: string, qty = 1): string | null {
-  const domain = process.env.SHOPIFY_STORE_DOMAIN;
+  const domain = SHOPIFY_DOMAIN;
   if (!domain || !variantId) return null;
   return `https://${domain}/cart/${String(variantId).split('/').pop()}:${qty}`;
 }
