@@ -7,6 +7,7 @@ import { useMemo, useState, useTransition } from 'react';
 import { addToCart, registerInterest } from '@/app/actions';
 import { announceCartChange } from '@/lib/cart-client';
 import { rightsColor } from '@/lib/rights';
+import { isIssued } from '@/lib/status';
 import type { Item, Series } from '@/lib/shopify/types';
 import GarmentPlate from './GarmentPlate';
 import styles from './ItemRecord.module.css';
@@ -18,11 +19,13 @@ type Props = {
   preorder: boolean;
 };
 
-const SPECS = (sizes: string) => [
+/* An issued series is taking payment; "TBD after sample" cannot stand beside a
+   charge, so the qualifier is dropped once the series is published as issued. */
+const SPECS = (sizes: string, issued: boolean) => [
   { k: 'garment', v: 'Heavyweight 220g' },
   { k: 'fabric', v: '100% combed cotton' },
   { k: 'fit', v: 'Boxy / relaxed' },
-  { k: 'print', v: 'DTG, TBD after sample' },
+  { k: 'print', v: issued ? 'DTG' : 'DTG, TBD after sample' },
   { k: 'placement', v: 'Full front' },
   { k: 'sizes', v: sizes },
 ];
@@ -56,6 +59,7 @@ export default function ItemRecord({ item, series, live, preorder }: Props) {
   const activeSize = size ?? firstAvailable?.size ?? item.sizeValues[0] ?? '';
   const variant = forColour.find((v) => v.size === activeSize) ?? firstAvailable ?? null;
 
+  const issued = isIssued(series.status);
   const inStock = Boolean(variant?.available);
   const sellable = live && inStock;
   const price = variant?.price || item.price;
@@ -85,9 +89,11 @@ export default function ItemRecord({ item, series, live, preorder }: Props) {
 
   const priceCaption = sellable
     ? `${currency} · ${variant?.title ?? ''}`
-    : preorder
-      ? `${currency} · charged when the series is issued`
-      : `${currency} test price · not yet fixed`;
+    : issued
+      ? `${currency} · ${variant?.title ?? ''}`
+      : preorder
+        ? `${currency} · charged when the series is issued`
+        : `${currency} test price · not yet fixed`;
 
   /* Choosing a blank resets size to that colour's first available size and
      clears any acknowledgement. */
@@ -322,7 +328,7 @@ export default function ItemRecord({ item, series, live, preorder }: Props) {
           {error && !registering ? <div className={styles.error}>{error}</div> : null}
 
           <div className={styles.specs}>
-            {SPECS(item.sizes).map((s) => (
+            {SPECS(item.sizes, issued).map((s) => (
               <div className={styles.spec} key={s.k}>
                 <div className={styles.specKey}>{s.k}</div>
                 <div className={styles.specValue}>{s.v}</div>

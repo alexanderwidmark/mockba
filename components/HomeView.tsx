@@ -27,7 +27,7 @@ export default function HomeView({
       <Catalogue series={series} live={live} />
       <Statement />
       <SourceRegister items={series.products} />
-      <PublicNotes />
+      <PublicNotes status={series.status} sizes={hero?.sizes ?? 'XS–3XL'} />
       <EntryMotion />
     </>
   );

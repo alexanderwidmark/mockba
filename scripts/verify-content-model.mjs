@@ -180,7 +180,9 @@ async function run(handle) {
     console.log(`  [${tick(Boolean(sizeOpt))}] a size option exists`);
     if (!sizeOpt) note(scope, 'no Size option on the product');
     if (colourOpt && colourOpt.name !== 'Colour') {
-      note(scope, `colour option is named "${colourOpt.name}"; the contract says "Colour"`);
+      // Cosmetic: the site matches either spelling, and the fulfilment
+      // integration may own this field and rewrite it.
+      console.log(`  [ note  ] colour option is named "${colourOpt.name}"; the contract says "Colour"`);
     }
 
     const colourValues = (colourOpt?.optionValues ?? []).map((v) => v.name);
