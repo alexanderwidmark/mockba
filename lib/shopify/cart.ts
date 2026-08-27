@@ -49,6 +49,9 @@ const CART_FRAGMENT = /* GraphQL */ `
               product {
                 title
                 handle
+                command: metafield(namespace: "mockba", key: "command") {
+                  value
+                }
               }
             }
           }
@@ -67,7 +70,11 @@ type RawCartLine = {
     sku: string | null;
     price: { amount: string; currencyCode: string };
     selectedOptions: { name: string; value: string }[];
-    product: { title: string; handle: string };
+    product: {
+      title: string;
+      handle: string;
+      command: { value: string | null } | null;
+    };
   };
 };
 
@@ -140,7 +147,9 @@ function normalizeCart(raw: RawCart | null | undefined): Cart | null {
       variantId: node.merchandise.id,
       variantTitle: node.merchandise.title,
       sku: node.merchandise.sku ?? '',
-      productTitle: node.merchandise.product.title,
+      // The command, as everywhere else on the site. The Shopify product title
+      // is what the hosted checkout shows, and it is not the display title.
+      productTitle: node.merchandise.product.command?.value || node.merchandise.product.title,
       productHandle: node.merchandise.product.handle,
       price: formatMoney(node.merchandise.price.amount, node.merchandise.price.currencyCode),
       lineTotal: formatMoney(

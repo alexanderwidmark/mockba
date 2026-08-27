@@ -1,9 +1,5 @@
 .footer {
-  padding: 22px 4vw;
   border-top: 1px solid var(--rule);
-  display: flex;
-  gap: 10px 30px;
-  flex-wrap: wrap;
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 1.6px;
@@ -11,11 +7,49 @@
   color: var(--mono-2);
 }
 
+/**
+ * The register of written policies, in the same language as the series index:
+ * a label cell, then one cell per policy, separated by hairlines. A flat row of
+ * links would wrap into a heap once the shipping policy and the legal notice
+ * are written; cells wrap into a grid.
+ */
+.policies {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.label {
+  padding: 11px 20px;
+  border-right: 1px solid var(--hairline);
+  color: var(--label);
+}
+
+.policy {
+  padding: 11px 20px;
+  border-right: 1px solid var(--hairline);
+  border-bottom: none;
+  color: var(--mono-2);
+}
+
+.policy:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-bottom: none;
+}
+
+/* The colophon keeps the four specified items and stays one line of record. */
+.colophon {
+  display: flex;
+  gap: 10px 30px;
+  flex-wrap: wrap;
+  padding: 22px 4vw;
+}
+
 .primary {
   color: var(--ink);
 }
 
-/* The source/intervention line is a standing statement, not a link. */
 .link {
   color: var(--mono-2);
   border-bottom: 1px solid var(--hairline);
