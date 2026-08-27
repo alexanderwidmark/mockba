@@ -44,7 +44,15 @@ export default async function Page({
     <>
       <Masthead series={series} />
       <SeriesIndex all={all} activeHandle={series.handle} />
-      <ItemRecord item={item} series={series} live={isLive()} preorder={preorder} />
+      <ItemRecord
+        item={item}
+        seriesHandle={series.handle}
+        seriesTitle={series.title}
+        seriesStatus={series.status}
+        siblings={series.products.map((p) => ({ handle: p.handle, title: p.title }))}
+        live={isLive()}
+        preorder={preorder}
+      />
     </>
   );
 }

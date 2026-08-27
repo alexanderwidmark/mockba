@@ -8,13 +8,24 @@ import { addToCart, registerInterest } from '@/app/actions';
 import { announceCartChange } from '@/lib/cart-client';
 import { rightsColor } from '@/lib/rights';
 import { isIssued } from '@/lib/status';
-import type { Item, Series } from '@/lib/shopify/types';
+import type { Item } from '@/lib/shopify/types';
 import GarmentPlate from './GarmentPlate';
 import styles from './ItemRecord.module.css';
 
+/**
+ * Only what this view renders. The whole series used to be handed in, which put
+ * every other item's variants and source note into the client payload for a
+ * page that shows one item and a row of sibling titles.
+ */
+type Sibling = { handle: string; title: string };
+
 type Props = {
   item: Item;
-  series: Series;
+  seriesHandle: string;
+  seriesTitle: string;
+  seriesStatus: string;
+  /** Every item in the series, for the register of interest chip row. */
+  siblings: Sibling[];
   live: boolean;
   preorder: boolean;
 };
@@ -30,7 +41,15 @@ const SPECS = (sizes: string, issued: boolean) => [
   { k: 'sizes', v: sizes },
 ];
 
-export default function ItemRecord({ item, series, live, preorder }: Props) {
+export default function ItemRecord({
+  item,
+  seriesHandle,
+  seriesTitle,
+  seriesStatus,
+  siblings,
+  live,
+  preorder,
+}: Props) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
@@ -59,7 +78,7 @@ export default function ItemRecord({ item, series, live, preorder }: Props) {
   const activeSize = size ?? firstAvailable?.size ?? item.sizeValues[0] ?? '';
   const variant = forColour.find((v) => v.size === activeSize) ?? firstAvailable ?? null;
 
-  const issued = isIssued(series.status);
+  const issued = isIssued(seriesStatus);
   const inStock = Boolean(variant?.available);
   const sellable = live && inStock;
   const price = variant?.price || item.price;
@@ -143,7 +162,7 @@ export default function ItemRecord({ item, series, live, preorder }: Props) {
         itemTitle: item.title,
         sku: variant?.accession || item.accession,
         variantTitle: variant?.title ?? '',
-        seriesTitle: series.title,
+        seriesTitle,
         price,
       });
       if (res.ok) {
@@ -156,11 +175,11 @@ export default function ItemRecord({ item, series, live, preorder }: Props) {
     });
   };
 
-  const total = String(series.products.length).padStart(2, '0');
+  const total = String(siblings.length).padStart(2, '0');
 
   return (
     <>
-      <Link href={`/series/${series.handle}#drop`} className={styles.backBar}>
+      <Link href={`/series/${seriesHandle}#drop`} className={styles.backBar}>
         ← Return to the catalogue of items
       </Link>
 
@@ -312,10 +331,10 @@ export default function ItemRecord({ item, series, live, preorder }: Props) {
                 Which item would you acquire at the stated price?
               </div>
               <div className={styles.chipRow}>
-                {series.products.map((p) => (
+                {siblings.map((p) => (
                   <Link
                     key={p.handle}
-                    href={`/series/${series.handle}/${p.handle}`}
+                    href={`/series/${seriesHandle}/${p.handle}`}
                     className={styles.itemChip}
                   >
                     {p.title}
@@ -352,7 +371,7 @@ export default function ItemRecord({ item, series, live, preorder }: Props) {
             <span className={styles.metaKey}>variant</span>
             <span>{variant?.title ?? ''}</span>
             <span className={styles.metaKey}>series</span>
-            <span>{series.title}</span>
+            <span>{seriesTitle}</span>
             <span className={styles.metaKey}>rights</span>
             <span style={{ color: rightsColor(item.rights) }}>
               {item.rights} / {item.risk} enforcement risk
