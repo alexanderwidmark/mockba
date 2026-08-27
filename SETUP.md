@@ -92,6 +92,35 @@ server-only:
   permalink from the spec stays available as `permalinkUrl` for single-item
   validation but is not what the site uses.
 
+## Creating the content model
+
+```
+node scripts/create-content-model.mjs --dry-run   # print what it would create
+node scripts/create-content-model.mjs
+```
+
+Creates the metaobject definition and all twelve metafield definitions from the
+contract in README.md, with the exact namespace, keys and types the site reads,
+and each one explicitly exposed to the Storefront API. A definition that exists
+but is not exposed reads back as null, which is indistinguishable from a field
+nobody filled in — so the exposure is set here rather than left to a checkbox.
+
+Definitions only; the values are entered in the Shopify admin. Safe to run
+again — anything already present is reported and skipped.
+
+The app needs Admin API scopes for this, which are separate from the
+`unauthenticated_*` scopes the site itself runs on:
+
+| scope | for |
+|---|---|
+| `write_products` | product and collection metafield definitions |
+| `write_metaobject_definitions` | the `source` metaobject |
+| `read_metaobject_definitions` | checking whether it already exists |
+
+Without them every call fails with "Access denied … API client to have access to
+the namespace", and the metaobject reports as reserved for another application.
+Check what the app actually holds at `/admin/oauth/access_scopes.json`.
+
 ## Checking the content model
 
 ```
