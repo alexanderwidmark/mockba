@@ -1,0 +1,89 @@
+/**
+ * Entry motion. A document being set down, not a product launch.
+ *
+ * The resting DOM is the correct laid-out state: every rule here is gated on
+ * `[data-motion="on"]`, which only JavaScript sets. With JS disabled, reduced
+ * motion, print, or a stylesheet that never loads, nothing is hidden or
+ * displaced. Motion is transform-only — never opacity, never layout.
+ */
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes mockba-mask-up {
+    from {
+      transform: translateY(106%);
+    }
+  }
+
+  @keyframes mockba-lift {
+    from {
+      transform: translateY(12px);
+    }
+  }
+
+  @keyframes mockba-lift-far {
+    from {
+      transform: translateY(22px);
+    }
+  }
+
+  [data-motion='on'] [data-enter] {
+    animation-duration: 0.7s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); /* expo.out */
+    animation-fill-mode: both;
+  }
+
+  [data-motion='on'] [data-enter='line'] {
+    animation-name: mockba-mask-up;
+    animation-duration: 1s;
+  }
+
+  [data-motion='on'] [data-enter='line'][data-enter-delay='1'] {
+    animation-delay: 0.09s;
+  }
+
+  [data-motion='on'] [data-enter='frame'] {
+    animation-name: mockba-lift;
+    animation-delay: 0.3s;
+  }
+
+  [data-motion='on'] [data-enter='register'] {
+    animation-name: mockba-lift;
+    animation-delay: 0.44s;
+  }
+
+  [data-motion='on'] [data-enter='plate'] {
+    animation-name: mockba-lift-far;
+    animation-duration: 1s;
+    animation-delay: 0.1s;
+  }
+
+  /* Cards enter on scroll, once. Paused they sit 22px low — offset, never
+     hidden — and the observer (or its safety timer) always releases them. */
+  [data-motion='on'] [data-enter='card'] {
+    animation-name: mockba-lift-far;
+    animation-duration: 0.8s;
+    animation-play-state: paused;
+  }
+
+  [data-motion='on'] [data-enter='card'][data-seen] {
+    animation-play-state: running;
+  }
+
+  [data-motion='on'] [data-enter='card']:nth-child(4n + 2) {
+    animation-delay: 0.06s;
+  }
+
+  [data-motion='on'] [data-enter='card']:nth-child(4n + 3) {
+    animation-delay: 0.12s;
+  }
+
+  [data-motion='on'] [data-enter='card']:nth-child(4n + 4) {
+    animation-delay: 0.18s;
+  }
+}
+
+@media print {
+  [data-enter] {
+    animation: none !important;
+  }
+}

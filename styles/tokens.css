@@ -1,0 +1,50 @@
+/**
+ * MOCKBA design tokens. Every value is literal from the specification —
+ * these are not suggestions to be rounded off.
+ *
+ * Geometry: border-radius is 0 everywhere. Hairlines are 1px. The only shadow
+ * in the design is the garment drop-shadow pair.
+ */
+:root {
+  /* Paper and panels */
+  --paper: #efece3;
+  --plate: #dcd5c4;
+
+  /* Ink */
+  --ink: #1a1a17;
+  --body: #45423a;
+  --label: #5f5a4e;
+  --mono-2: #6b675c;
+  --disabled: #8b8578;
+
+  /* Rules */
+  --rule: #1a1a17;
+  --hairline: #cfc9ba;
+  --swatch-edge: #b4ae9e;
+  --link-edge: #b9b3a3;
+
+  /* Print simulation */
+  --print-backing: #14130f;
+  --ink-dark: #171512;
+  --ink-light: #f1ede3;
+  --sub-ink-dark: #5c574c;
+  --sub-ink-light: #b9b4a8;
+
+  /* Status */
+  --accent: #8a1e14;
+  --restricted: #8a1e14;
+  --research: #8a6a16;
+  --cleared: #4f6b3f;
+
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* The garment lifted off the panel. The only shadow in the design. */
+  --garment-shadow: drop-shadow(0 0 0.6px rgba(26, 26, 23, 0.55))
+    drop-shadow(0 3px 7px rgba(26, 26, 23, 0.16));
+
+  /* The silhouette. Shared by all three mockup sizes. */
+  --garment-clip: polygon(
+    35% 0%, 65% 0%, 65% 7%, 88% 6%, 100% 26%, 84% 37%, 74% 29%, 74% 100%,
+    26% 100%, 26% 29%, 16% 37%, 0% 26%, 12% 6%, 35% 7%
+  );
+}

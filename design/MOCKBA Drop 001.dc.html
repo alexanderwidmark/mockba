@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="shopify.js"></script>
+  <style>
+    html, body { margin: 0; background: #EFECE3; }
+    body { overflow-x: hidden; }
+    ::selection { background: #1A1A17; color: #EFECE3; }
+    a { color: #1A1A17; text-decoration: none; border-bottom: 1px solid #B9B3A3; }
+    a:hover { color: #1A1A17; border-bottom-color: #1A1A17; }
+  </style>
+</helmet>
+
+<div id="mk" style="--accent: {{ accent }}; background: #EFECE3; color: #1A1A17; font-family: 'IBM Plex Mono', monospace;">
+
+  <!-- MASTHEAD / DOCUMENT BAR -->
+  <div style="position: sticky; top: 0; z-index: 90; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); background: #EFECE3; border-bottom: 1px solid #1A1A17; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase;">
+    <div style="padding: 12px 20px; border-right: 1px solid #CFC9BA; color: #1A1A17; font-weight: 600; cursor: pointer;" onClick="{{ goHome }}">MOCKBA Art Collective</div>
+    <div style="padding: 12px 20px; border-right: 1px solid #CFC9BA; color: #6B675C;">Office of Public Information</div>
+    <div style="padding: 12px 20px; border-right: 1px solid #CFC9BA; color: #6B675C;">{{ seriesLabel }}</div>
+    <div style="padding: 12px 20px; color: #6B675C;">{{ revisionLabel }}</div>
+  </div>
+
+  <!-- SERIES INDEX (only when more than one series is published) -->
+  <sc-if value="{{ hasSeriesIndex }}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; flex-wrap: wrap; border-bottom: 1px solid #1A1A17; font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase;">
+      <div style="padding: 10px 20px; border-right: 1px solid #CFC9BA; color: #5F5A4E;">Series index</div>
+      <sc-for list="{{ seriesTabs }}" as="s" hint-placeholder-count="2">
+        <div style="padding: 10px 20px; border-right: 1px solid #CFC9BA; cursor: pointer; background: {{ s.bg }}; color: {{ s.ink }};" onClick="{{ s.pick }}">{{ s.title }} · {{ s.count }}</div>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <!-- ===================== HOME ===================== -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <div>
+
+    <!-- TITLE BLOCK -->
+    <header style="border-bottom: 1px solid #1A1A17;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr));">
+
+        <div style="padding: 7vh 4vw 6vh; border-right: 1px solid #CFC9BA; display: flex; flex-direction: column; justify-content: center;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #6B675C; margin-bottom: 30px;">Issued by MOCKBA Art Collective · Moscow archive series</div>
+
+          <div id="hThesis" style="font-size: clamp(24px, 3.4vw, 50px); line-height: 1.14; letter-spacing: -0.02em; font-weight: 500; margin-bottom: 26px; text-wrap: pretty;">
+            <span class="hLine" style="display: block; overflow: hidden;"><span class="hIn" style="display: block;">Historical propaganda,</span></span>
+            <span class="hLine" style="display: block; overflow: hidden;"><span class="hIn" style="display: block;">contemporary mechanisms.</span></span>
+          </div>
+
+          <p id="hFrame" style="max-width: 500px; font-size: 14px; line-height: 1.85; color: #45423A; margin: 0 0 38px;">The archive is not nostalgia. It is treated as evidence. The political systems change; the mechanisms are remarkably persistent.</p>
+
+          <!-- DOCUMENT REGISTER -->
+          <div id="hCta" style="border-top: 1px solid #1A1A17; max-width: 560px;">
+            <sc-for list="{{ headMeta }}" as="m" hint-placeholder-count="4">
+              <div style="display: grid; grid-template-columns: 122px 1fr; gap: 14px; padding: 11px 0; border-bottom: 1px solid #CFC9BA; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px;">
+                <span style="font-size: 9.5px; letter-spacing: 1.6px; text-transform: uppercase; color: #6B675C; padding-top: 2px;">{{ m.k }}</span>
+                <span style="color: #1A1A17;">{{ m.v }}</span>
+              </div>
+            </sc-for>
+            <div style="padding-top: 22px;">
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 2.2px; text-transform: uppercase; color: #1A1A17; border-bottom: 1px solid #1A1A17; padding-bottom: 3px; cursor: pointer;" style-hover="color: #6B675C; border-bottom-color: #6B675C;" onClick="{{ goDrop }}">Consult the catalogue of items →</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PLATE I -->
+        <div style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6vh 3vw 4vh; background: #DCD5C4;">
+          <div style="position: absolute; top: 18px; left: 20px; font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #5F5A4E;">Plate I</div>
+
+          <div id="heroTee" style="position: relative; width: 80%; max-width: 470px; aspect-ratio: 4/5; cursor: pointer;" onClick="{{ openHero }}">
+            <div style="position: absolute; inset: 0; clip-path: polygon(35% 0%, 65% 0%, 65% 7%, 88% 6%, 100% 26%, 84% 37%, 74% 29%, 74% 100%, 26% 100%, 26% 29%, 16% 37%, 0% 26%, 12% 6%, 35% 7%); filter: drop-shadow(0 0 0.6px rgba(26,26,23,0.55)) drop-shadow(0 3px 7px rgba(26,26,23,0.16)); background: {{ hero.garmentColor }};"></div>
+            <div style="position: absolute; top: 17%; left: 50%; width: 52%; transform: translateX(-50%);">
+              <div style="position: relative; aspect-ratio: {{ hero.frameAspect }};">
+                {{ hero.posterImg }}
+                <div style="position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.11) 0 1px, transparent 1px 2px); mix-blend-mode: multiply;"></div>
+              </div>
+              <div style="text-align: center; padding-top: 10px;">
+                <div style="font-size: clamp(12px, 1.3vw, 16px); line-height: 1.25; letter-spacing: 0.01em; font-weight: 600; text-transform: uppercase; color: {{ hero.printInk }};" data-print-title="">{{ hero.title }}</div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: clamp(9px, 0.9vw, 11px); letter-spacing: 1px; color: {{ hero.printInkSub }}; margin-top: 6px;">{{ hero.secondary }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="max-width: 470px; width: 80%; margin-top: 26px; padding-top: 12px; border-top: 1px solid #CFC9BA; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: #6B675C; display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+            <span>Item {{ hero.no }} · {{ hero.title }}</span>
+            <span>{{ hero.sku }}</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CATALOGUE OF ITEMS -->
+    <section id="drop" style="padding: 8vh 4vw 10vh; border-bottom: 1px solid #1A1A17;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 12px 30px; align-items: end; margin-bottom: 40px; padding-bottom: 16px; border-bottom: 1px solid #1A1A17;">
+        <h2 style="font-size: clamp(18px, 2.1vw, 30px); line-height: 1.2; letter-spacing: -0.01em; font-weight: 500; margin: 0;">Catalogue of items — {{ dropTitle }}</h2>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: #6B675C;">{{ priceNote }}</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); border-top: 1px solid #CFC9BA; border-left: 1px solid #CFC9BA;">
+        <sc-for list="{{ products }}" as="p" hint-placeholder-count="4">
+          <div class="card" style="background: #EFECE3; border-right: 1px solid #CFC9BA; border-bottom: 1px solid #CFC9BA; display: flex; flex-direction: column; cursor: pointer;" onClick="{{ p.open }}">
+
+            <div style="position: relative; aspect-ratio: 4/5; background: #DCD5C4; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+              <span style="position: absolute; top: 13px; left: 14px; font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #5F5A4E;">Fig. {{ p.no }}</span>
+
+              <div class="cardTee" style="position: relative; width: 86%; aspect-ratio: 4/5;">
+                <div style="position: absolute; inset: 0; clip-path: polygon(35% 0%, 65% 0%, 65% 7%, 88% 6%, 100% 26%, 84% 37%, 74% 29%, 74% 100%, 26% 100%, 26% 29%, 16% 37%, 0% 26%, 12% 6%, 35% 7%); filter: drop-shadow(0 0 0.6px rgba(26,26,23,0.55)) drop-shadow(0 3px 7px rgba(26,26,23,0.16)); background: {{ p.garmentColor }};"></div>
+                <div style="position: absolute; top: 17%; left: 50%; width: 52%; transform: translateX(-50%);">
+                  <div style="position: relative; aspect-ratio: {{ p.frameAspect }};">
+                    {{ p.posterImg }}
+                    <div style="position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.11) 0 1px, transparent 1px 2px); mix-blend-mode: multiply;"></div>
+                  </div>
+                  <div style="text-align: center; padding-top: 8px;">
+                    <div style="font-size: clamp(10px, 1.05vw, 13px); line-height: 1.3; font-weight: 600; text-transform: uppercase; color: {{ p.printInk }};">{{ p.title }}</div>
+                    <div style="font-family: 'IBM Plex Mono', monospace; font-size: clamp(8.5px, 0.85vw, 10px); letter-spacing: 1px; color: {{ p.printInkSub }}; margin-top: 5px;">{{ p.secondary }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="padding: 22px 22px 24px; display: flex; flex-direction: column; flex: 1; border-top: 1px solid #CFC9BA;">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 1.8px; text-transform: uppercase; color: #6B675C; margin-bottom: 12px;">Item {{ p.no }} · {{ p.sku }}</div>
+              <h3 style="font-size: 17px; line-height: 1.25; letter-spacing: -0.01em; font-weight: 500; margin: 0 0 6px;">{{ p.title }}</h3>
+              <div style="font-size: 12.5px; line-height: 1.6; color: #45423A; margin-bottom: 16px;">{{ p.secondary }}</div>
+              <div style="display: grid; grid-template-columns: 62px 1fr; gap: 4px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: #45423A; margin-bottom: 16px;">
+                <span style="font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase; color: #5F5A4E;">source</span><span>{{ p.sourceShort }}</span>
+                <span style="font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase; color: #5F5A4E;">year</span><span>{{ p.year }}</span>
+                <span style="font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase; color: #5F5A4E;">blanks</span><span>{{ p.colourLine }}</span>
+                <span style="font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase; color: #5F5A4E;">stock</span><span>{{ p.stockLine }}</span>
+              </div>
+              <p style="font-size: 12.5px; line-height: 1.8; color: #45423A; margin: 0 0 20px; flex: 1;">{{ p.mechanismLine }}</p>
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-top: 14px; border-top: 1px solid #CFC9BA;">
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #1A1A17;">{{ p.price }}</span>
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 1.8px; text-transform: uppercase; padding: 9px 15px; border: 1px solid #1A1A17; color: #1A1A17;" style-hover="background: #1A1A17; color: #EFECE3;">Register interest</span>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- STATEMENT OF PURPOSE -->
+    <section style="padding: 9vh 4vw; border-bottom: 1px solid #1A1A17;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 40px 60px;">
+        <div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #6B675C; margin-bottom: 26px;">Statement of purpose</div>
+          <p style="font-size: clamp(16px, 1.7vw, 25px); line-height: 1.5; letter-spacing: -0.005em; margin: 0; text-wrap: pretty;">MOCKBA Art Collective uses historical propaganda to examine contemporary propaganda. The political systems change. The enemies change. The distribution channels change. The mechanisms persist.</p>
+        </div>
+        <div style="max-width: 620px;">
+          <p style="font-size: 13.5px; line-height: 1.9; color: #45423A; margin: 0 0 20px;">The archive is treated as evidence rather than decoration: fear, loyalty, manufactured enemies, political theatre, patriotic consumption and official truth keep returning in new forms and under new authorities.</p>
+          <p style="font-size: 13.5px; line-height: 1.9; color: #45423A; margin: 0 0 26px;">Every item records its original source and the contemporary intervention separately, so the two layers can never be confused for one another.</p>
+          <div style="border-left: 2px solid {{ accent }}; padding-left: 16px; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 1.6px; text-transform: uppercase; color: #1A1A17;">Yesterday’s propaganda. Today’s infrastructure.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOURCE REGISTER -->
+    <section style="padding: 9vh 4vw; border-bottom: 1px solid #1A1A17;">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #6B675C; margin-bottom: 26px;">Register of sources</div>
+      <div style="border-top: 1px solid #1A1A17;">
+        <sc-for list="{{ products }}" as="p" hint-placeholder-count="4">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 18px 40px; padding: 26px 0; border-bottom: 1px solid #CFC9BA;">
+            <div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 1.8px; text-transform: uppercase; color: #5F5A4E; margin-bottom: 10px;">Item {{ p.no }} · {{ p.title }}</div>
+              <div style="font-size: 14.5px; line-height: 1.6; color: #1A1A17; margin-bottom: 14px;">{{ p.sourceTitle }}</div>
+              <div style="display: grid; grid-template-columns: 68px 1fr; gap: 4px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #45423A;">
+                <span style="font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase; color: #5F5A4E;">artist</span><span>{{ p.artist }}</span>
+                <span style="font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase; color: #5F5A4E;">year</span><span>{{ p.year }}</span>
+                <span style="font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase; color: #5F5A4E;">origin</span><span>{{ p.origin }}</span>
+                <span style="font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase; color: #5F5A4E;">purpose</span><span>{{ p.purpose }}</span>
+              </div>
+            </div>
+            <p style="font-size: 13px; line-height: 1.9; color: #45423A; margin: 0;">{{ p.sourceNote }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- NOTES FOR THE PUBLIC -->
+    <section style="padding: 9vh 4vw;">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #6B675C; margin-bottom: 26px;">Notes for the public</div>
+      <div style="border-top: 1px solid #1A1A17; max-width: 1000px;">
+        <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="7">
+          <div style="border-bottom: 1px solid #CFC9BA; padding: 22px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 12px 40px;">
+            <div style="font-size: 14px; line-height: 1.6; color: #1A1A17; font-weight: 500;">{{ f.q }}</div>
+            <div style="font-size: 13px; line-height: 1.9; color: #45423A;">{{ f.a }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+  </div>
+  </sc-if>
+
+  <!-- ===================== ITEM RECORD ===================== -->
+  <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <div style="padding: 14px 4vw; border-bottom: 1px solid #CFC9BA; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.8px; text-transform: uppercase; color: #6B675C; cursor: pointer;" style-hover="color: #1A1A17;" onClick="{{ goHome }}">← Return to the catalogue of items</div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 430px), 1fr)); border-bottom: 1px solid #1A1A17;">
+
+      <div style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 54px 3vw 4vh; background: #DCD5C4; min-height: 74vh;">
+        <div style="position: absolute; top: 18px; left: 20px; font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #5F5A4E;">Fig. {{ current.no }} — recto, {{ current.garmentName }} cotton</div>
+        <div style="position: sticky; top: 90px; width: 82%; max-width: 500px; display: flex; flex-direction: column; align-items: center; gap: 18px;">
+        <div id="detailTee" style="position: relative; width: 100%; aspect-ratio: 4/5;">
+          <div style="position: absolute; inset: 0; clip-path: polygon(35% 0%, 65% 0%, 65% 7%, 88% 6%, 100% 26%, 84% 37%, 74% 29%, 74% 100%, 26% 100%, 26% 29%, 16% 37%, 0% 26%, 12% 6%, 35% 7%); filter: drop-shadow(0 0 0.6px rgba(26,26,23,0.55)) drop-shadow(0 3px 7px rgba(26,26,23,0.16)); background: {{ current.garmentColor }};"></div>
+          <div style="position: absolute; top: 17%; left: 50%; width: 52%; transform: translateX(-50%);">
+            <div style="position: relative; aspect-ratio: {{ current.frameAspect }};">
+              {{ current.posterImg }}
+              <div style="position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.11) 0 1px, transparent 1px 2px); mix-blend-mode: multiply;"></div>
+            </div>
+            <div style="text-align: center; padding-top: 10px;">
+              <div style="font-size: clamp(12px, 1.3vw, 16px); line-height: 1.25; font-weight: 600; text-transform: uppercase; color: {{ current.printInk }};">{{ current.title }}</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: clamp(9px, 0.9vw, 11px); letter-spacing: 1px; color: {{ current.printInkSub }}; margin-top: 6px;">{{ current.secondary }}</div>
+            </div>
+          </div>
+        </div>
+        <div style="width: 100%; padding-top: 12px; border-top: 1px solid #CFC9BA; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: #6B675C;">Reproduced from archive source · print imperfections retained</div>
+        </div>
+      </div>
+
+      <div style="padding: 6vh 4vw; border-left: 1px solid #CFC9BA;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2.4px; text-transform: uppercase; color: #6B675C; margin-bottom: 22px;">Item record {{ current.no }} / 04 · {{ current.sku }}</div>
+
+        <h1 style="font-size: clamp(24px, 2.9vw, 42px); line-height: 1.14; letter-spacing: -0.02em; font-weight: 500; margin: 0 0 8px;">{{ current.title }}</h1>
+        <div style="font-size: clamp(13px, 1.2vw, 16px); line-height: 1.6; color: #45423A; margin-bottom: 32px;">{{ current.secondary }}</div>
+
+        <!-- VARIANT SELECTION — colour and size are Shopify variant options -->
+        <div style="padding-top: 20px; border-top: 1px solid #1A1A17; margin-bottom: 26px;">
+          <div style="font-size: 9.5px; letter-spacing: 2px; text-transform: uppercase; color: #5F5A4E; margin-bottom: 10px;">Blank</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px;">
+            <sc-for list="{{ current.colourOptions }}" as="c" hint-placeholder-count="2">
+              <div style="display: flex; align-items: center; gap: 9px; padding: 8px 13px 8px 9px; border: 1px solid {{ c.edge }}; color: {{ c.ink }}; font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; cursor: pointer;" onClick="{{ c.pick }}">
+                <span style="width: 14px; height: 14px; border: 1px solid #B4AE9E; background: {{ c.swatch }};"></span>
+                <span>{{ c.name }}</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 10px;">
+            <div style="font-size: 9.5px; letter-spacing: 2px; text-transform: uppercase; color: #5F5A4E;">Size</div>
+            <div style="font-size: 9.5px; letter-spacing: 1.6px; text-transform: uppercase; color: {{ current.stockColor }};">{{ current.stockLabel }}</div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(44px, 1fr)); border-top: 1px solid #CFC9BA; border-left: 1px solid #CFC9BA;">
+            <sc-for list="{{ current.sizeOptions }}" as="s" hint-placeholder-count="7">
+              <div style="text-align: center; padding: 11px 6px; border-right: 1px solid #CFC9BA; border-bottom: 1px solid #CFC9BA; font-size: 11px; letter-spacing: 1.4px; background: {{ s.bg }}; color: {{ s.ink }}; text-decoration: {{ s.strike }}; cursor: pointer;" onClick="{{ s.pick }}">{{ s.label }}</div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: baseline; gap: 14px; margin-bottom: 24px;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 24px; color: #1A1A17;">{{ current.price }}</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 1.8px; text-transform: uppercase; color: #5F5A4E;">{{ priceCaption }}</span>
+        </div>
+
+        <div style="margin-bottom: 18px;">
+          <span style="display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 2.4px; text-transform: uppercase; padding: 16px 30px; border: 1px solid #1A1A17; color: #1A1A17; cursor: pointer;" style-hover="background: #1A1A17; color: #EFECE3;" onClick="{{ notify }}">{{ ctaLabel }}</span>
+        </div>
+
+        <sc-if value="{{ notified }}" hint-placeholder-val="{{ false }}">
+          <div style="border: 1px solid #1A1A17; padding: 18px 20px; margin-bottom: 30px;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 2px; text-transform: uppercase; color: #6B675C; margin-bottom: 12px;">Entered in the register</div>
+            <div style="font-size: 13px; line-height: 1.75; color: #45423A; margin-bottom: 14px;">Which item would you acquire at the stated price?</div>
+            <div style="display: flex; flex-wrap: wrap; border-top: 1px solid #CFC9BA; border-left: 1px solid #CFC9BA;">
+              <sc-for list="{{ products }}" as="p" hint-placeholder-count="4">
+                <span style="background: #EFECE3; border-right: 1px solid #CFC9BA; border-bottom: 1px solid #CFC9BA; padding: 10px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 1.2px; text-transform: uppercase; color: #45423A; cursor: pointer;" style-hover="background: #1A1A17; color: #EFECE3;">{{ p.title }}</span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); border-top: 1px solid #CFC9BA; border-left: 1px solid #CFC9BA; margin: 30px 0; font-family: 'IBM Plex Mono', monospace;">
+          <sc-for list="{{ current.specs }}" as="s" hint-placeholder-count="6">
+            <div style="background: #EFECE3; border-right: 1px solid #CFC9BA; border-bottom: 1px solid #CFC9BA; padding: 13px 15px;">
+              <div style="font-size: 9px; letter-spacing: 1.8px; text-transform: uppercase; color: #5F5A4E; margin-bottom: 6px;">{{ s.k }}</div>
+              <div style="font-size: 11.5px; color: #1A1A17;">{{ s.v }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2.4px; text-transform: uppercase; color: #6B675C; margin-bottom: 14px;">Source note</div>
+        <div style="font-size: 14.5px; line-height: 1.6; color: #1A1A17; margin-bottom: 12px;">{{ current.sourceTitle }}</div>
+        <p style="font-size: 13.5px; line-height: 1.9; color: #45423A; margin: 0 0 30px; max-width: 580px;">{{ current.sourceNote }}</p>
+
+        <div style="display: grid; grid-template-columns: 96px 1fr; gap: 5px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #45423A; padding-top: 22px; border-top: 1px solid #1A1A17;">
+          <span style="font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase; color: #5F5A4E;">artist</span><span>{{ current.artist }}</span>
+          <span style="font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase; color: #5F5A4E;">year</span><span>{{ current.year }}</span>
+          <span style="font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase; color: #5F5A4E;">origin</span><span>{{ current.origin }}</span>
+          <span style="font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase; color: #5F5A4E;">accession</span><span>{{ current.sku }}</span>
+          <span style="font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase; color: #5F5A4E;">variant</span><span>{{ current.variantTitle }}</span>
+          <span style="font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase; color: #5F5A4E;">series</span><span>{{ dropTitle }}</span>
+          <span style="font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase; color: #5F5A4E;">rights</span><span style="color: {{ current.rightsColor }};">{{ current.rights }} / {{ current.risk }} enforcement risk</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <footer style="padding: 22px 4vw; border-top: 1px solid #1A1A17; display: flex; gap: 10px 30px; flex-wrap: wrap; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: #6B675C;">
+    <span style="color: #1A1A17;">MOCKBA Art Collective</span>
+    <span>mockba.org</span>
+    <span>Original source and MOCKBA intervention recorded separately</span>
+    <span>Contact the office</span>
+  </footer>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;testPrice&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;$54&quot;,&quot;options&quot;:[&quot;$49&quot;,&quot;$54&quot;,&quot;$59&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Economics&quot;},&quot;ctaMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;notify&quot;,&quot;options&quot;:[&quot;notify&quot;,&quot;preorder&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Economics&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#8A1E14&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#8A1E14&quot;,&quot;#8A6A16&quot;,&quot;#1A1A17&quot;,&quot;#3F5B5A&quot;]}}">
+class Component extends DCLogic {
+  // Seed first paint synchronously from the build-time snapshot in shopify.js,
+  // then revalidate against the Storefront API. The page never waits to paint.
+  state = (() => {
+    const shop = window.MOCKBA_SHOPIFY;
+    const series = shop ? shop.snapshotSeries() : [];
+    return { view: 'home', seriesIdx: 0, idx: 0, notified: false, series, colour: null, size: null };
+  })();
+
+  faqs = [
+    { q: 'What is MOCKBA?', a: 'An art collective using historical propaganda to examine contemporary propaganda. Every item starts from a documented archive source and adds a contemporary intervention. The two layers are always recorded separately.' },
+    { q: 'Are these original historical posters?', a: 'The imagery is taken from real archive posters, reproduced with their age and print imperfections intact. The English headline and secondary line are the MOCKBA intervention, not part of the original work. Each item record states the original title, artist and year.' },
+    { q: 'What garment is used?', a: 'Heavyweight 220g, 100% combed cotton, boxy relaxed fit, sizes XS–3XL. Full-front print. Exact blank and print method are confirmed after physical samples are approved.' },
+    { q: 'Where is it produced?', a: 'Printed on demand through a print partner, with no stockpiled inventory. Production location is confirmed at the same time as the blank, after sample approval.' },
+    { q: 'When will it be issued?', a: 'This document is a release candidate. Nothing is dispatched until physical samples pass review. Register interest and you will be notified when the series is issued, with the dispatch window stated at that point.' },
+    { q: 'Returns and sizing', a: 'The full size chart is published with the series. Because every garment is printed to order, returns are handled case by case for print defects and sizing errors — the policy is published before any payment is taken.' },
+  ];
+
+  renderVals() {
+    // Declared tweaks drive the page. testPrice overrides the catalogue price
+    // so the US $49/$54/$59 test needs no admin change during validation.
+    const accent = this.props.accent || '#C1121F';
+    const testPrice = this.props.testPrice || null;
+    const preorder = (this.props.ctaMode || 'notify') === 'preorder';
+
+    const rc = s => s === 'cleared' ? '#4F6B3F' : s === 'research required' ? '#8A6A16' : '#8A1E14';
+    const subInk = ink => (ink || '').toLowerCase() === '#171512' ? '#5C574C' : '#B9B4A8';
+
+    // The poster <img> is supplied as an element, never as a template hole:
+    // a `{{ }}` in an image src is emitted literally during streaming and the
+    // browser fetches it, producing real 404s.
+    // Ink simulation depends on garment luminance. `multiply` only reads as ink
+    // on a LIGHT blank; on a dark blank it crushes the poster to black. Dark
+    // garments therefore print normally, screened back so the weave reads.
+    const lum = hex => {
+      const h = (hex || '#1A1A18').replace('#', '');
+      const n = parseInt(h.length === 3 ? h.split('').map(c => c + c).join('') : h, 16);
+      return (0.299 * ((n >> 16) & 255) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255;
+    };
+
+    const posterImg = p => {
+      const light = lum(p.garmentColor) > 0.5;
+      return React.createElement('img', {
+        src: p.poster,
+        alt: p.posterAlt || p.sourceTitle || p.title,
+        style: {
+          display: 'block', width: '100%', aspectRatio: (p.printAspect || '3/4').replace('/', ' / '), objectFit: 'cover',
+          backgroundColor: light ? p.garmentColor : '#14130F',
+          mixBlendMode: light ? 'multiply' : 'normal',
+          opacity: light ? 0.95 : 0.92,
+          filter: light ? 'contrast(1.04)' : 'contrast(1.06) brightness(1.12) saturate(1.04)',
+        },
+      });
+    };
+
+    // ── Shopify: series (collection) → items (products) → variants ──────────
+    const shop = window.MOCKBA_SHOPIFY;
+    const live = !!(shop && shop.isLive());
+    const seriesList = this.state.series || [];
+    const series = seriesList[this.state.seriesIdx] ||
+      { title: '', products: [], status: 'release candidate', seriesNo: '001', issued: '' };
+
+    const products = (series.products || []).map((p, i) => {
+      const stock = (p.variants || []).filter(v => v.available).length;
+      return Object.assign({}, p, {
+        posterImg: posterImg(p),
+        frameAspect: (p.printAspect || '3/4').replace('/', ' / '),
+        price: testPrice || p.price,
+        rightsColor: rc(p.rights),
+        printInkSub: subInk(p.printInk),
+        stockLine: !p.variants || !p.variants.length ? 'no variants recorded'
+          : stock === 0 ? 'all variants sold out'
+          : stock + ' of ' + p.variants.length + ' variants available',
+        colourLine: (p.colours || []).map(c => c.name).join(' · '),
+        open: () => this.setState({ view: 'detail', idx: i, notified: false, colour: null, size: null }),
+      });
+    });
+
+    // ── Variant selection for the item record ───────────────────────────────
+    const cur = products[this.state.idx] || {};
+    const colours = cur.colours || [];
+    const colourName = this.state.colour || cur.garmentName || (colours[0] && colours[0].name) || '';
+    const colourRec = colours.find(c => c.name === colourName) ||
+      { name: colourName, garment: cur.garmentColor, ink: cur.printInk };
+    const forColour = (cur.variants || []).filter(v => v.colourName === colourName);
+    const sizeList = cur.sizeValues || [];
+    const firstAvail = forColour.find(v => v.available) || forColour[0];
+    const size = this.state.size || (firstAvail ? firstAvail.size : sizeList[0] || '');
+    const variant = forColour.find(v => v.size === size) || firstAvail || null;
+
+    const colourOptions = colours.map(c => ({
+      name: c.name,
+      swatch: c.garment,
+      selected: c.name === colourName,
+      edge: c.name === colourName ? '#1A1A17' : '#CFC9BA',
+      ink: c.name === colourName ? '#1A1A17' : '#6B675C',
+      pick: () => this.setState({ colour: c.name, size: null, notified: false }),
+    }));
+
+    const sizeOptions = sizeList.map(sz => {
+      const v = forColour.find(x => x.size === sz);
+      const ok = !!(v && v.available);
+      const on = sz === size;
+      return {
+        label: sz,
+        available: ok,
+        bg: on ? '#1A1A17' : '#EFECE3',
+        ink: on ? '#EFECE3' : ok ? '#1A1A17' : '#8B8578',
+        strike: ok ? 'none' : 'line-through',
+        pick: ok ? () => this.setState({ size: sz, notified: false }) : () => {},
+      };
+    });
+
+    const inStock = !!(variant && variant.available);
+    const sellable = live && inStock;
+    const current = Object.assign({}, cur, {
+      garmentColor: colourRec.garment,
+      printInk: colourRec.ink,
+      printInkSub: subInk(colourRec.ink),
+      garmentName: colourName,
+      posterImg: posterImg(Object.assign({}, cur, { garmentColor: colourRec.garment })),
+      price: testPrice || (variant ? variant.price : cur.price),
+      sku: variant && variant.sku ? variant.sku : cur.sku,
+      colourOptions,
+      sizeOptions,
+      variantTitle: variant ? variant.title : '',
+      stockLabel: !variant ? 'no variant recorded'
+        : variant.available
+          ? 'available' + (variant.qty != null ? ' \u00b7 ' + variant.qty + ' units recorded' : '')
+          : 'sold out in this size',
+      stockColor: inStock ? '#4F6B3F' : '#8A1E14',
+      specs: [
+        { k: 'garment', v: 'Heavyweight 220g' },
+        { k: 'fabric', v: '100% combed cotton' },
+        { k: 'fit', v: 'Boxy / relaxed' },
+        { k: 'print', v: 'DTG, TBD after sample' },
+        { k: 'placement', v: 'Full front' },
+        { k: 'sizes', v: cur.sizes || '' },
+      ],
+    });
+
+    const hero = products[0] || {};
+
+    return {
+      products,
+      hero,
+      dropTitle: series.title,
+      seriesLabel: 'Series ' + (series.seriesNo || '001') + ' / ' + (series.status || ''),
+      revisionLabel: 'Revision ' + (series.issued || '\u2014'),
+      hasSeriesIndex: seriesList.length > 1,
+      seriesTabs: seriesList.map((s, i) => ({
+        title: s.title,
+        no: s.seriesNo,
+        status: s.status,
+        count: (s.products || []).length + ' items',
+        ink: i === this.state.seriesIdx ? '#1A1A17' : '#6B675C',
+        bg: i === this.state.seriesIdx ? '#DCD5C4' : '#EFECE3',
+        pick: () => this.setState({ seriesIdx: i, idx: 0, view: 'home', colour: null, size: null }),
+      })),
+      isHome: this.state.view === 'home',
+      isDetail: this.state.view === 'detail' && !!products[this.state.idx],
+      current,
+      accent,
+      notified: this.state.notified,
+      headMeta: [
+        { k: 'series', v: series.title + (series.seriesNo ? ' \u00b7 no. ' + series.seriesNo : '') },
+        { k: 'extent', v: (products.length || 0) + ' items \u00b7 full-front print, printed on demand' },
+        { k: 'sources', v: 'State archive posters, 1920\u20131988' },
+        { k: 'status', v: (series.status || 'release candidate') + (live ? ' \u00b7 checkout open' : ' \u00b7 interest registered only') },
+      ],
+      ctaLabel: sellable
+        ? 'Add to cart \u2014 ' + (current.price || '')
+        : !inStock && variant
+          ? 'Sold out \u00b7 register interest'
+          : preorder
+            ? (this.state.notified ? 'Reservation recorded' : 'Reserve this item')
+            : (this.state.notified ? 'Interest recorded' : 'Register interest in this item'),
+      priceCaption: sellable
+        ? (current.currency || 'USD').toLowerCase() + ' \u00b7 ' + (current.variantTitle || '')
+        : preorder
+          ? 'usd \u00b7 charged when the series is issued'
+          : 'usd test price \u00b7 not yet fixed',
+      notify: () => {
+        if (sellable) {
+          const url = shop.checkoutUrl(variant.id, 1);
+          if (url) { window.open(url, '_blank', 'noopener'); return; }
+        }
+        this.setState({ notified: true });
+      },
+      goHome: () => { this.setState({ view: 'home' }); window.scrollTo(0, 0); },
+      goDrop: () => {
+        const el = document.getElementById('drop');
+        if (el) window.scrollTo({ top: el.offsetTop - 44, behavior: 'smooth' });
+      },
+      openHero: () => this.setState({ view: 'detail', idx: 0, notified: false }),
+      priceNote: preorder
+        ? 'preorder \u00b7 ' + (hero.price || '') + ' \u00b7 charged on issue'
+        : hero.price
+          ? 'usd test price \u00b7 ' + hero.price + ' stated \u00b7 public price not yet fixed'
+          : 'usd test price \u00b7 public price not yet fixed',
+      faqs: this.faqs,
+    };
+  }
+
+  componentDidMount() {
+    this.tries = 0;
+    this.loadSeries();
+    this.boot();
+  }
+
+  /** Revalidate every configured series against the Storefront API. */
+  async loadSeries() {
+    const shop = window.MOCKBA_SHOPIFY;
+    if (!shop) return;
+    try {
+      const series = await shop.fetchAllSeries();
+      if (!series || !series.length) return;
+      this.setState({ series });
+    } catch (e) {
+      console.warn('[mockba] revalidation failed, keeping cached snapshot', e);
+    }
+  }
+  componentWillUnmount() {
+    const g = window.gsap, root = document.getElementById('mk');
+    if (g && root) {
+      const els = root.querySelectorAll('#hThesis .hIn, #hFrame, #hCta, #heroTee, .card');
+      if (els.length) g.set(els, { clearProps: 'all' });
+    }
+    if (this.retry) clearTimeout(this.retry);
+    if (this.trigs) this.trigs.forEach(t => t && t.kill());
+    if (this.tl) this.tl.kill();
+    this.booting = false;
+  }
+  componentDidUpdate(prev) {
+    if (prev && this.state.view !== 'home') return;
+    if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+  }
+
+  /**
+   * The ONLY entry-motion contract in this file. Every animated element goes
+   * through it, so no call site can omit immediateRender:false and write a
+   * layout-escaping FROM state into the DOM. If the ticker never advances
+   * (background tab, reduced motion, print, html-to-image) the resting DOM is
+   * already the correct laid-out position.
+   */
+  ENTER = { ease: 'expo.out', clearProps: 'transform', immediateRender: false };
+
+  enter(target, from, to) {
+    return window.gsap.fromTo(target, from, Object.assign({}, this.ENTER, to));
+  }
+
+  boot = () => {
+    if (this.booting) return;
+    const gsap = window.gsap, ST = window.ScrollTrigger;
+    const root = document.getElementById('mk');
+    const cards = root ? root.querySelectorAll('.card') : [];
+    if (!gsap || !ST || cards.length < 4) {
+      if (this.tries++ < 90) this.retry = setTimeout(this.boot, 120);
+      return;
+    }
+    this.booting = true;
+    gsap.registerPlugin(ST);
+
+    // Killing a tween must never leave content hidden: restore every animated
+    // target to its visible resting state BEFORE tearing anything down.
+    const reveal = ['#hThesis .hIn', '#hFrame', '#hCta', '#heroTee', '.card'];
+    reveal.forEach(sel => {
+      const els = root.querySelectorAll(sel);
+      if (els.length) gsap.set(els, { opacity: 1, y: 0, yPercent: 0, clearProps: 'transform' });
+    });
+
+    if (this.trigs) this.trigs.forEach(t => t && t.kill());
+    if (this.tl) this.tl.kill();
+    this.trigs = [];
+    const fresh = !this.booted;
+
+    // Entry motion animates TRANSFORM ONLY, and stays restrained: this reads as
+    // a document being set down, not a product launch.
+    if (fresh) {
+      this.tl = gsap.timeline({ defaults: Object.assign({}, this.ENTER, { stagger: 0 }) })
+        .fromTo('#hThesis .hIn', { yPercent: 106 }, { yPercent: 0, duration: 1, stagger: 0.09 })
+        .fromTo('#hFrame', { y: 12 }, { y: 0, duration: 0.7 }, 0.3)
+        .fromTo('#hCta', { y: 12 }, { y: 0, duration: 0.7 }, 0.44)
+        .fromTo('#heroTee', { y: 22 }, { y: 0, duration: 1 }, 0.1);
+
+      const tl = this.tl, trigs = this.trigs;
+      setTimeout(() => {
+        if (gsap.ticker.frame >= 2) return;
+        if (tl) tl.progress(1).kill();
+        trigs.forEach(t => t && t.kill());
+        gsap.set(root.querySelectorAll('#hThesis .hIn, #hFrame, #hCta, #heroTee, .card'), { clearProps: 'transform' });
+      }, 600);
+    }
+
+    if (fresh) {
+      cards.forEach((card, i) => {
+        const t = this.enter(card, { y: 22 }, {
+          y: 0, duration: 0.8, delay: (i % 4) * 0.06,
+          scrollTrigger: { trigger: card, start: 'top 88%', once: true },
+        });
+        this.trigs.push(t.scrollTrigger);
+      });
+    }
+
+    this.booted = true;
+    this.booting = false;
+    ST.refresh();
+  };
+}
+
+</script>
+</body>
+</html>

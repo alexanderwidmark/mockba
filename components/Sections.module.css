@@ -1,0 +1,138 @@
+.section {
+  padding: 9vh 4vw;
+  border-bottom: 1px solid var(--rule);
+}
+
+.last {
+  border-bottom: none;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--mono-2);
+  margin-bottom: 26px;
+}
+
+/* ── Statement of purpose ─────────────────────────────────────────────────── */
+
+.statementGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 40px 60px;
+}
+
+.lead {
+  font-size: clamp(16px, 1.7vw, 25px);
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+  text-wrap: pretty;
+}
+
+.statementBody {
+  max-width: 620px;
+}
+
+.para {
+  font-size: 13.5px;
+  line-height: 1.9;
+  color: var(--body);
+  margin: 0 0 20px;
+}
+
+.paraLast {
+  margin-bottom: 26px;
+}
+
+.callout {
+  border-left: 2px solid var(--accent);
+  padding-left: 16px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* ── Register of sources ──────────────────────────────────────────────────── */
+
+.list {
+  border-top: 1px solid var(--rule);
+}
+
+.sourceRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 18px 40px;
+  padding: 26px 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.itemLabel {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--label);
+  margin-bottom: 10px;
+}
+
+.originalTitle {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+.sourceMeta {
+  display: grid;
+  grid-template-columns: 68px 1fr;
+  gap: 4px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--body);
+}
+
+.metaKey {
+  font-size: 9px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+.sourceNote {
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--body);
+  margin: 0;
+}
+
+/* ── Notes for the public ─────────────────────────────────────────────────── */
+
+.notes {
+  border-top: 1px solid var(--rule);
+  max-width: 1000px;
+}
+
+.note {
+  border-bottom: 1px solid var(--hairline);
+  padding: 22px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 12px 40px;
+}
+
+.question {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.answer {
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--body);
+}

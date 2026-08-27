@@ -1,0 +1,20 @@
+.empty {
+  padding: 12vh 4vw;
+  border-bottom: 1px solid var(--rule);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--mono-2);
+  margin-bottom: 26px;
+}
+
+.line {
+  font-size: clamp(16px, 1.7vw, 25px);
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+  max-width: 640px;
+}

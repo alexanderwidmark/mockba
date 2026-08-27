@@ -1,0 +1,33 @@
+.index {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+
+.label {
+  padding: 10px 20px;
+  border-right: 1px solid var(--hairline);
+  color: var(--label);
+}
+
+.tab {
+  padding: 10px 20px;
+  border-right: 1px solid var(--hairline);
+  border-bottom: none;
+  background: var(--paper);
+  color: var(--mono-2);
+}
+
+.tab:hover {
+  color: var(--ink);
+  border-bottom: none;
+}
+
+.active {
+  background: var(--plate);
+  color: var(--ink);
+}

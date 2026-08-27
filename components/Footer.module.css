@@ -1,0 +1,27 @@
+.footer {
+  padding: 22px 4vw;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  gap: 10px 30px;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--mono-2);
+}
+
+.primary {
+  color: var(--ink);
+}
+
+/* The source/intervention line is a standing statement, not a link. */
+.link {
+  color: var(--mono-2);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.link:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}

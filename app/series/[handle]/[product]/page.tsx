@@ -1,0 +1,50 @@
+import { notFound } from 'next/navigation';
+
+import ItemRecord from '@/components/ItemRecord';
+import Masthead from '@/components/Masthead';
+import SeriesIndex from '@/components/SeriesIndex';
+import { isLive } from '@/lib/shopify/config';
+import { getAllSeries, getSeriesContext } from '@/lib/shopify/fetch';
+
+export const revalidate = 300;
+
+const preorder = (process.env.CTA_MODE ?? 'notify') === 'preorder';
+
+export async function generateStaticParams() {
+  const all = await getAllSeries();
+  return all.flatMap((s) => s.products.map((p) => ({ handle: s.handle, product: p.handle })));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ handle: string; product: string }>;
+}) {
+  const { handle, product } = await params;
+  const { series } = await getSeriesContext(handle);
+  const item = series?.products.find((p) => p.handle === product);
+  if (!item) return { title: 'Item record' };
+  return {
+    title: `Item record ${item.no} · ${item.title}`,
+    description: `${item.secondary} — ${item.mechanismLine}`,
+  };
+}
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ handle: string; product: string }>;
+}) {
+  const { handle, product } = await params;
+  const { series, all } = await getSeriesContext(handle);
+  const item = series?.products.find((p) => p.handle === product);
+  if (!series || !item) notFound();
+
+  return (
+    <>
+      <Masthead series={series} />
+      <SeriesIndex all={all} activeHandle={series.handle} />
+      <ItemRecord item={item} series={series} live={isLive()} preorder={preorder} />
+    </>
+  );
+}

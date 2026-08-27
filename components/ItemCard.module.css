@@ -1,0 +1,125 @@
+.card {
+  background: var(--paper);
+  border-right: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+  border-bottom-color: var(--hairline);
+  color: var(--ink);
+}
+
+.card:hover {
+  border-bottom-color: var(--hairline);
+}
+
+.plate {
+  position: relative;
+  aspect-ratio: 4/5;
+  background: var(--plate);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.fig {
+  position: absolute;
+  top: 13px;
+  left: 14px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+.mockup {
+  width: 86%;
+}
+
+.body {
+  padding: 22px 22px 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  border-top: 1px solid var(--hairline);
+}
+
+.accession {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--mono-2);
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 17px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.contradiction {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--body);
+  margin-bottom: 16px;
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: 62px 1fr;
+  gap: 4px 12px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--body);
+  margin-bottom: 16px;
+}
+
+.metaKey {
+  font-size: 9px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+.mechanism {
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: var(--body);
+  margin: 0 0 20px;
+  flex: 1;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--hairline);
+}
+
+.price {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.action {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  padding: 9px 15px;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+}
+
+.card:hover .action {
+  background: var(--ink);
+  color: var(--paper);
+}

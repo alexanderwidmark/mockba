@@ -1,0 +1,84 @@
+@import './tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border-radius: 0;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+}
+
+body {
+  overflow-x: hidden;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* No italics anywhere. Both a second family and italics were tried and rejected. */
+i,
+em,
+cite,
+address,
+dfn,
+var {
+  font-style: normal;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--link-edge);
+}
+
+a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+h1,
+h2,
+h3,
+p,
+figure {
+  margin: 0;
+  font-weight: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  text-align: inherit;
+}
+
+img {
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

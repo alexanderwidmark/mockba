@@ -1,0 +1,111 @@
+.section {
+  padding: 9vh 4vw;
+  border-bottom: 1px solid var(--rule);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--mono-2);
+  margin-bottom: 26px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 40px 60px;
+}
+
+.lead {
+  font-size: clamp(16px, 1.7vw, 25px);
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+  text-wrap: pretty;
+  margin-bottom: 26px;
+}
+
+.para {
+  font-size: 13.5px;
+  line-height: 1.9;
+  color: var(--body);
+  max-width: 560px;
+}
+
+.form {
+  max-width: 560px;
+  border-top: 1px solid var(--rule);
+  padding-top: 22px;
+}
+
+.field {
+  margin-bottom: 18px;
+}
+
+.label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--label);
+  margin-bottom: 8px;
+}
+
+.input,
+.textarea {
+  display: block;
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.4px;
+}
+
+.textarea {
+  min-height: 160px;
+  line-height: 1.8;
+  resize: vertical;
+}
+
+.submit {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  padding: 16px 30px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.submit:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.submit[disabled] {
+  color: var(--disabled);
+  border-color: var(--hairline);
+  cursor: default;
+}
+
+.status {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  margin-top: 16px;
+}
+
+.error {
+  color: var(--restricted);
+}
+
+.ok {
+  color: var(--cleared);
+}
