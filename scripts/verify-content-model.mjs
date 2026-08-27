@@ -62,11 +62,12 @@ const PRODUCT_METAFIELDS = [
   'contradiction',
   'mechanism',
   'role',
-  'colour_map',
-  'garment_color',
   'sku_base',
   'source',
 ];
+
+/* Only meaningful on a product whose variants declare a colour option. */
+const BLANK_METAFIELDS = ['colour_map', 'garment_color'];
 
 const SOURCE_FIELDS = [
   'original_title',
@@ -189,6 +190,19 @@ async function run(handle) {
     } catch {
       note(scope, 'colour_map is not valid JSON');
     }
+    for (const k of BLANK_METAFIELDS) {
+      const m = mf(k);
+      const has = Boolean(m && m.value);
+      if (!colourOpt) {
+        console.log(`  [ n/a  ] mockba.${k}   (no colour option, so no swatch to draw)`);
+        continue;
+      }
+      console.log(`  [${tick(has)}] mockba.${k}`);
+      if (!has && k === 'colour_map') {
+        note(scope, 'colour_map is empty although the product declares blanks');
+      }
+    }
+
     for (const name of colourValues) {
       const rec = map[name];
       const ok = Boolean(rec?.garment && rec?.ink);
