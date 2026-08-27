@@ -145,8 +145,8 @@ function specToCollection(entry: SpecEntry): RawCollection {
           priceRange: { minVariantPrice: { amount: it.price, currencyCode: 'USD' } },
           images: { edges: [{ node: { url: `/archive/${it.poster}`, altText: it.source.original_title } }] },
           options: [
-            { name: 'Colour', values: it.colours.map((c) => c.name) },
-            { name: 'Size', values: SIZES },
+            { name: 'Colour', optionValues: it.colours.map((c) => ({ name: c.name })) },
+            { name: 'Size', optionValues: SIZES.map((name) => ({ name })) },
           ],
           variants: { edges: variants },
           metafields: [

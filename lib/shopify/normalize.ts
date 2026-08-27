@@ -54,13 +54,18 @@ function readColourMap(node: RawProduct, fallbackGarment: string, fallbackInk: s
     map = {};
   }
   const opt = (node.options || []).find((o) => /colour|color/i.test(o.name));
-  const names = opt && opt.values.length ? opt.values : Object.keys(map);
+  const declared = optionNames(opt);
+  const names = declared.length ? declared : Object.keys(map);
   const resolved = names.length ? names : ['Black'];
   return resolved.map((name) => {
     const rec = map[name] || {};
     return { name, garment: rec.garment || fallbackGarment, ink: rec.ink || fallbackInk };
   });
 }
+
+/** The values of one product option, in the order Shopify holds them. */
+const optionNames = (opt: { optionValues: { name: string }[] } | undefined): string[] =>
+  (opt?.optionValues ?? []).map((v) => v.name).filter(Boolean);
 
 const optValue = (variant: RawVariant, re: RegExp): string =>
   (variant.selectedOptions || []).find((x) => re.test(x.name))?.value ?? '';
@@ -87,7 +92,8 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
   const fallbackInk = mfv(node.metafields, 'print_ink', '#F1EDE3');
   const colours = readColourMap(node, fallbackGarment, fallbackInk);
   const sizeOpt = (node.options || []).find((o) => /size/i.test(o.name));
-  const sizeValues = sizeOpt && sizeOpt.values.length ? sizeOpt.values : SIZES;
+  const declaredSizes = optionNames(sizeOpt);
+  const sizeValues = declaredSizes.length ? declaredSizes : SIZES;
   const artist = src.artist || 'Unknown';
 
   const variants: Variant[] = (node.variants?.edges ?? []).map((e) => {

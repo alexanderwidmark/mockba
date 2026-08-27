@@ -29,7 +29,8 @@ export type RawProduct = {
   availableForSale: boolean;
   priceRange: { minVariantPrice: { amount: string; currencyCode: string } } | null;
   images: { edges: { node: { url: string; altText: string | null } }[] } | null;
-  options: { name: string; values: string[] }[];
+  /** ProductOption.values was removed from the Storefront schema; read optionValues. */
+  options: { name: string; optionValues: { name: string }[] }[];
   variants: { edges: { node: RawVariant }[] } | null;
   metafields: RawMetafield[];
 };

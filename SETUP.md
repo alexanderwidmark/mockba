@@ -22,13 +22,39 @@ build-time snapshot of Validation Drop 001, shaped exactly like the Storefront
 response, and it is the per-series fallback in production: one dead collection
 handle costs that series its freshness and nothing else.
 
+## Getting the Storefront token
+
+The app in the Dev Dashboard exposes a client id and secret rather than a static
+Storefront token. Those exchange for a 24-hour Admin token, and one Admin call
+turns that into a Storefront token that does not expire:
+
+```
+SHOPIFY_CLIENT_ID=... SHOPIFY_CLIENT_SECRET=... node scripts/mint-storefront-token.mjs
+```
+
+It prints `SHOPIFY_STOREFRONT_TOKEN=...` plus the scopes the app actually
+granted, and names any that are missing. Put the token in Vercel and in
+`.env.local`. It is a one-time step — there is nothing to refresh.
+
+The site cannot run on the Admin token itself. The Cart API exists only in the
+Storefront API, so checkout would be impossible.
+
+Required scopes on the app:
+
+| scope | what breaks without it |
+|---|---|
+| `unauthenticated_read_product_listings` | everything |
+| `unauthenticated_read_product_inventory` | unit counts and struck-through sizes |
+| `unauthenticated_read_metaobjects` | source notes, rights fields and artist credits go blank while the page still renders |
+| `unauthenticated_write_checkouts` | the cart cannot open |
+
 ## Environment
 
 | variable | effect |
 |---|---|
 | `SHOPIFY_STORE_DOMAIN` | Defaults to `ebupet-y0.myshopify.com`. With a token, flips the site to sellable. |
 | `SHOPIFY_STOREFRONT_TOKEN` | Storefront API public access token. Read-only, but the query runs server-side; nothing is exposed to the browser. |
-| `SHOPIFY_API_VERSION` | Defaults to `2025-01`. |
+| `SHOPIFY_API_VERSION` | Defaults to `2026-07`. |
 | `SHOPIFY_SERIES_HANDLES` | Collection handles, newest first, comma separated. The series index appears once there are two. |
 | `RESEND_KEY` | Register of interest and correspondence. |
 | `MAIL_FROM` | Defaults to `MOCKBA Art Collective <hello@mockba.org>`; the domain must be verified in Resend. |

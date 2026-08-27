@@ -8,7 +8,7 @@
 
 export const SHOPIFY_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN ?? 'ebupet-y0.myshopify.com';
 export const SHOPIFY_TOKEN = process.env.SHOPIFY_STOREFRONT_TOKEN ?? '';
-export const SHOPIFY_API_VERSION = process.env.SHOPIFY_API_VERSION ?? '2025-01';
+export const SHOPIFY_API_VERSION = process.env.SHOPIFY_API_VERSION ?? '2026-07';
 
 /** Newest series first. Add a handle when a new series is created. */
 export const SERIES_HANDLES = (process.env.SHOPIFY_SERIES_HANDLES ?? 'validation-drop-001')

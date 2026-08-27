@@ -49,7 +49,9 @@ export const SERIES_QUERY = /* GraphQL */ `
             }
             options {
               name
-              values
+              optionValues {
+                name
+              }
             }
             variants(first: 100) {
               edges {
