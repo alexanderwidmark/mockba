@@ -132,6 +132,7 @@ function specToCollection(entry: SpecEntry): RawCollection {
                   { name: 'Colour', value: c.name },
                   { name: 'Size', value: sz },
                 ],
+                image: null,
               },
             };
           }),

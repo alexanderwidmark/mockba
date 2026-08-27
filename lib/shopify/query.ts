@@ -9,6 +9,9 @@
  * Product metafields, namespace `mockba`:
  *   command, contradiction, mechanism, role, colour_map (json),
  *   garment_color, print_ink, print_aspect, source (-> metaobject `source`)
+ *
+ * Product image 1 is the garment plate. A variant may carry its own image; when
+ * it does, choosing a blank changes the plate.
  */
 export const SERIES_QUERY = /* GraphQL */ `
   query Series($handle: String!) {
@@ -39,7 +42,7 @@ export const SERIES_QUERY = /* GraphQL */ `
                 currencyCode
               }
             }
-            images(first: 3) {
+            images(first: 10) {
               edges {
                 node {
                   url
@@ -69,6 +72,10 @@ export const SERIES_QUERY = /* GraphQL */ `
                   selectedOptions {
                     name
                     value
+                  }
+                  image {
+                    url
+                    altText
                   }
                 }
               }

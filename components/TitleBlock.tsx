@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import type { Item, Series } from '@/lib/shopify/types';
-import GarmentMockup from './GarmentMockup';
+import GarmentPlate from './GarmentPlate';
 import styles from './TitleBlock.module.css';
 
 export default function TitleBlock({
@@ -74,16 +74,7 @@ export default function TitleBlock({
           <div className={styles.plateLabel}>Plate I</div>
 
           <Link href={heroHref} className={styles.heroLink} data-enter="plate">
-            <GarmentMockup
-              garmentColor={hero.garmentColor}
-              printInk={hero.printInk}
-              poster={hero.poster}
-              posterAlt={hero.posterAlt}
-              printAspect={hero.printAspect}
-              title={hero.title}
-              secondary={hero.secondary}
-              priority
-            />
+            <GarmentPlate image={hero.image} imageAlt={hero.imageAlt} priority />
           </Link>
 
           <div className={styles.heroCaption}>

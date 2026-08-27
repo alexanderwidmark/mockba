@@ -6,9 +6,9 @@ import { useMemo, useState, useTransition } from 'react';
 
 import { addToCart, registerInterest } from '@/app/actions';
 import { announceCartChange } from '@/lib/cart-client';
-import { rightsColor } from '@/lib/ink';
+import { rightsColor } from '@/lib/rights';
 import type { Item, Series } from '@/lib/shopify/types';
-import GarmentMockup from './GarmentMockup';
+import GarmentPlate from './GarmentPlate';
 import styles from './ItemRecord.module.css';
 
 type Props = {
@@ -171,15 +171,10 @@ export default function ItemRecord({ item, series, live, preorder }: Props) {
 
           {/* One sticky wrapper holds plate and caption together. */}
           <div className={styles.sticky}>
-            <GarmentMockup
+            <GarmentPlate
               className={styles.mockup}
-              garmentColor={colour.garment}
-              printInk={colour.ink}
-              poster={item.poster}
-              posterAlt={item.posterAlt}
-              printAspect={item.printAspect}
-              title={item.title}
-              secondary={item.secondary}
+              image={variant?.image || item.image}
+              imageAlt={variant?.imageAlt || item.imageAlt}
               priority
             />
             <div className={styles.plateCaption}>

@@ -5,8 +5,8 @@
  *  - `colour_map` carries a garment + ink pair per blank, so one work ships on
  *    several blanks with no deploy. `garment_color` / `print_ink` are the
  *    fallbacks when the map is absent.
- *  - `print_aspect` carries the source poster's own orientation, so a 3/2
- *    poster is never cropped into a 3/4 frame.
+ *  - Product image 1 is the garment plate as photographed. A variant may carry
+ *    its own image; when it does, choosing a blank changes the plate.
  *  - The archive source and the MOCKBA intervention stay separate fields
  *    throughout; nothing here merges them into one credit line.
  */
@@ -96,6 +96,9 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
   const sizeValues = declaredSizes.length ? declaredSizes : SIZES;
   const artist = src.artist || 'Unknown';
 
+  const image = img ? img.node.url : '';
+  const imageAlt = img?.node.altText || node.title;
+
   const variants: Variant[] = (node.variants?.edges ?? []).map((e) => {
     const v = e.node;
     const colourName = optValue(v, /colour|color/i) || colours[0].name;
@@ -114,6 +117,8 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
       priceAmount: v.price ? v.price.amount : (price?.amount ?? '0'),
       currency: v.price ? v.price.currencyCode : 'USD',
       price: v.price ? formatMoney(v.price.amount, v.price.currencyCode) : '',
+      image: v.image?.url || image,
+      imageAlt: v.image?.altText || imageAlt,
     };
   });
 
@@ -131,8 +136,8 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
     price: price ? formatMoney(price.amount, price.currencyCode) : '',
     currency: price ? price.currencyCode : 'USD',
     availableForSale: Boolean(node.availableForSale),
-    poster: img ? img.node.url : '',
-    posterAlt: img?.node.altText || node.title,
+    image,
+    imageAlt,
     // First-paint / card mockup values: the default variant's colour.
     garmentColor: first ? first.garmentColor : fallbackGarment,
     printInk: first ? first.printInk : fallbackInk,

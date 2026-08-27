@@ -20,6 +20,7 @@ export type RawVariant = {
   currentlyNotInStock: boolean;
   price: { amount: string; currencyCode: string } | null;
   selectedOptions: { name: string; value: string }[];
+  image: { url: string; altText: string | null } | null;
 };
 
 export type RawProduct = {
@@ -64,6 +65,9 @@ export type Variant = {
   printInk: string;
   available: boolean;
   qty: number | null;
+  /** The plate for this blank. Falls back to product image 1. */
+  image: string;
+  imageAlt: string;
   priceAmount: string;
   currency: string;
   price: string;
@@ -87,12 +91,13 @@ export type Item = {
   price: string;
   currency: string;
   availableForSale: boolean;
-  poster: string;
-  posterAlt: string;
+  /** Product image 1 — the garment plate as photographed. */
+  image: string;
+  imageAlt: string;
   garmentColor: string;
   printInk: string;
   garmentName: string;
-  /** 'w/h' of the print area, carrying the source poster's own orientation. */
+  /** Kept from the content model; the plate is no longer composited locally. */
   printAspect: string;
   colours: Colour[];
   sizeValues: string[];

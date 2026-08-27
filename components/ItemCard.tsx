@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import type { Item } from '@/lib/shopify/types';
-import GarmentMockup from './GarmentMockup';
+import GarmentPlate from './GarmentPlate';
 import styles from './ItemCard.module.css';
 
 function stockLine(item: Item): string {
@@ -29,17 +29,7 @@ export default function ItemCard({
     >
       <div className={styles.plate}>
         <span className={styles.fig}>Fig. {item.no}</span>
-        <GarmentMockup
-          className={styles.mockup}
-          scale="card"
-          garmentColor={item.garmentColor}
-          printInk={item.printInk}
-          poster={item.poster}
-          posterAlt={item.posterAlt}
-          printAspect={item.printAspect}
-          title={item.title}
-          secondary={item.secondary}
-        />
+        <GarmentPlate className={styles.mockup} image={item.image} imageAlt={item.imageAlt} />
       </div>
 
       <div className={styles.body}>
