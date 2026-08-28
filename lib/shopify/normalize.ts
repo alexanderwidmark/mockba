@@ -95,7 +95,7 @@ const optValue = (variant: RawVariant, re: RegExp): string =>
 
 export function formatMoney(amount: string | number, currency: string): string {
   const n = Number(amount);
-  const sym = currency === 'USD' ? '$' : currency === 'EUR' ? '€' : '';
+  const sym = currency === 'USD' ? '$' : currency === 'EUR' ? '€' : currency === 'GBP' ? '£' : '';
   const body = Number.isInteger(n) ? String(n) : n.toFixed(2);
   return sym ? sym + body : `${body} ${currency}`;
 }

@@ -10,6 +10,9 @@
  *   command, contradiction, mechanism, role, colour_map (json),
  *   garment_color, sku_base, source (-> metaobject `source`)
  *
+ * Prices come back in the buyer's market, so the site quotes what the checkout
+ * will charge rather than the shop's own currency.
+ *
  * `sku_base` is the accession stem, e.g. 'MAC-4'. The variant SKU belongs to
  * the fulfilment integration and is not an accession number, so the site
  * composes one from the stem, the blank and the size instead of showing it.
@@ -18,7 +21,7 @@
  * it does, choosing a blank changes the plate.
  */
 export const SERIES_QUERY = /* GraphQL */ `
-  query Series($handle: String!) {
+  query Series($handle: String!, $country: CountryCode!) @inContext(country: $country) {
     collection(handle: $handle) {
       handle
       title

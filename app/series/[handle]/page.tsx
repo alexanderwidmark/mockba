@@ -2,14 +2,10 @@ import { notFound } from 'next/navigation';
 
 import Empty from '@/components/Empty';
 import HomeView from '@/components/HomeView';
-import { SERIES_HANDLES, isLive } from '@/lib/shopify/config';
+import { isLive } from '@/lib/shopify/config';
 import { getSeriesContext } from '@/lib/shopify/fetch';
 
-export const revalidate = 300;
-
-export function generateStaticParams() {
-  return SERIES_HANDLES.map((handle) => ({ handle }));
-}
+/* Rendered per request so the price matches the buyer's market. */
 
 export async function generateMetadata({ params }: { params: Promise<{ handle: string }> }) {
   const { handle } = await params;

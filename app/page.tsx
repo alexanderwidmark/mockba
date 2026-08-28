@@ -3,8 +3,6 @@ import { isLive } from '@/lib/shopify/config';
 import { getSeriesContext } from '@/lib/shopify/fetch';
 import Empty from '@/components/Empty';
 
-export const revalidate = 300;
-
 /** The newest published series. */
 export default async function Page() {
   const { series, all } = await getSeriesContext();

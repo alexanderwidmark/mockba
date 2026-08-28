@@ -4,16 +4,12 @@ import ItemRecord from '@/components/ItemRecord';
 import Masthead from '@/components/Masthead';
 import SeriesIndex from '@/components/SeriesIndex';
 import { isLive } from '@/lib/shopify/config';
-import { getAllSeries, getSeriesContext } from '@/lib/shopify/fetch';
+import { getSeriesContext } from '@/lib/shopify/fetch';
 
-export const revalidate = 300;
+/* Rendered per request so the price matches the buyer's market; the
+   Storefront response behind it is cached per country. */
 
 const preorder = (process.env.CTA_MODE ?? 'notify') === 'preorder';
-
-export async function generateStaticParams() {
-  const all = await getAllSeries();
-  return all.flatMap((s) => s.products.map((p) => ({ handle: s.handle, product: p.handle })));
-}
 
 export async function generateMetadata({
   params,

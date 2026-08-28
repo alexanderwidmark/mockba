@@ -7,6 +7,7 @@ import {
   isLive,
   storefrontEndpoint,
 } from './config';
+import { buyerCountry } from './localization';
 import { normalizeSeries } from './normalize';
 import { SERIES_QUERY } from './query';
 import { snapshotCollection } from './snapshot';
@@ -18,7 +19,7 @@ import type { RawCollection, Series } from './types';
  * from cached data — or from the snapshot — and the network is never on the
  * critical path.
  */
-async function fetchCollection(handle: string): Promise<RawCollection | null> {
+async function fetchCollection(handle: string, country: string): Promise<RawCollection | null> {
   if (!isLive()) return null;
 
   try {
@@ -28,7 +29,8 @@ async function fetchCollection(handle: string): Promise<RawCollection | null> {
         'Content-Type': 'application/json',
         'X-Shopify-Storefront-Access-Token': SHOPIFY_TOKEN,
       },
-      body: JSON.stringify({ query: SERIES_QUERY, variables: { handle } }),
+      body: JSON.stringify({ query: SERIES_QUERY, variables: { handle, country } }),
+      // The body carries the country, so each market caches separately.
       next: { revalidate: SERIES_REVALIDATE, tags: [`series:${handle}`] },
     });
 
@@ -53,8 +55,8 @@ async function fetchCollection(handle: string): Promise<RawCollection | null> {
 }
 
 /** One series, live if possible and from the snapshot otherwise. */
-export async function getSeries(handle: string): Promise<Series | null> {
-  const collection = (await fetchCollection(handle)) ?? snapshotCollection(handle);
+export async function getSeries(handle: string, country: string): Promise<Series | null> {
+  const collection = (await fetchCollection(handle, country)) ?? snapshotCollection(handle);
   return collection ? normalizeSeries(collection) : null;
 }
 
@@ -62,8 +64,8 @@ export async function getSeries(handle: string): Promise<Series | null> {
  * Every configured series, newest first. The fallback is per series, so one
  * dead handle costs that series' freshness and nothing else.
  */
-export async function getAllSeries(): Promise<Series[]> {
-  const all = await Promise.all(SERIES_HANDLES.map((h) => getSeries(h)));
+export async function getAllSeries(country: string): Promise<Series[]> {
+  const all = await Promise.all(SERIES_HANDLES.map((h) => getSeries(h, country)));
   return all.filter((s): s is Series => s !== null && s.products.length > 0);
 }
 
@@ -72,7 +74,7 @@ export async function getSeriesContext(handle?: string): Promise<{
   series: Series | null;
   all: Series[];
 }> {
-  const all = await getAllSeries();
+  const all = await getAllSeries(await buyerCountry());
   const series = handle ? (all.find((s) => s.handle === handle) ?? null) : (all[0] ?? null);
   return { series, all };
 }

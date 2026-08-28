@@ -3,6 +3,7 @@ import 'server-only';
 import { cookies } from 'next/headers';
 
 import { SHOPIFY_DOMAIN, SHOPIFY_TOKEN, isLive, storefrontEndpoint } from './config';
+import { buyerCountry } from './localization';
 import { formatMoney } from './normalize';
 
 /**
@@ -229,13 +230,17 @@ export async function addLine(variantId: string, quantity = 1): Promise<Cart | n
     await clearCartId();
   }
 
+  // The cart is opened in the buyer's market so the checkout charges the price
+  // the site quoted.
+  const country = await buyerCountry();
   const data = await storefront<{
     cartCreate: { cart: RawCart | null; userErrors: { message: string }[] };
   }>(
     /* GraphQL */ `
       ${CART_FRAGMENT}
-      mutation CartCreate($lines: [CartLineInput!]!) {
-        cartCreate(input: { lines: $lines }) {
+      mutation CartCreate($lines: [CartLineInput!]!, $country: CountryCode!)
+      @inContext(country: $country) {
+        cartCreate(input: { lines: $lines, buyerIdentity: { countryCode: $country } }) {
           cart {
             ...CartParts
           }
@@ -245,7 +250,7 @@ export async function addLine(variantId: string, quantity = 1): Promise<Cart | n
         }
       }
     `,
-    { lines: [{ merchandiseId: variantId, quantity }] },
+    { lines: [{ merchandiseId: variantId, quantity }], country },
   );
 
   const cart = normalizeCart(data?.cartCreate.cart);
