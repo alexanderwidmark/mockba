@@ -17,6 +17,11 @@
  *    table instead of inheriting one.
  *  - Product image 1 is the garment plate as photographed. A variant may carry
  *    its own image; when it does, choosing a blank changes the plate.
+ *  - Further plates are only offered where the object has one blank. Shopify
+ *    links a single image to a variant, so on a multi-blank product the
+ *    remaining images cannot be attributed to a colour — and in practice they
+ *    are photographs of one specific colourway. Showing them would put a black
+ *    garment under a chip reading Natural.
  *  - The archive source and the MOCKBA intervention stay separate fields
  *    throughout; nothing here merges them into one credit line.
  */
@@ -125,6 +130,19 @@ export function formatMoney(amount: string | number, currency: string): string {
 const asRights = (v: string): RightsStatus =>
   (RIGHTS as string[]).includes(v) ? (v as RightsStatus) : 'research required';
 
+/**
+ * Shopify fills alt text with the upload's filename when none is written, which
+ * a screen reader announces as a UUID. Anything that is only a filename or a
+ * bare identifier is treated as absent so a composed description is used.
+ */
+const usableAlt = (alt: string | null | undefined): string => {
+  const text = (alt ?? '').trim();
+  if (!text) return '';
+  if (/^[0-9a-f-]{16,}$/i.test(text)) return '';
+  if (/^[\w-]+\.(png|jpe?g|webp|gif|avif)$/i.test(text)) return '';
+  return text;
+};
+
 const asRisk = (v: string): EnforcementRisk =>
   (RISKS as string[]).includes(v) ? (v as EnforcementRisk) : 'low';
 
@@ -144,7 +162,8 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
   const artist = src.artist || 'Unknown';
 
   const image = img ? img.node.url : '';
-  const imageAlt = img?.node.altText || node.title;
+  const display = mfv(node.metafields, 'command', node.title);
+  const imageAlt = usableAlt(img?.node.altText) || display;
 
   const variants: Variant[] = (node.variants?.edges ?? []).map((e) => {
     const v = e.node;
@@ -165,7 +184,7 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
       currency: v.price ? v.price.currencyCode : 'USD',
       price: v.price ? formatMoney(v.price.amount, v.price.currencyCode) : '',
       image: v.image?.url || image,
-      imageAlt: v.image?.altText || imageAlt,
+      imageAlt: usableAlt(v.image?.altText) || (colourName ? `${display}, ${colourName}` : display),
       accession: accessionFor(skuBase, colourName, size, v.sku || ''),
     };
   });
@@ -177,7 +196,7 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
     id: node.id,
     handle: node.handle,
     productTitle: node.title,
-    title: mfv(node.metafields, 'command', node.title),
+    title: display,
     secondary: mfv(node.metafields, 'contradiction'),
     mechanismLine: mfv(node.metafields, 'mechanism'),
     role: mfv(node.metafields, 'role', 'hero graphic'),
@@ -186,6 +205,16 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
     availableForSale: Boolean(node.availableForSale),
     image,
     imageAlt,
+    sharedImages: (() => {
+      if (hasBlankOption) return [];
+      const owned = new Set(
+        (node.variants?.edges ?? []).map((e) => e.node.image?.url).filter(Boolean) as string[],
+      );
+      return (node.images?.edges ?? [])
+        .map((e) => e.node)
+        .filter((n) => !owned.has(n.url))
+        .map((n, i) => ({ url: n.url, alt: usableAlt(n.altText) || `${display}, plate ${i + 2}` }));
+    })(),
     // First-paint / card mockup values: the default variant's colour.
     garmentColor: first ? first.garmentColor : fallbackGarment,
     garmentName: first ? first.colourName : (colours[0]?.name ?? ''),

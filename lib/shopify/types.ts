@@ -93,6 +93,8 @@ export type Item = {
   /** Product image 1 — the garment plate as photographed. */
   image: string;
   imageAlt: string;
+  /** Images not owned by a variant: further plates of the same object. */
+  sharedImages: { url: string; alt: string }[];
   garmentColor: string;
   garmentName: string;
   /** Whether the store itself declares blanks. False = no blank selector. */

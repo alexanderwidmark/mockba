@@ -69,6 +69,7 @@ export default function ItemRecord({
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [added, setAdded] = useState(false);
+  const [plateIndex, setPlateIndex] = useState(0);
 
   /* Everything below is derived per render, never stored. */
   const colour = useMemo(
@@ -134,6 +135,7 @@ export default function ItemRecord({
   const pickColour = (name: string) => {
     setColourName(name);
     setSize(null);
+    setPlateIndex(0);
     setRegistered(false);
     setRegistering(false);
     setAdded(false);
@@ -190,6 +192,19 @@ export default function ItemRecord({
     });
   };
 
+  /**
+   * The selected blank's plate first, then the plates that belong to no variant.
+   * Choosing a blank changes the first plate and leaves the rest standing.
+   */
+  const plates = useMemo(() => {
+    const first = { url: variant?.image || item.image, alt: variant?.imageAlt || item.imageAlt };
+    const seen = new Set([first.url]);
+    return [first, ...item.sharedImages.filter((p) => !seen.has(p.url))].filter((p) => p.url);
+  }, [variant, item]);
+
+  const plate = plates[Math.min(plateIndex, plates.length - 1)] ?? plates[0];
+  const view = plateIndex === 0 ? 'recto' : `plate ${String(plateIndex + 1).padStart(2, '0')}`;
+
   const specs = item.specs.length ? item.specs : GARMENT_SPECS(item.sizes, issued);
   const total = String(siblings.length).padStart(2, '0');
 
@@ -202,17 +217,34 @@ export default function ItemRecord({
       <div className={styles.grid}>
         <div className={styles.platePanel}>
           <div className={styles.fig}>
-            Fig. {item.no} — recto{colour ? `, ${colour.name} ${item.substrate}` : ''}
+            Fig. {item.no} — {view}
+            {colour ? `, ${colour.name} ${item.substrate}` : ''}
           </div>
 
           {/* One sticky wrapper holds plate and caption together. */}
           <div className={styles.sticky}>
             <GarmentPlate
               className={styles.mockup}
-              image={variant?.image || item.image}
-              imageAlt={variant?.imageAlt || item.imageAlt}
+              image={plate?.url ?? ''}
+              imageAlt={plate?.alt ?? ''}
               priority
             />
+
+            {plates.length > 1 ? (
+              <div className={styles.plateRegister}>
+                {plates.map((p, i) => (
+                  <button
+                    type="button"
+                    key={p.url}
+                    onClick={() => setPlateIndex(i)}
+                    aria-pressed={i === plateIndex}
+                    className={`${styles.plate} ${i === plateIndex ? styles.plateSelected : ''}`}
+                  >
+                    {String(i + 1).padStart(2, '0')}
+                  </button>
+                ))}
+              </div>
+            ) : null}
             <div className={styles.plateCaption}>
               Reproduced from archive source · print imperfections retained
             </div>

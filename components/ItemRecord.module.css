@@ -61,6 +61,42 @@
   width: 100%;
 }
 
+/**
+ * The register of plates: the same construction as the size register — rules on
+ * the cells, border-top and left on the container, selection inverted. No
+ * thumbnails and no carousel; a plate is chosen by its number the way a size is
+ * chosen by its name.
+ */
+.plateRegister {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+  width: 100%;
+  border-top: 1px solid var(--hairline);
+  border-left: 1px solid var(--hairline);
+}
+
+.plate {
+  text-align: center;
+  padding: 9px 6px;
+  border-right: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1.4px;
+  color: var(--mono-2);
+  background: transparent;
+}
+
+.plate:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.plateSelected {
+  background: var(--ink);
+  color: var(--paper);
+}
+
 .plateCaption {
   width: 100%;
   padding-top: 12px;
