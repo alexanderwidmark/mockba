@@ -55,7 +55,7 @@ Required scopes on the app:
 | `SHOPIFY_STORE_DOMAIN` | Defaults to `ebupet-y0.myshopify.com`. With a token, flips the site to sellable. |
 | `SHOPIFY_STOREFRONT_TOKEN` | Storefront API public access token. Read-only, but the query runs server-side; nothing is exposed to the browser. |
 | `SHOPIFY_API_VERSION` | Defaults to `2026-07`. |
-| `SHOPIFY_SERIES_HANDLES` | Collection handles, newest first, comma separated. The series index appears once there are two. |
+| `SHOPIFY_SERIES_HANDLES` | Leave unset. Series are discovered from Shopify; set this only to pin the site to particular collections. |
 | `RESEND_KEY` | Register of interest and correspondence. |
 | `MAIL_FROM` | Defaults to `MOCKBA Art Collective <hello@mockba.org>`; the domain must be verified in Resend. |
 | `MAIL_TO` | Defaults to `hello@mockba.org`. |
@@ -65,6 +65,30 @@ Required scopes on the app:
 Without `SHOPIFY_*` the item record registers interest instead of selling.
 Without `RESEND_KEY` the register says it is not open rather than claiming an
 entry was made.
+
+## Publishing a series
+
+A series is any collection carrying the `mockba.series_no` metafield. Create the
+collection, set the metafield, and it appears — no environment change and no
+deploy. Series are ordered by that number, newest first, so a new drop reaches
+the front page by being numbered higher rather than by being listed first. The
+series index in the masthead appears on its own once there are two.
+
+Two things it does not do for you:
+
+- **The collection and its products must be published to the sales channel the
+  Storefront token reads.** A collection created through the API is not
+  published automatically and stays invisible to the site indefinitely — not
+  briefly, indefinitely. The admin usually publishes on creation, but check the
+  new collection's Publishing section against an existing one.
+- **The snapshot only covers Validation Drop 001.** A new series has no offline
+  fallback; if Shopify is unreachable it drops out of the list rather than
+  rendering stale.
+
+`SHOPIFY_SERIES_HANDLES` overrides discovery entirely when set. Use it to stage
+a drop before it should appear, or to hold one back without unpublishing it —
+and remember it is set, because while it is, a newly published series will not
+show up.
 
 ## Routes
 

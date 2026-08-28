@@ -10,11 +10,19 @@ export const SHOPIFY_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN ?? 'ebupet-y0.mys
 export const SHOPIFY_TOKEN = process.env.SHOPIFY_STOREFRONT_TOKEN ?? '';
 export const SHOPIFY_API_VERSION = process.env.SHOPIFY_API_VERSION ?? '2026-07';
 
-/** Newest series first. Add a handle when a new series is created. */
-export const SERIES_HANDLES = (process.env.SHOPIFY_SERIES_HANDLES ?? 'validation-drop-001')
+/**
+ * An explicit series list, newest first. Normally empty: the series are
+ * discovered from Shopify by their `mockba.series_no` metafield. Set this only
+ * to pin the site to particular collections — to stage a drop before it is
+ * meant to appear, or to hold a series back without unpublishing it.
+ */
+export const SERIES_HANDLES_OVERRIDE = (process.env.SHOPIFY_SERIES_HANDLES ?? '')
   .split(',')
   .map((h) => h.trim())
   .filter(Boolean);
+
+/** The handles the snapshot can serve when Shopify is unreachable. */
+export const SNAPSHOT_HANDLES = ['validation-drop-001'];
 
 /** Seconds before a cached series payload is revalidated in the background. */
 export const SERIES_REVALIDATE = 300;

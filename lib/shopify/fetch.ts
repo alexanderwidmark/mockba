@@ -1,13 +1,15 @@
 import 'server-only';
 
 import {
-  SERIES_HANDLES,
+  SERIES_HANDLES_OVERRIDE,
   SERIES_REVALIDATE,
   SHOPIFY_TOKEN,
+  SNAPSHOT_HANDLES,
   isLive,
   storefrontEndpoint,
 } from './config';
 import { buyerCountry } from './localization';
+import { publishedSeriesHandles } from './series-index';
 import { normalizeSeries } from './normalize';
 import { SERIES_QUERY } from './query';
 import { snapshotCollection } from './snapshot';
@@ -61,11 +63,23 @@ export async function getSeries(handle: string, country: string): Promise<Series
 }
 
 /**
- * Every configured series, newest first. The fallback is per series, so one
+ * The handles to render, in order: an explicit override if one is set, then
+ * what Shopify publishes, and the snapshot's own handles if neither answers —
+ * so an unreachable API degrades to cached content rather than an empty site.
+ */
+async function seriesHandles(): Promise<string[]> {
+  if (SERIES_HANDLES_OVERRIDE.length) return SERIES_HANDLES_OVERRIDE;
+  const published = await publishedSeriesHandles();
+  return published.length ? published : SNAPSHOT_HANDLES;
+}
+
+/**
+ * Every published series, newest first. The fallback is per series, so one
  * dead handle costs that series' freshness and nothing else.
  */
 export async function getAllSeries(country: string): Promise<Series[]> {
-  const all = await Promise.all(SERIES_HANDLES.map((h) => getSeries(h, country)));
+  const handles = await seriesHandles();
+  const all = await Promise.all(handles.map((h) => getSeries(h, country)));
   return all.filter((s): s is Series => s !== null && s.products.length > 0);
 }
 
