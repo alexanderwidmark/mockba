@@ -8,7 +8,11 @@
  *
  * Product metafields, namespace `mockba`:
  *   command, contradiction, mechanism, role, colour_map (json),
- *   garment_color, sku_base, source (-> metaobject `source`)
+ *   garment_color, sku_base, spec, substrate, source (-> metaobject `source`)
+ *
+ * `spec` is the item record's specification table as an ordered list, so an
+ * object that is not a garment describes itself instead of inheriting a fit and
+ * a weave it does not have. `substrate` is the one word in the plate label.
  *
  * Prices come back in the buyer's market, so the site quotes what the checkout
  * will charge rather than the shop's own currency.
@@ -96,6 +100,8 @@ export const SERIES_QUERY = /* GraphQL */ `
                 { namespace: "mockba", key: "colour_map" }
                 { namespace: "mockba", key: "garment_color" }
                 { namespace: "mockba", key: "sku_base" }
+                { namespace: "mockba", key: "spec" }
+                { namespace: "mockba", key: "substrate" }
                 { namespace: "mockba", key: "source" }
               ]
             ) {

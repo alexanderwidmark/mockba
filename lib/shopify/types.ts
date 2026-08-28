@@ -97,6 +97,12 @@ export type Item = {
   garmentName: string;
   /** Whether the store itself declares blanks. False = no blank selector. */
   hasBlankOption: boolean;
+  /** Whether the store itself declares sizes. False = no size register. */
+  hasSizeOption: boolean;
+  /** The specification table, when the item supplies its own. */
+  specs: { k: string; v: string }[];
+  /** The material word in the plate label: 'cotton', 'canvas'. */
+  substrate: string;
   colours: Colour[];
   sizeValues: string[];
   sizes: string;

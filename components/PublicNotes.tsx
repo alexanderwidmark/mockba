@@ -21,10 +21,18 @@ const NOTES = (status: string, sizes: string) => [
     a: 'The imagery is taken from real archive posters, reproduced with their age and print imperfections intact. The English headline and secondary line are the MOCKBA intervention, not part of the original work. Each item record states the original title, artist and year.',
   },
   {
-    q: 'What garment is used?',
-    a: isIssued(status)
-      ? `Heavyweight 220g, 100% combed cotton, boxy relaxed fit, sizes ${sizes}. Full-front print.`
-      : `Heavyweight 220g, 100% combed cotton, boxy relaxed fit, sizes ${sizes}. Full-front print. Exact blank and print method are confirmed after physical samples are approved.`,
+    q: 'What is it printed on?',
+    a: [
+      sizes
+        ? `Garments are heavyweight 220g, 100% combed cotton, boxy relaxed fit, sizes ${sizes}, printed full front.`
+        : 'Every object is printed full front.',
+      'Each item record states the specification for that object.',
+      isIssued(status)
+        ? ''
+        : 'Exact blank and print method are confirmed after physical samples are approved.',
+    ]
+      .filter(Boolean)
+      .join(' '),
   },
   {
     q: 'Where is it produced?',
@@ -41,7 +49,7 @@ const NOTES = (status: string, sizes: string) => [
   {
     q: 'Returns and sizing',
     a: isIssued(status)
-      ? `The size chart runs ${sizes}. Because every garment is printed to order, returns are handled case by case for print defects and sizing errors. Write to the office before returning anything.`
+      ? `${sizes ? `The size chart runs ${sizes}. ` : ''}Because every item is printed to order, returns are handled case by case for print defects and sizing errors. Write to the office before returning anything.`
       : 'The full size chart is published with the series. Because every garment is printed to order, returns are handled case by case for print defects and sizing errors — the policy is published before any payment is taken.',
   },
 ];

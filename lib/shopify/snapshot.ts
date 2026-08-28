@@ -156,7 +156,7 @@ function specToCollection(entry: SpecEntry): RawCollection {
             { key: 'mechanism', value: it.mechanism, reference: null },
             { key: 'role', value: 'hero graphic', reference: null },
             { key: 'colour_map', value: JSON.stringify(colourMap), reference: null },
-            { key: 'garment_color', value: it.colours[0].garment, reference: null },
+            { key: 'garment_color', value: it.colours[0]?.garment ?? '#1A1A18', reference: null },
             { key: 'sku_base', value: it.skuBase, reference: null },
             {
               key: 'source',

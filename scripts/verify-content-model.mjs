@@ -69,6 +69,9 @@ const PRODUCT_METAFIELDS = [
 /* Only meaningful on a product whose variants declare a colour option. */
 const BLANK_METAFIELDS = ['colour_map', 'garment_color'];
 
+/* Optional: a garment inherits the default specification table and substrate. */
+const OPTIONAL_METAFIELDS = ['spec', 'substrate'];
+
 const SOURCE_FIELDS = [
   'original_title',
   'artist',
@@ -219,6 +222,11 @@ async function run(handle) {
     console.log(`  [${tick(Boolean(img?.url))}] product image 1 (the archive scan)`);
     if (!img?.url) note(scope, 'no product image — the garment plate will print nothing');
     else if (!img.altText) note(scope, 'image 1 has no alt text; it should carry the original title');
+
+    for (const k of OPTIONAL_METAFIELDS) {
+      const m = mf(k);
+      console.log(`  [${m?.value ? '  ok  ' : ' n/a  '}] mockba.${k}${m?.value ? '' : '   (inherits the garment default)'}`);
+    }
 
     const base = mf('sku_base')?.value;
     console.log(`  [${tick(Boolean(base))}] accession stem${base ? `   ${base}` : ''}`);

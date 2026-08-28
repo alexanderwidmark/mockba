@@ -30,16 +30,23 @@ type Props = {
   preorder: boolean;
 };
 
-/* An issued series is taking payment; "TBD after sample" cannot stand beside a
-   charge, so the qualifier is dropped once the series is published as issued. */
-const SPECS = (sizes: string, issued: boolean) => [
-  { k: 'garment', v: 'Heavyweight 220g' },
-  { k: 'fabric', v: '100% combed cotton' },
-  { k: 'fit', v: 'Boxy / relaxed' },
-  { k: 'print', v: issued ? 'DTG' : 'DTG, TBD after sample' },
-  { k: 'placement', v: 'Full front' },
-  { k: 'sizes', v: sizes },
-];
+/**
+ * The specification table for a garment, used when an item does not supply its
+ * own. An object that is not a garment sets `mockba.spec` and describes itself
+ * instead of inheriting a weave and a fit it does not have.
+ *
+ * An issued series is taking payment; "TBD after sample" cannot stand beside a
+ * charge, so the qualifier is dropped once the series is published as issued.
+ */
+const GARMENT_SPECS = (sizes: string, issued: boolean) =>
+  [
+    { k: 'garment', v: 'Heavyweight 220g' },
+    { k: 'fabric', v: '100% combed cotton' },
+    { k: 'fit', v: 'Boxy / relaxed' },
+    { k: 'print', v: issued ? 'DTG' : 'DTG, TBD after sample' },
+    { k: 'placement', v: 'Full front' },
+    ...(sizes ? [{ k: 'sizes', v: sizes }] : []),
+  ];
 
 export default function ItemRecord({
   item,
@@ -183,6 +190,7 @@ export default function ItemRecord({
     });
   };
 
+  const specs = item.specs.length ? item.specs : GARMENT_SPECS(item.sizes, issued);
   const total = String(siblings.length).padStart(2, '0');
 
   return (
@@ -194,7 +202,7 @@ export default function ItemRecord({
       <div className={styles.grid}>
         <div className={styles.platePanel}>
           <div className={styles.fig}>
-            Fig. {item.no} — recto{colour ? `, ${colour.name} cotton` : ''}
+            Fig. {item.no} — recto{colour ? `, ${colour.name} ${item.substrate}` : ''}
           </div>
 
           {/* One sticky wrapper holds plate and caption together. */}
@@ -241,9 +249,15 @@ export default function ItemRecord({
             ) : null}
 
             <div className={styles.sizeHeader}>
-              <div className={styles.optionLabel} style={{ marginBottom: 0 }}>
-                Size
-              </div>
+              {item.hasSizeOption ? (
+                <div className={styles.optionLabel} style={{ marginBottom: 0 }}>
+                  Size
+                </div>
+              ) : (
+                <div className={styles.optionLabel} style={{ marginBottom: 0 }}>
+                  Availability
+                </div>
+              )}
               <div
                 className={styles.stock}
                 style={{ color: inStock ? 'var(--cleared)' : 'var(--restricted)' }}
@@ -252,6 +266,7 @@ export default function ItemRecord({
               </div>
             </div>
 
+            {item.hasSizeOption ? (
             <div className={styles.sizeGrid}>
               {item.sizeValues.map((sz) => {
                 const v = forColour.find((x) => x.size === sz);
@@ -277,6 +292,7 @@ export default function ItemRecord({
                 );
               })}
             </div>
+            ) : null}
           </div>
 
           <div className={styles.priceRow}>
@@ -362,7 +378,7 @@ export default function ItemRecord({
           {error && !registering ? <div className={styles.error}>{error}</div> : null}
 
           <div className={styles.specs}>
-            {SPECS(item.sizes, issued).map((s) => (
+            {specs.map((s) => (
               <div className={styles.spec} key={s.k}>
                 <div className={styles.specKey}>{s.k}</div>
                 <div className={styles.specValue}>{s.v}</div>

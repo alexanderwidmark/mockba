@@ -105,6 +105,18 @@ const PRODUCT_FIELDS = [
     type: 'single_line_text_field',
     description: "The item's own identifier, e.g. 'MAC-4'. The site composes the accession number from this plus the blank and the size. The variant SKU belongs to the fulfilment integration and is never shown.",
   },
+  {
+    key: 'spec',
+    name: 'Specification',
+    type: 'json',
+    description: 'The item record specification table, ordered: [{"k":"material","v":"12 oz cotton canvas"}]. Leave empty on a garment to inherit the garment table.',
+  },
+  {
+    key: 'substrate',
+    name: 'Substrate',
+    type: 'single_line_text_field',
+    description: "The material word in the plate label, e.g. 'cotton' or 'canvas'. Defaults to cotton.",
+  },
   /* `source` is appended once the metaobject definition id is known. */
 ];
 

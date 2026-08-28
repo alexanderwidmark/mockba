@@ -10,6 +10,11 @@
  *    no blank selector.
  *  - The accession number is composed from `sku_base`, the blank and the size.
  *    The variant SKU belongs to the fulfilment integration and is not shown.
+ *  - Sizes, like blanks, come from the product's own option. An item that
+ *    declares none has none; the size register is not rendered rather than
+ *    filled with a default range the store never offered.
+ *  - `spec` lets an item that is not a garment state its own specification
+ *    table instead of inheriting one.
  *  - Product image 1 is the garment plate as photographed. A variant may carry
  *    its own image; when it does, choosing a blank changes the plate.
  *  - The archive source and the MOCKBA intervention stay separate fields
@@ -74,6 +79,23 @@ function readColourMap(node: RawProduct, fallbackGarment: string): Colour[] {
 }
 
 /**
+ * The item's own specification table, ordered. Anything malformed is ignored
+ * rather than half-rendered, so the item record falls back to the garment
+ * defaults instead of printing a broken row.
+ */
+function readSpec(node: RawProduct): { k: string; v: string }[] {
+  try {
+    const raw = JSON.parse(mfv(node.metafields, 'spec', '[]'));
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .filter((r) => r && typeof r.k === 'string' && typeof r.v === 'string')
+      .map((r) => ({ k: r.k, v: r.v }));
+  } catch {
+    return [];
+  }
+}
+
+/**
  * The accession number: the stem from the content model, then the blank and the
  * size. 'MAC-4' + Black + S -> 'MAC-4-BL-S'; with no blank, 'MAC-4-S'. Falls
  * back to the fulfilment SKU so the field is never blank.
@@ -117,8 +139,8 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
   const hasBlankOption = optionNames(colourOption).length > 0;
   const skuBase = mfv(node.metafields, 'sku_base');
   const sizeOpt = (node.options || []).find((o) => /size/i.test(o.name));
-  const declaredSizes = optionNames(sizeOpt);
-  const sizeValues = declaredSizes.length ? declaredSizes : SIZES;
+  const sizeValues = optionNames(sizeOpt);
+  const hasSizeOption = sizeValues.length > 0;
   const artist = src.artist || 'Unknown';
 
   const image = img ? img.node.url : '';
@@ -170,9 +192,10 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
     hasBlankOption,
     colours,
     sizeValues,
-    sizes: sizeValues.length
-      ? `${sizeValues[0]}–${sizeValues[sizeValues.length - 1]}`
-      : 'XS–3XL',
+    sizes: hasSizeOption ? `${sizeValues[0]}–${sizeValues[sizeValues.length - 1]}` : '',
+    hasSizeOption,
+    specs: readSpec(node),
+    substrate: mfv(node.metafields, 'substrate', 'cotton'),
     variants,
     defaultVariantId: first ? first.id : null,
     sku: first?.sku ?? '',
