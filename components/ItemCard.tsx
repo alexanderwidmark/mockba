@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { isRestricted } from '@/lib/rights';
 import type { Item } from '@/lib/shopify/types';
 import GarmentPlate from './GarmentPlate';
 import styles from './ItemCard.module.css';
@@ -59,7 +60,7 @@ export default function ItemCard({
         <div className={styles.footer}>
           <span className={styles.price}>{item.price}</span>
           <span className={styles.action}>
-            {live ? 'Consult the item record' : 'Register interest'}
+            {live && !isRestricted(item.rights) ? 'Consult the item record' : 'Register interest'}
           </span>
         </div>
       </div>

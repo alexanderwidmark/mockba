@@ -250,6 +250,16 @@
   color: var(--disabled);
 }
 
+.rightsNote {
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: var(--body);
+  border-left: 2px solid var(--restricted);
+  padding-left: 14px;
+  max-width: 520px;
+  margin-bottom: 24px;
+}
+
 .cartNote {
   font-family: var(--font-mono);
   font-size: 9.5px;

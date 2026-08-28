@@ -3,6 +3,8 @@
 import { revalidatePath } from 'next/cache';
 
 import { addLine, removeLine, updateLine } from '@/lib/shopify/cart';
+import { variantRightsStatus } from '@/lib/shopify/rights-gate';
+import { isRestricted } from '@/lib/rights';
 import { sendContact, sendInterest, mailConfigured } from '@/lib/email';
 
 export type ActionResult = { ok: boolean; message?: string };
@@ -13,6 +15,12 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 export async function addToCart(variantId: string, quantity = 1): Promise<ActionResult> {
   if (!variantId) return { ok: false, message: 'No variant recorded.' };
+
+  // The rights gate is enforced here, not only in the interface.
+  if (isRestricted((await variantRightsStatus(variantId)) ?? '')) {
+    return { ok: false, message: 'This item is not offered while its rights remain restricted.' };
+  }
+
   const cart = await addLine(variantId, quantity);
   if (!cart) return { ok: false, message: 'The cart could not be opened.' };
   revalidatePath('/cart');

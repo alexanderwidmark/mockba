@@ -6,7 +6,7 @@ import { useMemo, useState, useTransition } from 'react';
 
 import { addToCart, registerInterest } from '@/app/actions';
 import { announceCartChange } from '@/lib/cart-client';
-import { rightsColor } from '@/lib/rights';
+import { isRestricted, rightsColor } from '@/lib/rights';
 import { isIssued } from '@/lib/status';
 import type { Item } from '@/lib/shopify/types';
 import GarmentPlate from './GarmentPlate';
@@ -80,7 +80,9 @@ export default function ItemRecord({
 
   const issued = isIssued(seriesStatus);
   const inStock = Boolean(variant?.available);
-  const sellable = live && inStock;
+  /* A restricted work is catalogued and stated, never transacted. */
+  const restricted = isRestricted(item.rights);
+  const sellable = live && inStock && !restricted;
   const price = variant?.price || item.price;
 
   const currency = (variant?.currency || item.currency || 'USD').toLowerCase();
@@ -96,10 +98,14 @@ export default function ItemRecord({
 
   const ctaLabel = sellable
     ? `Add to cart — ${price}`
-    : variant && !inStock
-      ? 'Sold out · register interest'
-      : preorder
-        ? registered
+    : restricted
+      ? registered
+        ? 'Interest recorded'
+        : 'Register interest in this item'
+      : variant && !inStock
+        ? 'Sold out · register interest'
+        : preorder
+          ? registered
           ? 'Reservation recorded'
           : 'Reserve this item'
         : registered
@@ -108,7 +114,9 @@ export default function ItemRecord({
 
   const priceCaption = sellable
     ? `${currency} · ${variant?.title ?? ''}`
-    : issued
+    : restricted
+      ? `${currency} · not offered pending rights review`
+      : issued
       ? `${currency} · ${variant?.title ?? ''}`
       : preorder
         ? `${currency} · charged when the series is issued`
@@ -286,6 +294,13 @@ export default function ItemRecord({
               {ctaLabel}
             </button>
           </div>
+
+          {restricted ? (
+            <div className={styles.rightsNote}>
+              Not offered while the rights record remains restricted. The item is
+              catalogued and its source is stated; interest is entered in the register.
+            </div>
+          ) : null}
 
           {added ? (
             <div className={styles.cartNote}>
