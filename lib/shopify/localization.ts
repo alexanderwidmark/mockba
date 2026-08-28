@@ -26,7 +26,12 @@ const COUNTRIES_QUERY = /* GraphQL */ `
   }
 `;
 
-/** The shop's markets. Changes rarely, so it is held for a day. */
+/**
+ * The shop's markets. Held for an hour: markets change rarely, but until this
+ * refreshes a newly opened market is priced in the shop's own currency while
+ * its checkout charges the local one — the exact mismatch this file exists to
+ * prevent.
+ */
 async function availableCountries(): Promise<string[]> {
   if (!isLive()) return [];
   try {
@@ -37,7 +42,7 @@ async function availableCountries(): Promise<string[]> {
         'X-Shopify-Storefront-Access-Token': SHOPIFY_TOKEN,
       },
       body: JSON.stringify({ query: COUNTRIES_QUERY }),
-      next: { revalidate: 86400, tags: ['localization'] },
+      next: { revalidate: 3600, tags: ['localization'] },
     });
     if (!res.ok) return [];
     const json = (await res.json()) as {
