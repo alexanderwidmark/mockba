@@ -31,6 +31,8 @@ const fromEnv = (key) => {
 const DOMAIN = fromEnv('SHOPIFY_STORE_DOMAIN') || 'ebupet-y0.myshopify.com';
 const TOKEN = fromEnv('SHOPIFY_STOREFRONT_TOKEN');
 const VERSION = fromEnv('SHOPIFY_API_VERSION') || '2026-07';
+/* The query is priced in a market; the primary one will do for a content check. */
+const COUNTRY = fromEnv('VERIFY_COUNTRY') || 'SE';
 const HANDLES = (fromEnv('SHOPIFY_SERIES_HANDLES') || 'validation-drop-001')
   .split(',')
   .map((h) => h.trim())
@@ -91,7 +93,7 @@ async function run(handle) {
   const res = await fetch(`https://${DOMAIN}/api/${VERSION}/graphql.json`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-Shopify-Storefront-Access-Token': TOKEN },
-    body: JSON.stringify({ query: SERIES_QUERY, variables: { handle } }),
+    body: JSON.stringify({ query: SERIES_QUERY, variables: { handle, country: COUNTRY } }),
   });
 
   const text = await res.text();
