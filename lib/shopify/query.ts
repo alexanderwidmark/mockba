@@ -10,9 +10,10 @@
  *   command, contradiction, mechanism, role, colour_map (json),
  *   garment_color, sku_base, spec, substrate, source (-> metaobject `source`)
  *
- * `spec` is the item record's specification table as an ordered list, so an
- * object that is not a garment describes itself instead of inheriting a fit and
- * a weave it does not have. `substrate` is the one word in the plate label.
+ * `spec` overrides the specification table for one product. The table itself
+ * normally comes from the `spec_template` metaobject for the product's Shopify
+ * category, so a medium is described once rather than on every item.
+ * `substrate` is the one word in the plate label.
  *
  * Prices come back in the buyer's market, so the site quotes what the checkout
  * will charge rather than the shop's own currency.
@@ -47,6 +48,9 @@ export const SERIES_QUERY = /* GraphQL */ `
             handle
             title
             availableForSale
+            category {
+              name
+            }
             priceRange {
               minVariantPrice {
                 amount

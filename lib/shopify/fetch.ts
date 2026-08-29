@@ -10,6 +10,7 @@ import {
 } from './config';
 import { buyerCountry } from './localization';
 import { publishedSeriesHandles } from './series-index';
+import { getSpecTemplates } from './spec-templates';
 import { normalizeSeries } from './normalize';
 import { SERIES_QUERY } from './query';
 import { snapshotCollection } from './snapshot';
@@ -58,8 +59,12 @@ async function fetchCollection(handle: string, country: string): Promise<RawColl
 
 /** One series, live if possible and from the snapshot otherwise. */
 export async function getSeries(handle: string, country: string): Promise<Series | null> {
-  const collection = (await fetchCollection(handle, country)) ?? snapshotCollection(handle);
-  return collection ? normalizeSeries(collection) : null;
+  const [collection, templates] = await Promise.all([
+    fetchCollection(handle, country),
+    getSpecTemplates(),
+  ]);
+  const raw = collection ?? snapshotCollection(handle);
+  return raw ? normalizeSeries(raw, templates) : null;
 }
 
 /**

@@ -30,24 +30,6 @@ type Props = {
   preorder: boolean;
 };
 
-/**
- * The specification table for a garment, used when an item does not supply its
- * own. An object that is not a garment sets `mockba.spec` and describes itself
- * instead of inheriting a weave and a fit it does not have.
- *
- * An issued series is taking payment; "TBD after sample" cannot stand beside a
- * charge, so the qualifier is dropped once the series is published as issued.
- */
-const GARMENT_SPECS = (sizes: string, issued: boolean) =>
-  [
-    { k: 'garment', v: 'Heavyweight 220g' },
-    { k: 'fabric', v: '100% combed cotton' },
-    { k: 'fit', v: 'Boxy / relaxed' },
-    { k: 'print', v: issued ? 'DTG' : 'DTG, TBD after sample' },
-    { k: 'placement', v: 'Full front' },
-    ...(sizes ? [{ k: 'sizes', v: sizes }] : []),
-  ];
-
 export default function ItemRecord({
   item,
   seriesHandle,
@@ -231,7 +213,6 @@ export default function ItemRecord({
   const view =
     namedView ?? (plateIndex === 0 ? 'recto' : `plate ${String(plateIndex + 1).padStart(2, '0')}`);
 
-  const specs = item.specs.length ? item.specs : GARMENT_SPECS(item.sizes, issued);
   const total = String(siblings.length).padStart(2, '0');
 
   return (
@@ -435,14 +416,18 @@ export default function ItemRecord({
 
           {error && !registering ? <div className={styles.error}>{error}</div> : null}
 
+          {/* Stated only where there is a table to state; nothing is asserted
+              about an object whose category has no specification template. */}
+          {item.specs.length ? (
           <div className={styles.specs}>
-            {specs.map((s) => (
+            {item.specs.map((s) => (
               <div className={styles.spec} key={s.k}>
                 <div className={styles.specKey}>{s.k}</div>
                 <div className={styles.specValue}>{s.v}</div>
               </div>
             ))}
           </div>
+          ) : null}
 
           <div className={styles.sectionLabel}>Source note</div>
           <div className={styles.sourceTitle}>{item.sourceTitle}</div>

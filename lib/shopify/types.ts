@@ -28,6 +28,8 @@ export type RawProduct = {
   handle: string;
   title: string;
   availableForSale: boolean;
+  /** Shopify's own taxonomy category: 'T-Shirts', 'Tote Bags'. */
+  category: { name: string } | null;
   priceRange: { minVariantPrice: { amount: string; currencyCode: string } } | null;
   images: { edges: { node: { url: string; altText: string | null } }[] } | null;
   /** ProductOption.values was removed from the Storefront schema; read optionValues. */
@@ -118,7 +120,9 @@ export type Item = {
   hasBlankOption: boolean;
   /** Whether the store itself declares sizes. False = no size register. */
   hasSizeOption: boolean;
-  /** The specification table, when the item supplies its own. */
+  /** Shopify's taxonomy category, which selects the specification template. */
+  category: string;
+  /** The resolved specification table: the item's own, or its category's. */
   specs: { k: string; v: string }[];
   /** The material word in the plate label: 'cotton', 'canvas'. */
   substrate: string;

@@ -143,6 +143,7 @@ function specToCollection(entry: SpecEntry): RawCollection {
           handle: it.handle,
           title: it.title,
           availableForSale: variants.some((v) => v.node.availableForSale),
+          category: { name: 'T-Shirts' },
           priceRange: { minVariantPrice: { amount: it.price, currencyCode: 'USD' } },
           images: { edges: [{ node: { url: `/archive/${it.poster}`, altText: it.source.original_title } }] },
           options: [
@@ -158,6 +159,13 @@ function specToCollection(entry: SpecEntry): RawCollection {
             { key: 'colour_map', value: JSON.stringify(colourMap), reference: null },
             { key: 'garment_color', value: it.colours[0]?.garment ?? '#1A1A18', reference: null },
             { key: 'sku_base', value: it.skuBase, reference: null },
+            { key: 'spec', value: JSON.stringify([
+                { k: 'garment', v: 'Heavyweight 220g' },
+                { k: 'fabric', v: '100% combed cotton' },
+                { k: 'fit', v: 'Boxy / relaxed' },
+                { k: 'print', v: 'DTG' },
+                { k: 'placement', v: 'Full front' },
+              ]), reference: null },
             {
               key: 'source',
               value: `gid://shopify/Metaobject/${it.source.id}`,

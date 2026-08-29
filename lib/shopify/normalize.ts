@@ -13,8 +13,10 @@
  *  - Sizes, like blanks, come from the product's own option. An item that
  *    declares none has none; the size register is not rendered rather than
  *    filled with a default range the store never offered.
- *  - `spec` lets an item that is not a garment state its own specification
- *    table instead of inheriting one.
+ *  - The specification table comes from the `spec_template` for the product's
+ *    Shopify category, so a medium is described once. `mockba.spec` overrides
+ *    it for one product. Nothing is stated that is not in the data: an item
+ *    whose category has no template shows no table at all.
  *  - Product image 1 is the garment plate as photographed. A variant may carry
  *    its own image; when it does, choosing a blank changes the plate.
  *  - Which blank a plate shows, and which face it is, are read out of its alt
@@ -166,7 +168,11 @@ const asRisk = (v: string): EnforcementRisk =>
   (RISKS as string[]).includes(v) ? (v as EnforcementRisk) : 'low';
 
 /** Flatten one Storefront product node into what the page renders. */
-export function normalizeProduct(node: RawProduct, i: number): Item {
+export function normalizeProduct(
+  node: RawProduct,
+  i: number,
+  specTemplates: Record<string, { k: string; v: string }[]> = {},
+): Item {
   const src = readSource(node);
   const price = node.priceRange?.minVariantPrice ?? null;
   const img = node.images?.edges?.[0] ?? null;
@@ -175,6 +181,7 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
   const colourOption = (node.options || []).find((o) => /colour|color/i.test(o.name));
   const hasBlankOption = optionNames(colourOption).length > 0;
   const skuBase = mfv(node.metafields, 'sku_base');
+  const category = node.category?.name ?? '';
   const sizeOpt = (node.options || []).find((o) => /size/i.test(o.name));
   const sizeValues = optionNames(sizeOpt);
   const hasSizeOption = sizeValues.length > 0;
@@ -247,7 +254,19 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
     sizeValues,
     sizes: hasSizeOption ? `${sizeValues[0]}–${sizeValues[sizeValues.length - 1]}` : '',
     hasSizeOption,
-    specs: readSpec(node),
+    category,
+    specs: (() => {
+      const own = readSpec(node);
+      const rows = own.length ? own : (specTemplates[category.toLowerCase()] ?? []);
+      if (!rows.length) return [];
+      // The size range is derived per product, so it is never in a template.
+      const sizes = hasSizeOption
+        ? `${sizeValues[0]}–${sizeValues[sizeValues.length - 1]}`
+        : '';
+      return sizes && !rows.some((r) => r.k.toLowerCase() === 'sizes')
+        ? [...rows, { k: 'sizes', v: sizes }]
+        : rows;
+    })(),
     substrate: mfv(node.metafields, 'substrate', 'cotton'),
     variants,
     defaultVariantId: first ? first.id : null,
@@ -266,7 +285,10 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
   };
 }
 
-export function normalizeSeries(collection: RawCollection): Series {
+export function normalizeSeries(
+  collection: RawCollection,
+  specTemplates: Record<string, { k: string; v: string }[]> = {},
+): Series {
   const meta = (k: string) => mfv(collection.metafields, k);
   const edges = collection.products?.edges ?? [];
   return {
@@ -275,6 +297,6 @@ export function normalizeSeries(collection: RawCollection): Series {
     seriesNo: meta('series_no'),
     status: meta('status') || 'release candidate',
     issued: meta('issued'),
-    products: edges.map((e, i) => normalizeProduct(e.node, i)),
+    products: edges.map((e, i) => normalizeProduct(e.node, i, specTemplates)),
   };
 }

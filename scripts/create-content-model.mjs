@@ -47,6 +47,23 @@ const choices = (values) => [{ name: 'choices', value: JSON.stringify(values) }]
  * asks for; they must match exactly or the field reads back empty.
  */
 
+const SPEC_TEMPLATE_FIELDS = [
+  {
+    key: 'category',
+    name: 'Shopify category',
+    type: 'single_line_text_field',
+    required: true,
+    description: "The product category this table applies to, exactly as Shopify names it: 'T-Shirts', 'Tote Bags'.",
+  },
+  {
+    key: 'spec',
+    name: 'Specification table',
+    type: 'json',
+    required: true,
+    description: 'Ordered rows: [{"k":"garment","v":"Heavyweight 220g"}]',
+  },
+];
+
 const SOURCE_FIELDS = [
   { key: 'original_title', name: 'Original title', type: 'single_line_text_field', required: true },
   { key: 'artist', name: 'Artist', type: 'single_line_text_field' },
@@ -109,7 +126,7 @@ const PRODUCT_FIELDS = [
     key: 'spec',
     name: 'Specification',
     type: 'json',
-    description: 'The item record specification table, ordered: [{"k":"material","v":"12 oz cotton canvas"}]. Leave empty on a garment to inherit the garment table.',
+    description: 'Overrides the specification template for this product only. Ordered rows: [{"k":"material","v":"12 oz cotton canvas"}]. Leave empty to inherit the template for the product\'s category.',
   },
   {
     key: 'substrate',
@@ -203,31 +220,31 @@ const record = (what, state, detail = '') => {
   console.log(`  [${mark}] ${what}${detail ? `  — ${detail}` : ''}`);
 };
 
-async function ensureMetaobject() {
-  const existing = await gql(METAOBJECT_BY_TYPE, { type: 'source' });
+async function ensureMetaobject({ type, name, description, displayNameKey, fields }) {
+  const existing = await gql(METAOBJECT_BY_TYPE, { type });
   if (existing?.metaobjectDefinitionByType?.id) {
-    record('metaobject "source"', 'exists');
+    record(`metaobject "${type}"`, 'exists');
     return existing.metaobjectDefinitionByType.id;
   }
 
   const data = await gql(CREATE_METAOBJECT, {
     definition: {
-      type: 'source',
-      name: 'Source',
-      description: 'One archive poster. The MOCKBA intervention is recorded separately on the product.',
-      displayNameKey: 'original_title',
+      type,
+      name,
+      description,
+      displayNameKey,
       access: { storefront: 'PUBLIC_READ' },
-      fieldDefinitions: SOURCE_FIELDS,
+      fieldDefinitions: fields,
     },
   });
 
   const payload = data.metaobjectDefinitionCreate;
   if (payload.userErrors?.length) {
-    record('metaobject "source"', 'failed', payload.userErrors.map((e) => e.message).join('; '));
+    record(`metaobject "${type}"`, 'failed', payload.userErrors.map((e) => e.message).join('; '));
     return null;
   }
-  record('metaobject "source"', 'created');
-  for (const f of SOURCE_FIELDS) console.log(`            field ${f.key}`);
+  record(`metaobject "${type}"`, 'created');
+  for (const f of fields) console.log(`            field ${f.key}`);
   return payload.metaobjectDefinition.id;
 }
 
@@ -281,6 +298,8 @@ if (DRY) {
   console.log(`Would create, in namespace "${NAMESPACE}" on ${DOMAIN}:\n`);
   console.log(`  metaobject "source" with ${SOURCE_FIELDS.length} fields:`);
   for (const f of SOURCE_FIELDS) console.log(`    ${f.key.padEnd(18)} ${f.type}${f.required ? '  (required)' : ''}`);
+  console.log(`\n  metaobject "spec_template" with ${SPEC_TEMPLATE_FIELDS.length} fields:`);
+  for (const f of SPEC_TEMPLATE_FIELDS) console.log(`    ${f.key.padEnd(18)} ${f.type}${f.required ? '  (required)' : ''}`);
   console.log(`\n  collection metafields:`);
   for (const f of COLLECTION_FIELDS) console.log(`    ${f.key.padEnd(18)} ${f.type}`);
   console.log(`\n  product metafields:`);
@@ -292,8 +311,22 @@ if (DRY) {
 TOKEN = await adminToken();
 console.log(`\nStore ${DOMAIN}, API ${VERSION}, namespace "${NAMESPACE}"\n`);
 
-console.log('Metaobject definition');
-const sourceDefinitionId = await ensureMetaobject();
+console.log('Metaobject definitions');
+const sourceDefinitionId = await ensureMetaobject({
+  type: 'source',
+  name: 'Source',
+  description: 'One archive poster. The MOCKBA intervention is recorded separately on the product.',
+  displayNameKey: 'original_title',
+  fields: SOURCE_FIELDS,
+});
+await ensureMetaobject({
+  type: 'spec_template',
+  name: 'Specification template',
+  description:
+    'The item record specification table for one product category. A product may override it with mockba.spec.',
+  displayNameKey: 'category',
+  fields: SPEC_TEMPLATE_FIELDS,
+});
 
 console.log('\nCollection metafields');
 for (const f of COLLECTION_FIELDS) await ensureMetafield('COLLECTION', f);
