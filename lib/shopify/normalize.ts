@@ -17,17 +17,21 @@
  *    table instead of inheriting one.
  *  - Product image 1 is the garment plate as photographed. A variant may carry
  *    its own image; when it does, choosing a blank changes the plate.
- *  - Further plates are only offered where the object has one blank. Shopify
- *    links a single image to a variant, so on a multi-blank product the
- *    remaining images cannot be attributed to a colour — and in practice they
- *    are photographs of one specific colourway. Showing them would put a black
- *    garment under a chip reading Natural.
+ *  - Which blank a plate shows, and which face it is, are read out of its alt
+ *    text: "Public Servant, Natural, verso". Shopify links one image to a
+ *    variant and exposes no other per-image field, so the alt text is the only
+ *    place this can live — and it has to be written anyway. An image naming no
+ *    blank is neutral and shown for every one. Where no alt text names a blank
+ *    the convention is simply not in use, and a multi-blank object falls back
+ *    to its variant image alone rather than pairing a colour with a photograph
+ *    of a different one.
  *  - The archive source and the MOCKBA intervention stay separate fields
  *    throughout; nothing here merges them into one credit line.
  */
 
 import type {
   Colour,
+  Plate,
   EnforcementRisk,
   Item,
   RawCollection,
@@ -81,6 +85,21 @@ function readColourMap(node: RawProduct, fallbackGarment: string): Colour[] {
     const rec = map[name] || {};
     return { name, garment: rec.garment || fallbackGarment };
   });
+}
+
+/** The face named in an alt text, if any. */
+function readView(alt: string): 'recto' | 'verso' | null {
+  if (/\b(verso|back|reverse)\b/i.test(alt)) return 'verso';
+  if (/\b(recto|front)\b/i.test(alt)) return 'recto';
+  return null;
+}
+
+/** The blank named in an alt text, matched against the blanks the store declares. */
+function readPlateColour(alt: string, colours: Colour[]): string | null {
+  const found = colours.find((c) =>
+    new RegExp(`(^|[^\\p{L}])${c.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([^\\p{L}]|$)`, 'iu').test(alt),
+  );
+  return found ? found.name : null;
 }
 
 /**
@@ -205,15 +224,20 @@ export function normalizeProduct(node: RawProduct, i: number): Item {
     availableForSale: Boolean(node.availableForSale),
     image,
     imageAlt,
-    sharedImages: (() => {
-      if (hasBlankOption) return [];
+    plates: (() => {
       const owned = new Set(
         (node.variants?.edges ?? []).map((e) => e.node.image?.url).filter(Boolean) as string[],
       );
-      return (node.images?.edges ?? [])
-        .map((e) => e.node)
-        .filter((n) => !owned.has(n.url))
-        .map((n, i) => ({ url: n.url, alt: usableAlt(n.altText) || `${display}, plate ${i + 2}` }));
+      return (node.images?.edges ?? []).map((e, i): Plate => {
+        const alt = usableAlt(e.node.altText);
+        return {
+          url: e.node.url,
+          alt: alt || `${display}, plate ${i + 1}`,
+          colour: alt ? readPlateColour(alt, colours) : null,
+          view: alt ? readView(alt) : null,
+          variantOwned: owned.has(e.node.url),
+        };
+      });
     })(),
     // First-paint / card mockup values: the default variant's colour.
     garmentColor: first ? first.garmentColor : fallbackGarment,

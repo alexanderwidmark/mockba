@@ -72,6 +72,23 @@ export type Variant = {
   price: string;
 };
 
+/**
+ * One image of the object. Shopify links a single image to a variant and offers
+ * no other per-image field, so which blank a plate shows and which face it is
+ * are read out of the alt text — which has to be written anyway, and which
+ * survives reordering and re-uploading in a way positions do not.
+ */
+export type Plate = {
+  url: string;
+  alt: string;
+  /** The blank this plate shows, when the alt text names one. */
+  colour: string | null;
+  /** The face, when the alt text says. */
+  view: 'recto' | 'verso' | null;
+  /** Whether a variant points at this image. */
+  variantOwned: boolean;
+};
+
 export type RightsStatus = 'cleared' | 'research required' | 'restricted';
 export type EnforcementRisk = 'low' | 'medium' | 'high';
 
@@ -93,8 +110,8 @@ export type Item = {
   /** Product image 1 — the garment plate as photographed. */
   image: string;
   imageAlt: string;
-  /** Images not owned by a variant: further plates of the same object. */
-  sharedImages: { url: string; alt: string }[];
+  /** Every image of the object, annotated from its alt text. */
+  plates: Plate[];
   garmentColor: string;
   garmentName: string;
   /** Whether the store itself declares blanks. False = no blank selector. */

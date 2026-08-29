@@ -182,8 +182,8 @@ async function run(handle) {
     const colourOpt = (p.options ?? []).find((o) => /colour|color/i.test(o.name));
     const sizeOpt = (p.options ?? []).find((o) => /size/i.test(o.name));
     console.log(`  [${colourOpt ? '  ok  ' : ' none '}] colour option   (options: ${names.join(', ')})`);
-    console.log(`  [${tick(Boolean(sizeOpt))}] a size option exists`);
-    if (!sizeOpt) note(scope, 'no Size option on the product');
+    // An object without sizes is a statement about the object, not a fault.
+    console.log(`  [${sizeOpt ? '  ok  ' : ' none '}] size option`);
     if (colourOpt && colourOpt.name !== 'Colour') {
       // Cosmetic: the site matches either spelling, and the fulfilment
       // integration may own this field and rewrite it.
@@ -219,6 +219,27 @@ async function run(handle) {
       }
     }
 
+
+    /* Plates are grouped by what their alt text names, so the alt text is data
+       as well as accessibility. Shopify fills it with the upload's filename. */
+    const images = (p.images?.edges ?? []).map((e) => e.node);
+    const filename = (a) => !a || /^[0-9a-f-]{16,}$/i.test(a.trim()) || /^[\w-]+\.(png|jpe?g|webp|gif|avif)$/i.test(a.trim());
+    const unusable = images.filter((im) => filename(im.altText)).length;
+    const blanks = (colourOpt?.optionValues ?? []).map((v) => v.name);
+    const attributed = images.filter((im) =>
+      blanks.some((b) => new RegExp(`(^|[^\\p{L}])${b}([^\\p{L}]|$)`, 'iu').test(im.altText ?? '')),
+    ).length;
+
+    console.log(`  [${unusable ? ' MISS ' : '  ok  '}] alt text on ${images.length} image(s)${unusable ? `   ${unusable} carry only a filename` : ''}`);
+    if (unusable) {
+      note(scope, `${unusable} image(s) have no alt text beyond the upload filename — a screen reader announces the identifier`);
+    }
+    if (blanks.length) {
+      console.log(`  [${attributed ? '  ok  ' : ' none '}] ${attributed} image(s) name a blank   (plates are grouped by this)`);
+      if (!attributed && images.length > 1) {
+        note(scope, 'no image alt text names a blank, so only the variant image is shown; name the blank and the face, e.g. "Natural, verso"');
+      }
+    }
 
     const img = p.images?.edges?.[0]?.node;
     console.log(`  [${tick(Boolean(img?.url))}] product image 1 (the archive scan)`);

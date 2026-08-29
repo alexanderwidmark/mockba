@@ -193,17 +193,43 @@ export default function ItemRecord({
   };
 
   /**
-   * The selected blank's plate first, then the plates that belong to no variant.
-   * Choosing a blank changes the first plate and leaves the rest standing.
+   * The plates for the selected blank: the ones whose alt text names it, recto
+   * first, then any that name no blank at all.
+   *
+   * Where no alt text names a blank the convention is not in use, and a
+   * multi-blank object shows only its variant image — pairing an unattributed
+   * photograph with a colour chip would show the wrong garment.
    */
   const plates = useMemo(() => {
-    const first = { url: variant?.image || item.image, alt: variant?.imageAlt || item.imageAlt };
-    const seen = new Set([first.url]);
-    return [first, ...item.sharedImages.filter((p) => !seen.has(p.url))].filter((p) => p.url);
-  }, [variant, item]);
+    const anchor = {
+      url: variant?.image || item.image,
+      alt: variant?.imageAlt || item.imageAlt,
+    };
+    const rank = (v: string | null) => (v === 'recto' ? 0 : v === 'verso' ? 1 : 2);
+    const dedupe = (list: { url: string; alt: string }[]) => {
+      const seen = new Set<string>();
+      return list.filter((p) => p.url && !seen.has(p.url) && seen.add(p.url));
+    };
+
+    const attributed = item.plates.some((p) => p.colour);
+    if (attributed) {
+      const mine = item.plates
+        .filter((p) => p.colour?.toLowerCase() === colourName.toLowerCase())
+        .sort((a, b) => rank(a.view) - rank(b.view));
+      const neutral = item.plates.filter((p) => !p.colour);
+      const ordered = dedupe([...mine, ...neutral]);
+      return ordered.length ? ordered : dedupe([anchor]);
+    }
+
+    if (item.hasBlankOption) return dedupe([anchor]);
+    return dedupe([anchor, ...item.plates.filter((p) => !p.variantOwned)]);
+  }, [variant, item, colourName]);
 
   const plate = plates[Math.min(plateIndex, plates.length - 1)] ?? plates[0];
-  const view = plateIndex === 0 ? 'recto' : `plate ${String(plateIndex + 1).padStart(2, '0')}`;
+  /* The label names the face when the alt text does, and never otherwise. */
+  const namedView = item.plates.find((p) => p.url === plate?.url)?.view ?? null;
+  const view =
+    namedView ?? (plateIndex === 0 ? 'recto' : `plate ${String(plateIndex + 1).padStart(2, '0')}`);
 
   const specs = item.specs.length ? item.specs : GARMENT_SPECS(item.sizes, issued);
   const total = String(siblings.length).padStart(2, '0');
