@@ -192,8 +192,10 @@ function compose(product, templates) {
   if (sizes.length) facts.push(`sizes ${sizes[0]}–${sizes[sizes.length - 1]}`);
   if (blanks.length) facts.push(`on ${blanks.join(' and ')}`);
 
-  const spec = facts.length ? `${esc(facts.join(' · '))}. ` : '';
-  paragraphs.push(`${spec}Printed to order; nothing is held in stock.`);
+  /* No closing line: the fulfilment method is stated in the shipping policy,
+     and repeating it on every product is the kind of filler a feed rewards and
+     a reader does not. */
+  if (facts.length) paragraphs.push(`${esc(facts.join(' · '))}.`);
 
   return `${MARKER}\n${paragraphs.map((p) => `<p>${p}</p>`).join('\n')}`;
 }
