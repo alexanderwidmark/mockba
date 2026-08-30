@@ -13,6 +13,19 @@ const OFFICE = process.env.MAIL_TO ?? 'hello@mockba.org';
 
 export const mailConfigured = (): boolean => Boolean(KEY && OFFICE);
 
+/**
+ * A missing key and an unreachable Resend produce the same calm sentence to the
+ * visitor, which is right — but they must not look the same in the logs, where
+ * one is a deployment fault and the other is weather.
+ */
+export function reportMailUnconfigured(where: string): void {
+  const missing = [!KEY && 'RESEND_KEY', !OFFICE && 'MAIL_TO'].filter(Boolean).join(', ');
+  console.error(
+    `[mockba] ${where} refused: mail is not configured. Missing ${missing}. ` +
+      'Environment changes in Vercel do not reach an existing deployment; redeploy after setting it.',
+  );
+}
+
 const client = () => (KEY ? new Resend(KEY) : null);
 
 /** Plain text only — the acknowledgement is a notice, not a marketing email. */

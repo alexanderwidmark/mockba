@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { addLine, removeLine, updateLine } from '@/lib/shopify/cart';
 import { variantRightsStatus } from '@/lib/shopify/rights-gate';
 import { isRestricted } from '@/lib/rights';
-import { sendContact, sendInterest, mailConfigured } from '@/lib/email';
+import { sendContact, sendInterest, mailConfigured, reportMailUnconfigured } from '@/lib/email';
 
 export type ActionResult = { ok: boolean; message?: string };
 
@@ -53,6 +53,7 @@ export async function registerInterest(input: {
 
   if (!mailConfigured()) {
     // The office is not yet reachable; say so rather than claiming an entry.
+    reportMailUnconfigured('register of interest');
     return { ok: false, message: 'The register is not open. Try again shortly.' };
   }
 
@@ -72,6 +73,7 @@ export async function contactOffice(input: {
   if (!input.body.trim()) return { ok: false, message: 'A message is required.' };
 
   if (!mailConfigured()) {
+    reportMailUnconfigured('correspondence');
     return { ok: false, message: 'The office is not reachable. Try again shortly.' };
   }
 
