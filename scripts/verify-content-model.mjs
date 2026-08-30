@@ -212,10 +212,11 @@ async function run(handle) {
 
     for (const name of colourValues) {
       const rec = map[name];
-      const ok = Boolean(rec?.garment && rec?.ink);
+      // Only `garment` is read; `ink` is legacy and drives nothing.
+      const ok = Boolean(rec?.garment);
       console.log(`    [${tick(ok)}] colour_map covers "${name}"`);
       if (!ok) {
-        note(scope, `colour_map has no garment/ink pair for the blank "${name}" — it will fall back`);
+        note(scope, `colour_map has no garment hex for the blank "${name}" — the swatch will fall back`);
       }
     }
 
