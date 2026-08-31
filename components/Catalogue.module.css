@@ -21,14 +21,6 @@
   font-weight: 500;
 }
 
-.priceNote {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 1.6px;
-  text-transform: uppercase;
-  color: var(--mono-2);
-}
-
 /* Rules live on the cells; the container carries only top and left, so a
    partially filled row never shows orphan lines or grey blocks. */
 .grid {
