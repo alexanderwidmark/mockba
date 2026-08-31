@@ -392,6 +392,24 @@ namespace `mockba`: `series_no` (`'001'`), `status`
 `enforcement_risk` (`low` | `medium` | `high`). The two rights fields stay separate
 so a restricted item can be unpublished or region-gated without touching artwork.
 
+**Rights are territorial.** `rights_status` and `enforcement_risk` may each be
+overridden per territory with `_us` and `_eu` suffixed fields —
+`rights_status_us`, `enforcement_risk_us`, `rights_status_eu`,
+`enforcement_risk_eu`. The buyer's country selects the territory (`eu` is the
+life+70 bloc: EEA, UK and Switzerland); anywhere else reads the unsuffixed
+field, which must therefore hold the most restrictive status that applies
+anywhere. The same poster can be out of term in one market and in copyright in
+another — a 1920 work is clear in the US on the 95-year rule while a joint
+author who died in 1962 keeps a European term running to 2032.
+
+The territory fields are optional and the model is backward compatible: a source
+with only the base fields behaves exactly as before. Where a territory value is
+present the item record names it (`cleared in the US / low enforcement risk`);
+where it is not, the value is shown unqualified rather than dressed up as a
+territorial finding. The sale gate in `app/actions.ts` resolves the same fields
+through the same function the page uses, so the published status and the cart
+can never disagree about one item.
+
 Product images: image 1 is the archive poster scan used for the print. Alt text
 carries the original title.
 

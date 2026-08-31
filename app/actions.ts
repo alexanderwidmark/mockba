@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 
 import { addLine, removeLine, updateLine } from '@/lib/shopify/cart';
+import { buyerCountry } from '@/lib/shopify/localization';
 import { variantRightsStatus } from '@/lib/shopify/rights-gate';
 import { isRestricted } from '@/lib/rights';
 import { sendContact, sendInterest, mailConfigured, reportMailUnconfigured } from '@/lib/email';
@@ -16,9 +17,15 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 export async function addToCart(variantId: string, quantity = 1): Promise<ActionResult> {
   if (!variantId) return { ok: false, message: 'No variant recorded.' };
 
-  // The rights gate is enforced here, not only in the interface.
-  if (isRestricted((await variantRightsStatus(variantId)) ?? '')) {
-    return { ok: false, message: 'This item is not offered while its rights remain restricted.' };
+  // The rights gate is enforced here, not only in the interface, and for the
+  // buyer's own territory — a work out of term in one market can be in
+  // copyright in another.
+  const country = await buyerCountry();
+  if (isRestricted((await variantRightsStatus(variantId, country)) ?? '')) {
+    return {
+      ok: false,
+      message: 'This item is not offered for sale in your territory. Its rights position is stated on the item record.',
+    };
   }
 
   const cart = await addLine(variantId, quantity);

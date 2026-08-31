@@ -6,7 +6,7 @@ import { useMemo, useState, useTransition } from 'react';
 
 import { addToCart, registerInterest } from '@/app/actions';
 import { announceCartChange } from '@/lib/cart-client';
-import { isRestricted, rightsColor } from '@/lib/rights';
+import { isRestricted, rightsColor, territoryLabel } from '@/lib/rights';
 import { isIssued } from '@/lib/status';
 import type { Item } from '@/lib/shopify/types';
 import GarmentPlate from './GarmentPlate';
@@ -105,7 +105,7 @@ export default function ItemRecord({
   const priceCaption = sellable
     ? `${currency} · ${variant?.title ?? ''}`
     : restricted
-      ? `${currency} · not offered pending rights review`
+      ? `${currency} · not offered in this territory`
       : issued
       ? `${currency} · ${variant?.title ?? ''}`
       : preorder
@@ -447,8 +447,12 @@ export default function ItemRecord({
             <span className={styles.metaKey}>series</span>
             <span>{seriesTitle}</span>
             <span className={styles.metaKey}>rights</span>
+            {/* Named with its territory only when the source records one, so an
+                unscoped value is not dressed up as a territorial finding. */}
             <span style={{ color: rightsColor(item.rights) }}>
-              {item.rights} / {item.risk} enforcement risk
+              {item.rights}
+              {item.rightsScoped ? ` in the ${territoryLabel(item.rightsTerritory)}` : ''} /{' '}
+              {item.risk} enforcement risk
             </span>
           </div>
         </div>

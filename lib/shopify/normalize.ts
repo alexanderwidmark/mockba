@@ -31,6 +31,7 @@
  *    throughout; nothing here merges them into one credit line.
  */
 
+import { resolveRights, territoryOf } from '../rights';
 import type {
   Colour,
   Plate,
@@ -42,6 +43,7 @@ import type {
   RawVariant,
   RightsStatus,
   Series,
+  Territory,
   Variant,
 } from './types';
 
@@ -172,6 +174,7 @@ export function normalizeProduct(
   node: RawProduct,
   i: number,
   specTemplates: Record<string, { k: string; v: string }[]> = {},
+  territory: Territory = 'row',
 ): Item {
   const src = readSource(node);
   const price = node.priceRange?.minVariantPrice ?? null;
@@ -280,15 +283,24 @@ export function normalizeProduct(
     origin: src.origin || '',
     purpose: src.purpose || '',
     sourceNote: src.source_note || '',
-    rights: asRights(src.rights_status || ''),
-    risk: asRisk(src.enforcement_risk || ''),
+    ...(() => {
+      const r = resolveRights((k) => src[k], territory);
+      return {
+        rights: asRights(r.status),
+        risk: asRisk(r.risk),
+        rightsTerritory: r.territory,
+        rightsScoped: r.scoped,
+      };
+    })(),
   };
 }
 
 export function normalizeSeries(
   collection: RawCollection,
   specTemplates: Record<string, { k: string; v: string }[]> = {},
+  country = '',
 ): Series {
+  const territory = territoryOf(country);
   const meta = (k: string) => mfv(collection.metafields, k);
   const edges = collection.products?.edges ?? [];
   return {
@@ -297,6 +309,6 @@ export function normalizeSeries(
     seriesNo: meta('series_no'),
     status: meta('status') || 'release candidate',
     issued: meta('issued'),
-    products: edges.map((e, i) => normalizeProduct(e.node, i, specTemplates)),
+    products: edges.map((e, i) => normalizeProduct(e.node, i, specTemplates, territory)),
   };
 }

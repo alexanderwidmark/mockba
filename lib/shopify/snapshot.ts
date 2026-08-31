@@ -20,8 +20,22 @@ type SpecSource = {
   year: string;
   origin: string;
   purpose: string;
+  /**
+   * The status that applies everywhere: `row` reads it, and so does any
+   * territory with no value of its own, so it must hold the most restrictive
+   * position that applies anywhere.
+   */
   rights_status: string;
   enforcement_risk: string;
+  /**
+   * Optional per-territory overrides. Set these only to mirror what the source
+   * metaobject in Shopify says — this file is the fallback, and a fallback that
+   * contradicts the live record is worse than one that merely lags it.
+   */
+  rights_status_us?: string;
+  enforcement_risk_us?: string;
+  rights_status_eu?: string;
+  enforcement_risk_eu?: string;
   source_note: string;
 };
 
@@ -172,8 +186,8 @@ function specToCollection(entry: SpecEntry): RawCollection {
               reference: {
                 type: 'source',
                 fields: (Object.keys(it.source) as (keyof SpecSource)[])
-                  .filter((k) => k !== 'id')
-                  .map((k) => ({ key: k as string, value: it.source[k] })),
+                  .filter((k) => k !== 'id' && it.source[k] != null)
+                  .map((k) => ({ key: k as string, value: it.source[k] as string })),
               },
             },
           ],

@@ -64,7 +64,7 @@ export async function getSeries(handle: string, country: string): Promise<Series
     getSpecTemplates(),
   ]);
   const raw = collection ?? snapshotCollection(handle);
-  return raw ? normalizeSeries(raw, templates) : null;
+  return raw ? normalizeSeries(raw, templates, country) : null;
 }
 
 /**

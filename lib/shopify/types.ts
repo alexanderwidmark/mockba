@@ -5,6 +5,10 @@
  * than an undefined at runtime.
  */
 
+import type { Territory } from '../rights';
+
+export type { Territory };
+
 export type RawMetafield = {
   key: string;
   value: string | null;
@@ -147,6 +151,10 @@ export type Item = {
   sourceNote: string;
   rights: RightsStatus;
   risk: EnforcementRisk;
+  /** The territory the two rights fields above describe. */
+  rightsTerritory: Territory;
+  /** True when the source carries a value for this territory specifically. */
+  rightsScoped: boolean;
 };
 
 export type Series = {
