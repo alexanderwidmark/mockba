@@ -2,14 +2,16 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState, useTransition } from 'react';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 
 import { addToCart, registerInterest } from '@/app/actions';
+import { trackMockbaEvent } from '@/lib/analytics-client';
 import { announceCartChange } from '@/lib/cart-client';
 import { isRestricted, rightsColor, territoryLabel } from '@/lib/rights';
 import { isIssued } from '@/lib/status';
 import type { Item } from '@/lib/shopify/types';
 import GarmentPlate from './GarmentPlate';
+import AnalyticsVisibilityEvent from './AnalyticsVisibilityEvent';
 import styles from './ItemRecord.module.css';
 
 /**
@@ -52,6 +54,10 @@ export default function ItemRecord({
   const [error, setError] = useState<string | null>(null);
   const [added, setAdded] = useState(false);
   const [plateIndex, setPlateIndex] = useState(0);
+
+  useEffect(() => {
+    trackMockbaEvent('item_record_view', { item: item.accession });
+  }, [item.accession]);
 
   /* Everything below is derived per render, never stored. */
   const colour = useMemo(
@@ -115,6 +121,12 @@ export default function ItemRecord({
   /* Choosing a blank resets size to that colour's first available size and
      clears any acknowledgement. */
   const pickColour = (name: string) => {
+    const firstForColour =
+      item.variants.find((candidate) => candidate.colourName === name && candidate.available) ??
+      item.variants.find((candidate) => candidate.colourName === name);
+    trackMockbaEvent('variant_select', {
+      selection: `${item.accession}|${name}|${firstForColour?.size ?? ''}`,
+    });
     setColourName(name);
     setSize(null);
     setPlateIndex(0);
@@ -125,6 +137,9 @@ export default function ItemRecord({
   };
 
   const pickSize = (sz: string) => {
+    trackMockbaEvent('variant_select', {
+      selection: `${item.accession}|${colourName}|${sz}`,
+    });
     setSize(sz);
     setRegistered(false);
     setRegistering(false);
@@ -138,6 +153,9 @@ export default function ItemRecord({
       startTransition(async () => {
         const res = await addToCart(variant.id, 1);
         if (res.ok) {
+          trackMockbaEvent('add_to_cart', {
+            selection: `${item.accession}|${variant.accession}`,
+          });
           setAdded(true);
           announceCartChange();
           router.refresh();
@@ -165,6 +183,7 @@ export default function ItemRecord({
         price,
       });
       if (res.ok) {
+        trackMockbaEvent('register_interest', { item: item.accession });
         setRegistered(true);
         setRegistering(false);
         setEmail('');
@@ -432,6 +451,10 @@ export default function ItemRecord({
           <div className={styles.sectionLabel}>Source note</div>
           <div className={styles.sourceTitle}>{item.sourceTitle}</div>
           <p className={styles.sourceNote}>{item.sourceNote}</p>
+          <AnalyticsVisibilityEvent
+            name="source_note_read"
+            detail={{ item: item.accession }}
+          />
 
           <div className={styles.meta}>
             <span className={styles.metaKey}>artist</span>

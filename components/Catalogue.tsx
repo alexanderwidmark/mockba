@@ -1,10 +1,12 @@
 import type { Series } from '@/lib/shopify/types';
+import AnalyticsEvent from './AnalyticsEvent';
 import ItemCard from './ItemCard';
 import styles from './Catalogue.module.css';
 
 export default function Catalogue({ series, live }: { series: Series; live: boolean }) {
   return (
     <section id="drop" className={styles.section}>
+      <AnalyticsEvent name="catalogue_view" />
       <div className={styles.header}>
         <h2 className={styles.heading}>Catalogue of items — {series.title}</h2>
       </div>

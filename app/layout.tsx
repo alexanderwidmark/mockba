@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { IBM_Plex_Mono } from 'next/font/google';
 
 import Footer from '@/components/Footer';
+import WebAnalytics from '@/components/WebAnalytics';
 import '@/styles/globals.css';
 import '@/styles/motion.css';
 
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {children}
         <Footer />
+        <WebAnalytics />
       </body>
     </html>
   );
