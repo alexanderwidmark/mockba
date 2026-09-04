@@ -7,6 +7,14 @@ export type TrafficSource =
 
 const TRAFFIC_SOURCE_KEY = 'mockba:traffic-source';
 
+const isTrafficSource = (value: string | null): value is TrafficSource =>
+  value === 'founder' ||
+  value === 'search' ||
+  value === 'referral' ||
+  value === 'direct' ||
+  value === 'instagram' ||
+  Boolean(value && /^instagram:[AP]\d{2}$/.test(value));
+
 type StorageLike = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
 
 export type MockbaEventName =
@@ -69,8 +77,8 @@ export function resolveTrafficSource(
   storage: StorageLike,
 ): TrafficSource {
   const hasExplicitSource = new URL(href).searchParams.has('utm_source');
-  const stored = storage.getItem(TRAFFIC_SOURCE_KEY) as TrafficSource | null;
-  if (!hasExplicitSource && stored) return stored;
+  const stored = storage.getItem(TRAFFIC_SOURCE_KEY);
+  if (!hasExplicitSource && isTrafficSource(stored)) return stored;
 
   const source = classifyTrafficSource(href, referrer, origin);
   storage.setItem(TRAFFIC_SOURCE_KEY, source);
@@ -80,14 +88,19 @@ export function resolveTrafficSource(
 export function applyAnalyticsControl(href: string, storage: StorageLike) {
   const url = new URL(href);
   const control = url.searchParams.get('mockba_analytics');
-  if (control === 'off') storage.setItem('va-disable', '1');
-  if (control === 'on') storage.removeItem('va-disable');
   if (control) url.searchParams.delete('mockba_analytics');
 
-  return {
-    disabled: Boolean(storage.getItem('va-disable')),
-    cleanHref: url.toString(),
-  };
+  try {
+    if (control === 'off') storage.setItem('va-disable', '1');
+    if (control === 'on') storage.removeItem('va-disable');
+
+    return {
+      disabled: Boolean(storage.getItem('va-disable')),
+      cleanHref: url.toString(),
+    };
+  } catch {
+    return { disabled: true, cleanHref: url.toString() };
+  }
 }
 
 export function buildEventData(source: TrafficSource, detail?: EventDetail) {
@@ -100,13 +113,17 @@ export function sendAnalyticsEvent(
   environment: AnalyticsEnvironment,
   send: AnalyticsSender,
 ) {
-  if (environment.localStorage.getItem('va-disable')) return false;
-  const source = resolveTrafficSource(
-    environment.href,
-    environment.referrer,
-    environment.origin,
-    environment.sessionStorage,
-  );
-  send(name, buildEventData(source, detail));
-  return true;
+  try {
+    if (environment.localStorage.getItem('va-disable')) return false;
+    const source = resolveTrafficSource(
+      environment.href,
+      environment.referrer,
+      environment.origin,
+      environment.sessionStorage,
+    );
+    send(name, buildEventData(source, detail));
+    return true;
+  } catch {
+    return false;
+  }
 }

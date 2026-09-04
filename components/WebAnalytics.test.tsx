@@ -43,6 +43,8 @@ describe('WebAnalytics', () => {
     );
 
     await waitFor(() => expect(order).toEqual(['analytics-init', 'page-event']));
+    expect(injectAnalytics.mock.calls[0]?.[0]).not.toHaveProperty('disableAutoTrack');
+    expect(analyticsComponent).not.toHaveBeenCalled();
   });
 
   it('does not mount Vercel Analytics after this device is disabled', async () => {
@@ -53,5 +55,62 @@ describe('WebAnalytics', () => {
     expect(injectAnalytics).not.toHaveBeenCalled();
     expect(analyticsComponent).not.toHaveBeenCalled();
     expect(location.search).toBe('?utm_source=founder');
+  });
+
+  it('fails closed when browser storage is unavailable during initialization', () => {
+    const original = Object.getOwnPropertyDescriptor(window, 'localStorage');
+    Object.defineProperty(window, 'localStorage', {
+      configurable: true,
+      get: () => {
+        throw new Error('storage access denied');
+      },
+    });
+
+    try {
+      expect(() => render(React.createElement(WebAnalytics))).not.toThrow();
+      expect(injectAnalytics).not.toHaveBeenCalled();
+      expect(analyticsComponent).not.toHaveBeenCalled();
+    } finally {
+      if (original) Object.defineProperty(window, 'localStorage', original);
+    }
+  });
+
+  it('drops an event when the beforeSend storage check throws', async () => {
+    render(React.createElement(WebAnalytics));
+    await waitFor(() => expect(injectAnalytics).toHaveBeenCalled());
+
+    const props = injectAnalytics.mock.calls[0]?.[0] as unknown as {
+      beforeSend: (event: unknown) => unknown;
+    };
+
+    const getItem = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('storage access denied');
+    });
+
+    try {
+      expect(props.beforeSend({ type: 'pageview' })).toBeNull();
+    } finally {
+      getItem.mockRestore();
+    }
+  });
+
+  it('keeps surrounding product UI mounted when SDK initialization throws', () => {
+    injectAnalytics.mockImplementation(() => {
+      throw new Error('analytics SDK unavailable');
+    });
+
+    expect(() =>
+      render(
+        React.createElement(
+          React.Fragment,
+          null,
+          React.createElement('button', null, 'Add to cart'),
+          React.createElement(WebAnalytics),
+        ),
+      ),
+    ).not.toThrow();
+
+    expect(document.body.textContent).toContain('Add to cart');
+    expect(analyticsComponent).not.toHaveBeenCalled();
   });
 });

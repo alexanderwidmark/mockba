@@ -60,6 +60,16 @@ describe('resolveTrafficSource', () => {
       ),
     ).toBe('instagram:A01');
   });
+
+  it('rejects a PII-like stored source and replaces it with a safe bucket', () => {
+    const storage = memoryStorage();
+    storage.setItem('mockba:traffic-source', 'person@example.com');
+
+    expect(
+      resolveTrafficSource('https://mockba.org/catalogue', '', 'https://mockba.org', storage),
+    ).toBe('direct');
+    expect(storage.getItem('mockba:traffic-source')).toBe('direct');
+  });
 });
 
 describe('applyAnalyticsControl', () => {
@@ -83,6 +93,27 @@ describe('applyAnalyticsControl', () => {
 
     expect(result.disabled).toBe(false);
     expect(storage.getItem('va-disable')).toBeNull();
+  });
+
+  it('fails closed when local storage throws', () => {
+    const storage = {
+      getItem: () => {
+        throw new Error('storage unavailable');
+      },
+      setItem: () => {
+        throw new Error('storage unavailable');
+      },
+      removeItem: () => {
+        throw new Error('storage unavailable');
+      },
+    };
+
+    expect(
+      applyAnalyticsControl('https://mockba.org/?mockba_analytics=off', storage),
+    ).toEqual({
+      disabled: true,
+      cleanHref: 'https://mockba.org/',
+    });
   });
 });
 
@@ -143,5 +174,74 @@ describe('sendAnalyticsEvent', () => {
     expect(calls).toEqual([
       ['item_record_view', { source: 'founder', item: 'MAC-12' }],
     ]);
+  });
+
+  it('fails closed when the local storage getter throws', () => {
+    const calls: unknown[] = [];
+
+    const sent = sendAnalyticsEvent(
+      'item_record_view',
+      { item: 'MAC-12' },
+      {
+        href: 'https://mockba.org/',
+        referrer: '',
+        origin: 'https://mockba.org',
+        localStorage: {
+          ...memoryStorage(),
+          getItem: () => {
+            throw new Error('local storage unavailable');
+          },
+        },
+        sessionStorage: memoryStorage(),
+      },
+      (...args: unknown[]) => void calls.push(args),
+    );
+
+    expect(sent).toBe(false);
+    expect(calls).toEqual([]);
+  });
+
+  it('fails closed when session storage throws', () => {
+    const calls: unknown[] = [];
+
+    const sent = sendAnalyticsEvent(
+      'item_record_view',
+      { item: 'MAC-12' },
+      {
+        href: 'https://mockba.org/',
+        referrer: '',
+        origin: 'https://mockba.org',
+        localStorage: memoryStorage(),
+        sessionStorage: {
+          ...memoryStorage(),
+          getItem: () => {
+            throw new Error('session storage unavailable');
+          },
+        },
+      },
+      (...args: unknown[]) => void calls.push(args),
+    );
+
+    expect(sent).toBe(false);
+    expect(calls).toEqual([]);
+  });
+
+  it('does not propagate sender failures into the product flow', () => {
+    const sent = sendAnalyticsEvent(
+      'add_to_cart',
+      { item: 'MAC-12' },
+      {
+        href: 'https://mockba.org/?utm_source=founder',
+        referrer: '',
+        origin: 'https://mockba.org',
+        localStorage: memoryStorage(),
+        sessionStorage: memoryStorage(),
+      },
+      () => {
+        throw new Error('analytics sender unavailable');
+      },
+    );
+
+    expect(sent).toBe(false);
   });
 });

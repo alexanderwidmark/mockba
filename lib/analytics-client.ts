@@ -11,16 +11,20 @@ import {
 export function trackMockbaEvent(name: MockbaEventName, detail?: EventDetail) {
   if (typeof window === 'undefined') return false;
 
-  return sendAnalyticsEvent(
-    name,
-    detail,
-    {
-      href: window.location.href,
-      referrer: document.referrer,
-      origin: window.location.origin,
-      localStorage: window.localStorage,
-      sessionStorage: window.sessionStorage,
-    },
-    (eventName, data) => track(eventName, data),
-  );
+  try {
+    return sendAnalyticsEvent(
+      name,
+      detail,
+      {
+        href: window.location.href,
+        referrer: document.referrer,
+        origin: window.location.origin,
+        localStorage: window.localStorage,
+        sessionStorage: window.sessionStorage,
+      },
+      (eventName, data) => track(eventName, data),
+    );
+  } catch {
+    return false;
+  }
 }

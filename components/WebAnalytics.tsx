@@ -1,33 +1,36 @@
 'use client';
 
 import { inject } from '@vercel/analytics';
-import { Analytics, type BeforeSendEvent } from '@vercel/analytics/next';
-import { createElement, useLayoutEffect, useState } from 'react';
+import type { BeforeSendEvent } from '@vercel/analytics/next';
+import { useLayoutEffect } from 'react';
 
 import { applyAnalyticsControl } from '../lib/analytics';
 
-const blockDisabledEvent = (event: BeforeSendEvent) =>
-  window.localStorage.getItem('va-disable') ? null : event;
+const blockDisabledEvent = (event: BeforeSendEvent) => {
+  try {
+    return window.localStorage.getItem('va-disable') ? null : event;
+  } catch {
+    return null;
+  }
+};
 
 export default function WebAnalytics() {
-  const [enabled, setEnabled] = useState(false);
-
   useLayoutEffect(() => {
-    const result = applyAnalyticsControl(window.location.href, window.localStorage);
-    if (result.cleanHref !== window.location.href) {
-      window.history.replaceState(window.history.state, '', result.cleanHref);
-    }
-    if (result.disabled) return;
+    try {
+      const result = applyAnalyticsControl(window.location.href, window.localStorage);
+      if (result.cleanHref !== window.location.href) {
+        window.history.replaceState(window.history.state, '', result.cleanHref);
+      }
+      if (result.disabled) return;
 
-    inject({
-      beforeSend: blockDisabledEvent,
-      disableAutoTrack: true,
-      framework: 'next',
-    });
-    setEnabled(true);
+      inject({
+        beforeSend: blockDisabledEvent,
+        framework: 'next',
+      });
+    } catch {
+      return;
+    }
   }, []);
 
-  if (!enabled) return null;
-
-  return createElement(Analytics, { beforeSend: blockDisabledEvent });
+  return null;
 }
