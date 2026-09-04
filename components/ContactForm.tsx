@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 
 import { contactOffice } from '@/app/actions';
+import { trackMockbaEvent } from '@/lib/analytics-client';
 import styles from './ContactForm.module.css';
 
 export default function ContactForm() {
@@ -20,7 +21,10 @@ export default function ContactForm() {
         subject: String(data.get('subject') ?? ''),
         body: String(data.get('body') ?? ''),
       });
-      if (res.ok) setSent(true);
+      if (res.ok) {
+        trackMockbaEvent('contact_submit');
+        setSent(true);
+      }
       else setError(res.message ?? 'The message could not be delivered.');
     });
   };

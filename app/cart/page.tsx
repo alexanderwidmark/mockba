@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { dropLineForm, setLineQuantityForm } from '@/app/actions';
 import Masthead from '@/components/Masthead';
+import TrackedCheckoutLink from '@/components/TrackedCheckoutLink';
 import { getCart } from '@/lib/shopify/cart';
 import { getSeriesContext } from '@/lib/shopify/fetch';
 import styles from './Cart.module.css';
@@ -87,9 +88,9 @@ export default async function CartPage() {
                 <div className={styles.subtotalKey}>subtotal · before shipping and tax</div>
                 <div className={styles.subtotal}>{cart.subtotal}</div>
               </div>
-              <a href={cart.checkoutUrl} className={styles.checkout}>
+              <TrackedCheckoutLink href={cart.checkoutUrl} className={styles.checkout}>
                 Proceed to checkout
-              </a>
+              </TrackedCheckoutLink>
             </div>
           </>
         )}

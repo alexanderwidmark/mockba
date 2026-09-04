@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import Masthead from '@/components/Masthead';
+import AnalyticsEvent from '@/components/AnalyticsEvent';
 import { getPolicies, getPolicy } from '@/lib/shopify/policies';
 import { getSeriesContext } from '@/lib/shopify/fetch';
 import styles from './Policy.module.css';
@@ -29,6 +30,7 @@ export default async function PolicyPage({ params }: { params: Promise<{ handle:
 
   return (
     <>
+      <AnalyticsEvent name="policy_view" detail={{ policy: policy.handle }} />
       <Masthead series={series} />
       <section className={styles.section}>
         <div className={styles.eyebrow}>Office of Public Information</div>
