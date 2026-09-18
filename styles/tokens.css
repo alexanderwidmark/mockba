@@ -7,21 +7,21 @@
  */
 :root {
   /* Paper and panels */
-  --paper: #efece3;
-  --plate: #dcd5c4;
+  --paper: #edede8;
+  --plate: #d7d7d0;
 
   /* Ink */
-  --ink: #1a1a17;
-  --body: #45423a;
-  --label: #5f5a4e;
-  --mono-2: #6b675c;
-  --disabled: #8b8578;
+  --ink: #121210;
+  --body: #3a3a35;
+  --label: #55554c;
+  --mono-2: #64645b;
+  --disabled: #8a8a80;
 
   /* Rules */
-  --rule: #1a1a17;
-  --hairline: #cfc9ba;
-  --swatch-edge: #b4ae9e;
-  --link-edge: #b9b3a3;
+  --rule: #121210;
+  --hairline: #c7c7be;
+  --swatch-edge: #acaba0;
+  --link-edge: #b0afa3;
 
   /* Print simulation */
   --print-backing: #14130f;
@@ -31,10 +31,10 @@
   --sub-ink-light: #b9b4a8;
 
   /* Status */
-  --accent: #8a1e14;
-  --restricted: #8a1e14;
-  --research: #8a6a16;
-  --cleared: #4f6b3f;
+  --accent: #7c1911;
+  --restricted: #7c1911;
+  --research: #7c5f14;
+  --cleared: #46603a;
 
   --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 

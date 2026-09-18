@@ -422,13 +422,41 @@ but move the query server-side anyway.
 
 ## Design tokens
 
-Colours:
+Colours (revised 2026-09 — "Dossier grey": cooler and higher-contrast than the
+original archive-paper palette below, on the client's explicit direction that
+the original read as too soft/warm for the message and the intervention. This
+table is the current canonical source, superseding the original prototype
+values; the token names in `styles/tokens.css` did not change, only the hex
+values):
+
+| value | use |
+|---|---|
+| `#EDEDE8` | paper / page background |
+| `#D7D7D0` | plate panel (garment stage) |
+| `#E6E2D6` | lighter panel, legacy — avoid |
+| `#121210` | primary ink, hairline rules, inverted button fill |
+| `#3A3A35` | body copy |
+| `#55554C` | plate/fig labels, table keys |
+| `#64645B` | mono secondary, eyebrows |
+| `#8A8A80` | disabled (struck-through sizes) |
+| `#C7C7BE` | hairline rule, secondary borders |
+| `#ACABA0` | swatch border |
+| `#14130F` | print backing on dark blanks (legacy — unused; see Capabilities and Constraints in `PRODUCT.md`) |
+| `#7C1911` | accent (oxblood) / restricted / out of stock |
+| `#7C5F14` | rights: research required |
+| `#46603A` | rights: cleared / in stock |
+| `#171512` | dark ink on light blanks (legacy — unused) |
+| `#F1EDE3` | light ink on dark blanks (legacy — unused) |
+| `#E8E3D6` | bone blank |
+| `#1A1A18` | black blank |
+
+<details>
+<summary>Original prototype palette (superseded, kept for reference)</summary>
 
 | value | use |
 |---|---|
 | `#EFECE3` | paper / page background |
 | `#DCD5C4` | plate panel (garment stage) |
-| `#E6E2D6` | lighter panel, legacy — avoid |
 | `#1A1A17` | primary ink, hairline rules, inverted button fill |
 | `#45423A` | body copy |
 | `#5F5A4E` | plate/fig labels, table keys |
@@ -436,14 +464,11 @@ Colours:
 | `#8B8578` | disabled (struck-through sizes) |
 | `#CFC9BA` | hairline rule, secondary borders |
 | `#B4AE9E` | swatch border |
-| `#14130F` | print backing on dark blanks |
 | `#8A1E14` | accent (oxblood) / restricted / out of stock |
 | `#8A6A16` | rights: research required |
 | `#4F6B3F` | rights: cleared / in stock |
-| `#171512` | dark ink on light blanks |
-| `#F1EDE3` | light ink on dark blanks |
-| `#E8E3D6` | bone blank |
-| `#1A1A18` | black blank |
+
+</details>
 
 Typography: **IBM Plex Mono** only — weights 400 / 500 / 600. No serif, no second
 family, and **no italics anywhere** (both were tried and rejected).
