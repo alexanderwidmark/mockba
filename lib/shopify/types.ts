@@ -118,6 +118,12 @@ export type Item = {
   imageAlt: string;
   /** Every image of the object, annotated from its alt text. */
   plates: Plate[];
+  /**
+   * The plate a catalogue card reveals on hover — the next one after `image`
+   * for the blank the card shows. Null where the alt-text convention cannot
+   * say which garment a second photograph is of.
+   */
+  secondPlate: { url: string; alt: string } | null;
   garmentColor: string;
   garmentName: string;
   /** Whether the store itself declares blanks. False = no blank selector. */

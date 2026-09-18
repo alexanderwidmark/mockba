@@ -30,7 +30,12 @@ export default function ItemCard({
     >
       <div className={styles.plate}>
         <span className={styles.fig}>Fig. {item.no}</span>
-        <GarmentPlate className={styles.mockup} image={item.image} imageAlt={item.imageAlt} />
+        <GarmentPlate
+          className={styles.mockup}
+          image={item.image}
+          imageAlt={item.imageAlt}
+          secondImage={item.secondPlate?.url}
+        />
       </div>
 
       <div className={styles.body}>

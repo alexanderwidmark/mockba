@@ -29,6 +29,41 @@
     drop-shadow(0 3px 7px rgba(26, 26, 23, 0.16));
 }
 
+/**
+ * The second plate, stacked on the first and revealed by an ancestor setting
+ * `--plate-face` to 1. A custom property is what lets the catalogue card own
+ * the hover while the plate owns the drawing, across a module boundary.
+ *
+ * The two faces cross-fade rather than layering, because both plates are
+ * transparent PNGs: leaving the first at full opacity underneath shows one
+ * garment through the other. At rest `--plate-face` is 0 and the resting DOM
+ * is the first plate at full strength — nothing is hidden or displaced.
+ */
+.image {
+  opacity: calc(1 - var(--plate-face, 0));
+}
+
+.second {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: var(--plate-face, 0);
+  filter: drop-shadow(0 0 0.6px rgba(26, 26, 23, 0.55))
+    drop-shadow(0 3px 7px rgba(26, 26, 23, 0.16));
+}
+
+/* Motion is opt-in, as everywhere else in the build. Under reduced motion the
+   plates still swap — instantly, which is the point. */
+@media (prefers-reduced-motion: no-preference) {
+  .image,
+  .second {
+    transition: opacity 180ms linear;
+  }
+}
+
 /* No image on the record: state the absence rather than leaving a blank panel. */
 .absent {
   font-family: var(--font-mono);

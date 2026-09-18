@@ -245,6 +245,56 @@ export function normalizeProduct(
 
   const first = variants.find((v) => v.available) ?? variants[0] ?? null;
 
+  const plates: Plate[] = (() => {
+    const owned = new Set(
+      (node.variants?.edges ?? []).map((e) => e.node.image?.url).filter(Boolean) as string[],
+    );
+    return (node.images?.edges ?? []).map((e, n): Plate => {
+      const alt = usableAlt(e.node.altText);
+      return {
+        url: e.node.url,
+        alt: alt || `${display}, plate ${n + 1}`,
+        colour: alt ? readPlateColour(alt, colours) : null,
+        view: alt ? readView(alt) : null,
+        variantOwned: owned.has(e.node.url),
+      };
+    });
+  })();
+
+  /**
+   * The plate a card reveals on hover: the next one after the plate it shows,
+   * for the blank the card shows.
+   *
+   * It follows the same alt-text rule as the item record rather than taking
+   * image 2 blindly. Image 2 is often the archive scan or a photograph of a
+   * different blank, and revealing either on hover would claim the wrong thing
+   * about the garment. Where the convention is not in use there is no second
+   * plate and the card simply does not react.
+   */
+  const secondPlate: { url: string; alt: string } | null = (() => {
+    const rank = (v: Plate['view']) => (v === 'recto' ? 0 : v === 'verso' ? 1 : 2);
+    const shownColour = (first ? first.colourName : (colours[0]?.name ?? '')).toLowerCase();
+
+    let ordered: { url: string; alt: string }[];
+    if (plates.some((p) => p.colour)) {
+      ordered = [
+        ...plates
+          .filter((p) => p.colour?.toLowerCase() === shownColour)
+          .sort((a, b) => rank(a.view) - rank(b.view)),
+        ...plates.filter((p) => !p.colour),
+      ];
+    } else if (hasBlankOption) {
+      // Blanks are declared but no alt text names one: pairing an unattributed
+      // photograph with this card's colour would show a different garment.
+      return null;
+    } else {
+      ordered = plates.filter((p) => !p.variantOwned);
+    }
+
+    const next = ordered.find((p) => p.url && p.url !== image);
+    return next ? { url: next.url, alt: next.alt } : null;
+  })();
+
   return {
     no: String(i + 1).padStart(2, '0'),
     id: node.id,
@@ -259,21 +309,8 @@ export function normalizeProduct(
     availableForSale: Boolean(node.availableForSale),
     image,
     imageAlt,
-    plates: (() => {
-      const owned = new Set(
-        (node.variants?.edges ?? []).map((e) => e.node.image?.url).filter(Boolean) as string[],
-      );
-      return (node.images?.edges ?? []).map((e, i): Plate => {
-        const alt = usableAlt(e.node.altText);
-        return {
-          url: e.node.url,
-          alt: alt || `${display}, plate ${i + 1}`,
-          colour: alt ? readPlateColour(alt, colours) : null,
-          view: alt ? readView(alt) : null,
-          variantOwned: owned.has(e.node.url),
-        };
-      });
-    })(),
+    plates,
+    secondPlate,
     // First-paint / card mockup values: the default variant's colour.
     garmentColor: first ? first.garmentColor : fallbackGarment,
     garmentName: first ? first.colourName : (colours[0]?.name ?? ''),

@@ -12,6 +12,25 @@
   border-bottom-color: var(--hairline);
 }
 
+/**
+ * Hovering or tabbing to a card turns its plate to the second face. The card
+ * owns the trigger because the whole card is the link; the plate owns the
+ * drawing. `--plate-face` inherits across that boundary, so neither module has
+ * to reach into the other.
+ *
+ * Guarded on `hover: hover` so a touch device never lands in a stuck state,
+ * and paired with `:focus-visible` so the keyboard sees what the mouse sees.
+ */
+@media (hover: hover) {
+  .card:hover {
+    --plate-face: 1;
+  }
+}
+
+.card:focus-visible {
+  --plate-face: 1;
+}
+
 .plate {
   position: relative;
   aspect-ratio: 4/5;
