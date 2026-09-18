@@ -22,6 +22,16 @@
   border-right: none;
 }
 
+/* Below one cell per row, the sticky masthead's own height is what's on
+   screen for the whole session — four full paddings stay pinned forever, not
+   just at first paint. Tighter padding keeps every cell present per spec
+   without permanently spending a quarter of a phone viewport on chrome. */
+@media (max-width: 640px) {
+  .cell {
+    padding: 8px 16px;
+  }
+}
+
 .title {
   color: var(--ink);
   font-weight: 600;

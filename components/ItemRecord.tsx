@@ -9,6 +9,7 @@ import { trackMockbaEvent } from '@/lib/analytics-client';
 import { announceCartChange } from '@/lib/cart-client';
 import { isRestricted, rightsColor, territoryLabel } from '@/lib/rights';
 import { isIssued } from '@/lib/status';
+import { currencyHasSymbol } from '@/lib/shopify/normalize';
 import type { Item } from '@/lib/shopify/types';
 import GarmentPlate from './GarmentPlate';
 import AnalyticsVisibilityEvent from './AnalyticsVisibilityEvent';
@@ -82,6 +83,11 @@ export default function ItemRecord({
   const price = variant?.price || item.price;
 
   const currency = (variant?.currency || item.currency || 'USD').toLowerCase();
+  // A symbol currency ($, €, £) doesn't spell its name in the price, so the
+  // caption states it. A code currency (SEK, and most others) already prints
+  // its code inline in the price — see formatMoney — so the caption drops it
+  // rather than repeating "sek" directly underneath "SEK 432".
+  const currencyLabel = currencyHasSymbol(currency.toUpperCase()) ? currency : null;
 
   // A tracked count of 0 on a sellable variant means inventory is not tracked,
   // not that the shelf is empty. Stating "0 units recorded" beside "available"
@@ -108,15 +114,17 @@ export default function ItemRecord({
           ? 'Interest recorded'
           : 'Register interest in this item';
 
+  const currencyPrefix = currencyLabel ? `${currencyLabel} · ` : '';
+
   const priceCaption = sellable
-    ? `${currency} · ${variant?.title ?? ''}`
+    ? `${currencyPrefix}${variant?.title ?? ''}`
     : restricted
-      ? `${currency} · not offered in this territory`
+      ? `${currencyPrefix}not offered in this territory`
       : issued
-      ? `${currency} · ${variant?.title ?? ''}`
+      ? `${currencyPrefix}${variant?.title ?? ''}`
       : preorder
-        ? `${currency} · charged when the series is issued`
-        : `${currency} test price · not yet fixed`;
+        ? `${currencyPrefix}charged when the series is issued`
+        : `${currencyLabel ? `${currencyLabel} ` : ''}test price · not yet fixed`;
 
   /* Choosing a blank resets size to that colour's first available size and
      clears any acknowledgement. */

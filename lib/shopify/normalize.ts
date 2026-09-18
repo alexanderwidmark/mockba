@@ -143,11 +143,36 @@ const optionNames = (opt: { optionValues: { name: string }[] } | undefined): str
 const optValue = (variant: RawVariant, re: RegExp): string =>
   (variant.selectedOptions || []).find((x) => re.test(x.name))?.value ?? '';
 
+/**
+ * Whole units always, regardless of currency: the register states prices as
+ * $49 / $54 / $59, never to the cent, and a converted price like 432.12 SEK
+ * reads as bookkeeping precision the institutional register doesn't claim.
+ */
 export function formatMoney(amount: string | number, currency: string): string {
   const n = Number(amount);
-  const sym = currency === 'USD' ? '$' : currency === 'EUR' ? '€' : currency === 'GBP' ? '£' : '';
-  const body = Number.isInteger(n) ? String(n) : n.toFixed(2);
-  return sym ? sym + body : `${body} ${currency}`;
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+    currencyDisplay: 'narrowSymbol',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(n);
+}
+
+/**
+ * True when the currency renders as a distinct symbol ($, €, £) rather than
+ * falling back to its ISO code inline in the price — SEK, for one, has no
+ * symbol Intl will use here, so formatMoney already prints "SEK 432" and a
+ * caption prefixing "sek ·" would repeat it right underneath.
+ */
+export function currencyHasSymbol(currency: string): boolean {
+  const parts = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+    currencyDisplay: 'narrowSymbol',
+  }).formatToParts(0);
+  const shown = parts.find((p) => p.type === 'currency')?.value ?? '';
+  return shown.toUpperCase() !== currency.toUpperCase();
 }
 
 const asRights = (v: string): RightsStatus =>

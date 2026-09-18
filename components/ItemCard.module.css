@@ -111,6 +111,7 @@
   font-family: var(--font-mono);
   font-size: 14px;
   color: var(--ink);
+  white-space: nowrap;
 }
 
 .action {
