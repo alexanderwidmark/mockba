@@ -18,7 +18,8 @@ export default function HomeView({
   live: boolean;
 }) {
   const hero = series.products[0];
-  /* Not every object has sizes; the note quotes the first one that does. */
+  /* Not every object has sizes; the note quotes the first one that does, and
+     takes that object's specification with it rather than restating it. */
   const sizedItem = series.products.find((p) => p.hasSizeOption);
 
   return (
@@ -29,7 +30,11 @@ export default function HomeView({
       <Catalogue series={series} live={live} />
       <Statement />
       <SourceRegister items={series.products} />
-      <PublicNotes status={series.status} sizes={sizedItem?.sizes ?? ''} />
+      <PublicNotes
+        status={series.status}
+        sizes={sizedItem?.sizes ?? ''}
+        specs={sizedItem?.specs ?? []}
+      />
       <EntryMotion />
     </>
   );

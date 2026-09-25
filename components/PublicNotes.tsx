@@ -1,3 +1,4 @@
+import { garmentClause, type Spec } from '@/lib/garment-clause';
 import { isIssued } from '@/lib/status';
 import styles from './Sections.module.css';
 
@@ -11,7 +12,7 @@ import styles from './Sections.module.css';
  * payment, those hedges would contradict the transaction, so they are dropped
  * rather than left standing.
  */
-const NOTES = (status: string, sizes: string) => [
+const NOTES = (status: string, sizes: string, specs: Spec[]) => [
   {
     q: 'What is MOCKBA?',
     a: 'An art collective using historical propaganda to examine contemporary propaganda. Every item starts from a documented archive source and adds a contemporary intervention. The two layers are always recorded separately.',
@@ -23,9 +24,7 @@ const NOTES = (status: string, sizes: string) => [
   {
     q: 'What is it printed on?',
     a: [
-      sizes
-        ? `Garments are midweight 180g, 100% cotton, relaxed fit, sizes ${sizes}, printed full front.`
-        : 'Every object is printed full front.',
+      garmentClause(specs, sizes),
       'Each item record states the specification for that object.',
       isIssued(status)
         ? ''
@@ -54,12 +53,21 @@ const NOTES = (status: string, sizes: string) => [
   },
 ];
 
-export default function PublicNotes({ status, sizes }: { status: string; sizes: string }) {
+export default function PublicNotes({
+  status,
+  sizes,
+  specs,
+}: {
+  status: string;
+  sizes: string;
+  /** The specification of the object the note quotes — its category's template. */
+  specs: Spec[];
+}) {
   return (
     <section className={`${styles.section} ${styles.last}`}>
       <div className={styles.eyebrow}>Notes for the public</div>
       <div className={styles.notes}>
-        {NOTES(status, sizes).map((n) => (
+        {NOTES(status, sizes, specs).map((n) => (
           <div className={styles.note} key={n.q}>
             <div className={styles.question}>{n.q}</div>
             <div className={styles.answer}>{n.a}</div>
