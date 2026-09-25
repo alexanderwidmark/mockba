@@ -60,7 +60,7 @@ const SPEC_TEMPLATE_FIELDS = [
     name: 'Specification table',
     type: 'json',
     required: true,
-    description: 'Ordered rows: [{"k":"garment","v":"Heavyweight 220g"}]',
+    description: 'Ordered rows: [{"k":"garment","v":"Midweight 180g"}]',
   },
 ];
 

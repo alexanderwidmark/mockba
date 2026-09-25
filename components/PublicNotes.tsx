@@ -24,7 +24,7 @@ const NOTES = (status: string, sizes: string) => [
     q: 'What is it printed on?',
     a: [
       sizes
-        ? `Garments are heavyweight 220g, 100% combed cotton, boxy relaxed fit, sizes ${sizes}, printed full front.`
+        ? `Garments are midweight 180g, 100% cotton, relaxed fit, sizes ${sizes}, printed full front.`
         : 'Every object is printed full front.',
       'Each item record states the specification for that object.',
       isIssued(status)

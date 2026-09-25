@@ -290,9 +290,11 @@ separately, which lets them overlap.
 - Spec table: grid `repeat(auto-fit, minmax(150px, 1fr))`, border-top/left on the
   grid and border-right/bottom on each cell, `margin: 30px 0`, cells
   `padding: 13px 15px`. Key mono `9px` / `1.8px` uppercase `#5F5A4E`, `mb 6px`;
-  value mono `11.5px` `#1A1A17`. Rows: garment `Heavyweight 220g` · fabric
-  `100% combed cotton` · fit `Boxy / relaxed` · print `DTG, TBD after sample` ·
-  placement `Full front` · sizes `{range}`.
+  value mono `11.5px` `#1A1A17`. Rows: garment `Midweight 180g` · fabric
+  `100% cotton (preshrunk jersey knit)` · fit `relaxed` · print `DTG` ·
+  placement `Full front` · sizes `{range}`. The rows themselves now come from
+  the `spec_template` metaobject for the product's category, not from the code;
+  these are the values that template carries.
 - Source note: eyebrow `Source note`; original title `14.5px`, `line-height: 1.6`,
   `#1A1A17`, `mb 12px`; note `13.5px`, `line-height: 1.9`, `#45423A`,
   `max-width: 580px`, `mb 30px`.

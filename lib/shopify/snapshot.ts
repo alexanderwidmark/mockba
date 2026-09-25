@@ -174,9 +174,9 @@ function specToCollection(entry: SpecEntry): RawCollection {
             { key: 'garment_color', value: it.colours[0]?.garment ?? '#1A1A18', reference: null },
             { key: 'sku_base', value: it.skuBase, reference: null },
             { key: 'spec', value: JSON.stringify([
-                { k: 'garment', v: 'Heavyweight 220g' },
-                { k: 'fabric', v: '100% combed cotton' },
-                { k: 'fit', v: 'Boxy / relaxed' },
+                { k: 'garment', v: 'Midweight 180g' },
+                { k: 'fabric', v: '100% cotton (preshrunk jersey knit)' },
+                { k: 'fit', v: 'relaxed' },
                 { k: 'print', v: 'DTG' },
                 { k: 'placement', v: 'Full front' },
               ]), reference: null },
