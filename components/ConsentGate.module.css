@@ -1,0 +1,169 @@
+/**
+ * The notice of measurement.
+ *
+ * Built in the same language as the masthead and the footer: a register of
+ * cells on paper, separated by hairlines, carried by a full-strength rule.
+ * There is no overlay and no dimmed page behind it — the document is never
+ * obscured by a thing asking it a question, and this system has no modal.
+ *
+ * It is `position: fixed`, so it displaces nothing: the resting DOM stays the
+ * correct laid-out state whether the notice is shown or not.
+ */
+.notice {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 95;
+  background: var(--paper);
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  max-height: 100dvh;
+  overflow-y: auto;
+}
+
+.statement {
+  padding: 16px 4vw 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 10px 40px;
+  align-items: baseline;
+}
+
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--mono-2);
+}
+
+.body {
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: var(--body);
+  max-width: 620px;
+  margin: 0;
+}
+
+/* The actions carry no hierarchy. Refusing is exactly as easy as permitting,
+   which is both the rule and the house style. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--hairline);
+  border-left: 1px solid var(--hairline);
+}
+
+.action {
+  flex: 1 1 auto;
+  text-align: center;
+  padding: 13px 20px;
+  border-right: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.action:hover,
+.action:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ── The expanded register ────────────────────────────────────────────────── */
+
+.register {
+  border-top: 1px solid var(--rule);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 10px 40px;
+  align-items: center;
+  padding: 16px 4vw;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.rowKey {
+  font-size: 9.5px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--label);
+  margin-bottom: 8px;
+}
+
+.rowBody {
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: var(--body);
+  margin: 0;
+}
+
+.switch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(64px, 1fr));
+  border-top: 1px solid var(--hairline);
+  border-left: 1px solid var(--hairline);
+  max-width: 200px;
+  justify-self: start;
+}
+
+.state {
+  text-align: center;
+  padding: 10px 6px;
+  border-right: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+
+.state:hover,
+.state:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.stateSelected {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* Essential is stated, not offered. It reads as a value in a register rather
+   than as a control, because it is not one. */
+.fixed {
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--mono-2);
+  justify-self: start;
+  padding: 10px 0;
+}
+
+/* ── The reopen control, in the footer colophon ───────────────────────────── */
+
+.reopen {
+  font-family: var(--font-mono);
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: var(--mono-2);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--hairline);
+  padding: 0;
+}
+
+.reopen:hover,
+.reopen:focus-visible {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}

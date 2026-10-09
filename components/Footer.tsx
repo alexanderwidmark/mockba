@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { getPolicies } from '@/lib/shopify/policies';
+import { ConsentReopen } from './ConsentGate';
 import styles from './Footer.module.css';
 
 /**
@@ -32,6 +33,7 @@ export default async function Footer() {
         <Link href="/contact" className={styles.link}>
           Contact the office
         </Link>
+        <ConsentReopen />
       </div>
     </footer>
   );

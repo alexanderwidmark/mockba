@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { IBM_Plex_Mono } from 'next/font/google';
 
+import ConsentGate from '@/components/ConsentGate';
 import Footer from '@/components/Footer';
 import WebAnalytics from '@/components/WebAnalytics';
 import '@/styles/globals.css';
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {children}
         <Footer />
+        <ConsentGate />
         <WebAnalytics />
       </body>
     </html>
