@@ -8,34 +8,40 @@
 }
 
 /**
- * The register of written policies, in the same language as the series index:
- * a label cell, then one cell per policy, separated by hairlines. A flat row of
- * links would wrap into a heap once the shipping policy and the legal notice
- * are written; cells wrap into a grid.
+ * The register of written policies: a label cell, then one cell per policy.
+ *
+ * This said "cells wrap into a grid" while being a wrapping flex row, and a
+ * wrapping flex row is not a grid — cells took their own content's width, so
+ * six policies on a phone came out as a ragged block with a short right edge
+ * and hairline stubs hanging off the end of every row. It is a real grid now,
+ * built the way every other register here is: rules on the cells, top and left
+ * on the container, so a partly filled last row shows no orphan line.
  */
 .policies {
-  display: flex;
-  flex-wrap: wrap;
-  border-bottom: 1px solid var(--hairline);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 175px), 1fr));
+  border-top: 1px solid var(--hairline);
+  border-left: 1px solid var(--hairline);
 }
 
 .label {
-  padding: 11px 20px;
+  padding: 13px 20px;
   border-right: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
   color: var(--label);
 }
 
 .policy {
-  padding: 11px 20px;
+  padding: 13px 20px;
   border-right: 1px solid var(--hairline);
-  border-bottom: none;
+  border-bottom: 1px solid var(--hairline);
   color: var(--mono-2);
 }
 
 .policy:hover {
   background: var(--ink);
   color: var(--paper);
-  border-bottom: none;
+  border-bottom-color: var(--hairline);
 }
 
 /* The colophon keeps the four specified items and stays one line of record. */
@@ -50,7 +56,11 @@
   color: var(--ink);
 }
 
+/* 14px of text was 14px of target. The underline stays on the text; the
+   padding is what the thumb gets. */
 .link {
+  display: inline-block;
+  padding: 9px 0;
   color: var(--mono-2);
   border-bottom: 1px solid var(--hairline);
 }

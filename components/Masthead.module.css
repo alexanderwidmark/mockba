@@ -23,25 +23,46 @@
 }
 
 /**
- * Below four cells per row the bar stops being sticky.
+ * On a phone the bar was four stacked rows — 117px, 14% of the screen, and 40%
+ * of it once the notice of measurement was up too. It is two rows here.
  *
- * Measured on a 375px screen it is four stacked rows, 117px, 14% of the
- * viewport — held there for the whole session, and 40% of the screen once the
- * notice of measurement is also up. Sticky is worth that on a desktop row of
- * 37px. It is not worth it here: this bar states facts about the document
- * rather than carrying navigation, and every fact in it is restated in the
- * register below. It scrolls away and the document gets its screen back.
- *
- * Nothing is hidden to achieve it. All five cells stay, in order, for every
- * reader at every width.
+ * The line of the office is the only cell carrying no data, and it already
+ * stands in the page title, so it is the one that steps aside; the three that
+ * are facts about the document stay. A narrower track lets two cells share a
+ * row at 375px.
  */
-@media (max-width: 880px) {
+@media (max-width: 879px) {
   .masthead {
-    position: static;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 165px), 1fr));
+  }
+
+  .office {
+    display: none;
+  }
+
+  /* The wordmark needs 192px of the 187px a half-width track gives it, and
+     broke onto two lines for the sake of five. It takes the row. */
+  .title {
+    grid-column: 1 / -1;
+    border-right: none;
+  }
+
+  /* Hidden on the way down, back on the way up. Set by script, so with no JS
+     the bar simply stays where the document put it. */
+  .masthead[data-hidden='true'] {
+    transform: translateY(-100%);
   }
 }
 
-/* Tighter padding keeps every cell present per spec without spending the top
+/* Motion is opt-in, as everywhere else. Under reduced motion the bar still
+   steps aside — instantly, which is the point. */
+@media (prefers-reduced-motion: no-preference) {
+  .masthead {
+    transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+/* Tighter padding keeps every remaining cell present without spending the top
    of a phone screen on chrome before the document has said anything. */
 @media (max-width: 640px) {
   .cell {

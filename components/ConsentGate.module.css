@@ -159,7 +159,9 @@
   background: transparent;
   border: none;
   border-bottom: 1px solid var(--hairline);
-  padding: 0;
+  /* Matches the colophon's links: the underline sits on the text, the padding
+     is what a thumb gets. */
+  padding: 9px 0;
 }
 
 .reopen:hover,

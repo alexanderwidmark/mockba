@@ -55,6 +55,10 @@
 .register {
   border-top: 1px solid var(--rule);
   max-width: 560px;
+  /* The prose and the document's record of itself are different registers and
+     stacked they ran together. The rule separates them; this gives the rule
+     room to be seen. */
+  margin-top: 8px;
 }
 
 .row {
@@ -106,6 +110,22 @@
   justify-content: center;
   padding: 6vh 3vw 4vh;
   background: var(--plate);
+}
+
+/**
+ * The hero plate and the first catalogue card are the same photograph of the
+ * same object — the hero IS item 01.
+ *
+ * Beside the text that is a frontispiece. Stacked, it is the same shirt twice
+ * inside a screen of itself, and it costs half a phone screen to say it. The
+ * catalogue carries the object a few hundred pixels below, so on one column
+ * the plate steps aside and the title block is what it is on a phone: the
+ * document stating its own terms.
+ */
+@media (max-width: 919px) {
+  .plate {
+    display: none;
+  }
 }
 
 .plateLabel {
