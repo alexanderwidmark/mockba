@@ -22,10 +22,27 @@
   border-right: none;
 }
 
-/* Below one cell per row, the sticky masthead's own height is what's on
-   screen for the whole session — four full paddings stay pinned forever, not
-   just at first paint. Tighter padding keeps every cell present per spec
-   without permanently spending a quarter of a phone viewport on chrome. */
+/**
+ * Below four cells per row the bar stops being sticky.
+ *
+ * Measured on a 375px screen it is four stacked rows, 117px, 14% of the
+ * viewport — held there for the whole session, and 40% of the screen once the
+ * notice of measurement is also up. Sticky is worth that on a desktop row of
+ * 37px. It is not worth it here: this bar states facts about the document
+ * rather than carrying navigation, and every fact in it is restated in the
+ * register below. It scrolls away and the document gets its screen back.
+ *
+ * Nothing is hidden to achieve it. All five cells stay, in order, for every
+ * reader at every width.
+ */
+@media (max-width: 880px) {
+  .masthead {
+    position: static;
+  }
+}
+
+/* Tighter padding keeps every cell present per spec without spending the top
+   of a phone screen on chrome before the document has said anything. */
 @media (max-width: 640px) {
   .cell {
     padding: 8px 16px;

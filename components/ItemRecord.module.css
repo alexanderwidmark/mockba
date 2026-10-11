@@ -15,10 +15,51 @@
   border-bottom-color: var(--hairline);
 }
 
+/**
+ * The record is a head, a plate panel and the rest, in that source order.
+ *
+ * Stacked, the plate panel was 74% of a phone screen, and the work's name, its
+ * price and its one action all sat a screen and a half beneath it — a reader
+ * met a garment in full screen without being told what it was called. The head
+ * is its own grid child now, before the plate, so a narrow screen reads: what
+ * this is, then the object, then the record.
+ *
+ * This is the one grid in the build placed by media query rather than
+ * collapsing on its own. `auto-fit` can give the two-column arrangement or the
+ * stacked order, not both: wide, the plate spans two rows on the left while the
+ * head sits above the record on the right, and that is explicit placement.
+ */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 430px), 1fr));
+  grid-template-columns: 1fr;
   border-bottom: 1px solid var(--rule);
+}
+
+.head {
+  padding: 30px 4vw 0;
+}
+
+@media (min-width: 860px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .platePanel {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  .head {
+    grid-column: 2;
+    grid-row: 1;
+    padding: 6vh 4vw 0;
+    border-left: 1px solid var(--hairline);
+  }
+
+  .record {
+    grid-column: 2;
+    grid-row: 2;
+  }
 }
 
 /* ── Left plate panel ─────────────────────────────────────────────────────── */
@@ -31,7 +72,13 @@
   justify-content: flex-start;
   padding: 54px 3vw 4vh;
   background: var(--plate);
-  min-height: 74vh;
+}
+
+/* A tall column only means something beside a column that scrolls past it. */
+@media (min-width: 860px) {
+  .platePanel {
+    min-height: 74vh;
+  }
 }
 
 .fig {
@@ -47,14 +94,24 @@
 
 /* One sticky wrapper around plate + caption. Two sticky siblings overlap. */
 .sticky {
-  position: sticky;
-  top: 90px;
   width: 82%;
   max-width: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 18px;
+}
+
+/**
+ * Stacked, the panel gave the plate about 130px of travel — and stuck it 27px
+ * under the masthead, because this offset was written for a desktop bar of one
+ * row and a phone's is 117px of four. It sticks where it was meant to.
+ */
+@media (min-width: 860px) {
+  .sticky {
+    position: sticky;
+    top: 90px;
+  }
 }
 
 .mockup {
@@ -111,7 +168,7 @@
 /* ── Right column ─────────────────────────────────────────────────────────── */
 
 .record {
-  padding: 6vh 4vw;
+  padding: 0 4vw 6vh;
   border-left: 1px solid var(--hairline);
 }
 

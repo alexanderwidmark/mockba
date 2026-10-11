@@ -5,8 +5,10 @@ import CartCell from './CartCell';
 import styles from './Masthead.module.css';
 
 /**
- * The document bar. Persistent on both views, sticky at the top.
- * Series number, status and revision come from collection metafields.
+ * The document bar. Present on both views; sticky at the top where it is one
+ * row, and static below 880px where it is four and the screen is small enough
+ * for that to matter. Series number, status and revision come from collection
+ * metafields.
  */
 export default function Masthead({ series }: { series: Series | null }) {
   const seriesLabel = `Series ${series?.seriesNo || '001'} / ${series?.status ?? ''}`;

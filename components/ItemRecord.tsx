@@ -249,6 +249,17 @@ export default function ItemRecord({
       </Link>
 
       <div className={styles.grid}>
+        {/* Before the plate in source order: stacked, a reader meets the name
+            of the work before a screen-high photograph of it. */}
+        <header className={styles.head}>
+          <div className={styles.accession}>
+            Item record {item.no} / {total} · {variant?.accession || item.accession}
+          </div>
+
+          <h1 className={styles.command}>{item.title}</h1>
+          <div className={styles.contradiction}>{item.secondary}</div>
+        </header>
+
         <div className={styles.platePanel}>
           <div className={styles.fig}>
             Fig. {item.no} — {view}
@@ -286,13 +297,6 @@ export default function ItemRecord({
         </div>
 
         <div className={styles.record}>
-          <div className={styles.accession}>
-            Item record {item.no} / {total} · {variant?.accession || item.accession}
-          </div>
-
-          <h1 className={styles.command}>{item.title}</h1>
-          <div className={styles.contradiction}>{item.secondary}</div>
-
           <div className={styles.variants}>
             {item.hasBlankOption ? (
               <>
