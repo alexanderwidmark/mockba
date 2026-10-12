@@ -5,10 +5,11 @@
 
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 3px;
+  font-size: var(--reg-eyebrow-size);
+  letter-spacing: var(--reg-eyebrow-track);
+  font-weight: var(--reg-eyebrow-weight);
   text-transform: uppercase;
-  color: var(--mono-2);
+  color: var(--ink);
   margin-bottom: 26px;
 }
 

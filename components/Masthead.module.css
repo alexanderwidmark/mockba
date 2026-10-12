@@ -7,8 +7,9 @@
   background: var(--paper);
   border-bottom: 1px solid var(--rule);
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 1.6px;
+  font-size: var(--reg-frame-size);
+  letter-spacing: var(--reg-frame-track);
+  font-weight: var(--reg-frame-weight);
   text-transform: uppercase;
 }
 

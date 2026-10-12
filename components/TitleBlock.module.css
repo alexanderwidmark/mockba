@@ -17,10 +17,11 @@
 
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 3px;
+  font-size: var(--reg-eyebrow-size);
+  letter-spacing: var(--reg-eyebrow-track);
+  font-weight: var(--reg-eyebrow-weight);
   text-transform: uppercase;
-  color: var(--mono-2);
+  color: var(--ink);
   margin-bottom: 30px;
 }
 
@@ -72,10 +73,11 @@
 }
 
 .key {
-  font-size: 9.5px;
-  letter-spacing: 1.6px;
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
   text-transform: uppercase;
-  color: var(--mono-2);
+  color: var(--label);
   padding-top: 2px;
 }
 
@@ -89,8 +91,9 @@
 
 .consult {
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 2.2px;
+  font-size: var(--reg-action-size);
+  letter-spacing: var(--reg-action-track);
+  font-weight: var(--reg-action-weight);
   text-transform: uppercase;
   color: var(--ink);
   border-bottom: 1px solid var(--ink);
@@ -133,8 +136,9 @@
   top: 18px;
   left: 20px;
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 2px;
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
   text-transform: uppercase;
   color: var(--label);
 }
@@ -157,8 +161,9 @@
   padding-top: 12px;
   border-top: 1px solid var(--hairline);
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 1.4px;
+  font-size: var(--reg-frame-size);
+  letter-spacing: var(--reg-frame-track);
+  font-weight: var(--reg-frame-weight);
   text-transform: uppercase;
   color: var(--mono-2);
   display: flex;

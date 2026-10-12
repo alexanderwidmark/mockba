@@ -46,8 +46,9 @@
   top: 13px;
   left: 14px;
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 2px;
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
   text-transform: uppercase;
   color: var(--label);
 }
@@ -66,8 +67,9 @@
 
 .accession {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 1.8px;
+  font-size: var(--reg-frame-size);
+  letter-spacing: var(--reg-frame-track);
+  font-weight: var(--reg-frame-weight);
   text-transform: uppercase;
   color: var(--mono-2);
   margin-bottom: 12px;
@@ -103,8 +105,9 @@
 }
 
 .metaKey {
-  font-size: 9px;
-  letter-spacing: 1.4px;
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
   text-transform: uppercase;
   color: var(--label);
 }
@@ -133,10 +136,17 @@
   white-space: nowrap;
 }
 
+/**
+ * The card's hint, not the record's action — the whole card is the link, and
+ * this label only says what pressing it leads to. It takes the action
+ * register's weight and ink but the frame's size and tracking: at 2.4px it no
+ * longer fits beside a price inside a 290px track.
+ */
 .action {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 1.8px;
+  font-size: var(--reg-frame-size);
+  letter-spacing: var(--reg-frame-track);
+  font-weight: var(--reg-action-weight);
   text-transform: uppercase;
   padding: 9px 15px;
   border: 1px solid var(--ink);

@@ -38,6 +38,43 @@
 
   --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
+  /**
+   * The four registers.
+   *
+   * The small uppercase register did four jobs — the document's frame, a
+   * section announcing itself, the key half of a pair, and a thing you can
+   * press — across sixteen settings between 9px and 11.5px, every one of them
+   * weight 400. The differences were half a pixel and two tenths of tracking.
+   * Nobody could see them, and stacked on a phone they read as one ribbon.
+   *
+   * Four now, and weight carries the separation: it was the one lever the
+   * build never used, with 400/500/600 already loaded. Three sizes instead of
+   * six. Tracking means something — the wider it is, the more the text is
+   * announcing rather than labelling.
+   *
+   * One family, one palette, all still capitals. Nothing new was added to say
+   * it.
+   */
+  --reg-frame-size: 10px;
+  --reg-frame-track: 1.6px;
+  --reg-frame-weight: 400;
+
+  --reg-eyebrow-size: 11px;
+  --reg-eyebrow-track: 3.4px;
+  --reg-eyebrow-weight: 500;
+
+  --reg-key-size: 9px;
+  --reg-key-track: 1.4px;
+  --reg-key-weight: 400;
+
+  /* 10px, not the 11px first proposed: at 11/2.4 the three actions on the
+     notice of measurement wrap at 375px, and the record's action has a price
+     beside it. Tracking, weight and ink already separate it from the frame
+     three times over. */
+  --reg-action-size: 10px;
+  --reg-action-track: 2.4px;
+  --reg-action-weight: 500;
+
   /* The garment lifted off the panel. The only shadow in the design. */
   --garment-shadow: drop-shadow(0 0 0.6px rgba(26, 26, 23, 0.55))
     drop-shadow(0 3px 7px rgba(26, 26, 23, 0.16));

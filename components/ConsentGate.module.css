@@ -31,10 +31,11 @@
 }
 
 .eyebrow {
-  font-size: 10px;
-  letter-spacing: 3px;
+  font-size: var(--reg-eyebrow-size);
+  letter-spacing: var(--reg-eyebrow-track);
+  font-weight: var(--reg-eyebrow-weight);
   text-transform: uppercase;
-  color: var(--mono-2);
+  color: var(--ink);
 }
 
 .body {
@@ -63,8 +64,9 @@
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 2px;
+  font-size: var(--reg-action-size);
+  letter-spacing: var(--reg-action-track);
+  font-weight: var(--reg-action-weight);
   text-transform: uppercase;
 }
 
@@ -90,8 +92,9 @@
 }
 
 .rowKey {
-  font-size: 9.5px;
-  letter-spacing: 1.8px;
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
   text-transform: uppercase;
   color: var(--label);
   margin-bottom: 8px;
@@ -121,8 +124,9 @@
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 1.6px;
+  font-size: var(--reg-frame-size);
+  letter-spacing: var(--reg-frame-track);
+  font-weight: var(--reg-frame-weight);
   text-transform: uppercase;
 }
 
@@ -140,8 +144,9 @@
 /* Essential is stated, not offered. It reads as a value in a register rather
    than as a control, because it is not one. */
 .fixed {
-  font-size: 10px;
-  letter-spacing: 1.6px;
+  font-size: var(--reg-frame-size);
+  letter-spacing: var(--reg-frame-track);
+  font-weight: var(--reg-frame-weight);
   text-transform: uppercase;
   color: var(--mono-2);
   justify-self: start;

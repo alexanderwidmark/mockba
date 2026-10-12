@@ -67,10 +67,11 @@
 /* No image on the record: state the absence rather than leaving a blank panel. */
 .absent {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 1.8px;
+  font-size: var(--reg-frame-size);
+  letter-spacing: var(--reg-frame-track);
+  font-weight: var(--reg-frame-weight);
   text-transform: uppercase;
-  color: var(--label);
+  color: var(--mono-2);
   text-align: center;
   padding: 0 12px;
 }

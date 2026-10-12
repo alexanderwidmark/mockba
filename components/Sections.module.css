@@ -9,10 +9,11 @@
 
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 3px;
+  font-size: var(--reg-eyebrow-size);
+  letter-spacing: var(--reg-eyebrow-track);
+  font-weight: var(--reg-eyebrow-weight);
   text-transform: uppercase;
-  color: var(--mono-2);
+  color: var(--ink);
   margin-bottom: 26px;
 }
 
@@ -46,6 +47,12 @@
   margin-bottom: 26px;
 }
 
+/**
+ * Outside the four registers on purpose. Those govern labels; this is a
+ * sentence, and a sentence at an eyebrow's 3.4px of tracking is unreadable.
+ * Its accent rule is what separates it, and no other element in the build
+ * carries one.
+ */
 .callout {
   border-left: 2px solid var(--accent);
   padding-left: 16px;
@@ -72,8 +79,9 @@
 
 .itemLabel {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 1.8px;
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
   text-transform: uppercase;
   color: var(--label);
   margin-bottom: 10px;
@@ -96,8 +104,9 @@
 }
 
 .metaKey {
-  font-size: 9px;
-  letter-spacing: 1.4px;
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
   text-transform: uppercase;
   color: var(--label);
 }

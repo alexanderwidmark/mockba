@@ -2,8 +2,9 @@
   padding: 14px 4vw;
   border-bottom: 1px solid var(--hairline);
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 1.8px;
+  font-size: var(--reg-frame-size);
+  letter-spacing: var(--reg-frame-track);
+  font-weight: var(--reg-frame-weight);
   text-transform: uppercase;
   color: var(--mono-2);
   display: block;
@@ -86,8 +87,9 @@
   top: 18px;
   left: 20px;
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 2px;
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
   text-transform: uppercase;
   color: var(--label);
 }
@@ -159,8 +161,9 @@
   padding-top: 12px;
   border-top: 1px solid var(--hairline);
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 1.4px;
+  font-size: var(--reg-frame-size);
+  letter-spacing: var(--reg-frame-track);
+  font-weight: var(--reg-frame-weight);
   text-transform: uppercase;
   color: var(--mono-2);
 }
@@ -174,8 +177,9 @@
 
 .accession {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 2.4px;
+  font-size: var(--reg-frame-size);
+  letter-spacing: var(--reg-frame-track);
+  font-weight: var(--reg-frame-weight);
   text-transform: uppercase;
   color: var(--mono-2);
   margin-bottom: 22px;
@@ -207,8 +211,9 @@
 }
 
 .optionLabel {
-  font-size: 9.5px;
-  letter-spacing: 2px;
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
   text-transform: uppercase;
   color: var(--label);
   margin-bottom: 10px;
@@ -228,8 +233,9 @@
   padding: 8px 13px 8px 9px;
   border: 1px solid var(--hairline);
   color: var(--mono-2);
-  font-size: 10px;
-  letter-spacing: 1.6px;
+  font-size: var(--reg-frame-size);
+  letter-spacing: var(--reg-frame-track);
+  font-weight: var(--reg-frame-weight);
   text-transform: uppercase;
 }
 
@@ -254,8 +260,9 @@
 }
 
 .stock {
-  font-size: 9.5px;
-  letter-spacing: 1.6px;
+  font-size: var(--reg-frame-size);
+  letter-spacing: var(--reg-frame-track);
+  font-weight: var(--reg-frame-weight);
   text-transform: uppercase;
 }
 
@@ -305,8 +312,9 @@
 
 .priceCaption {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 1.8px;
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
   text-transform: uppercase;
   color: var(--label);
 }
@@ -318,8 +326,9 @@
 .cta {
   display: inline-block;
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 2.4px;
+  font-size: var(--reg-action-size);
+  letter-spacing: var(--reg-action-track);
+  font-weight: var(--reg-action-weight);
   text-transform: uppercase;
   padding: 16px 30px;
   border: 1px solid var(--ink);
@@ -355,8 +364,9 @@
 
 .cartNote {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 1.8px;
+  font-size: var(--reg-frame-size);
+  letter-spacing: var(--reg-frame-track);
+  font-weight: var(--reg-frame-weight);
   text-transform: uppercase;
   color: var(--mono-2);
   margin-bottom: 24px;
@@ -377,10 +387,11 @@
 
 .panelEyebrow {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 2px;
+  font-size: var(--reg-eyebrow-size);
+  letter-spacing: var(--reg-eyebrow-track);
+  font-weight: var(--reg-eyebrow-weight);
   text-transform: uppercase;
-  color: var(--mono-2);
+  color: var(--ink);
   margin-bottom: 12px;
 }
 
@@ -404,8 +415,9 @@
   border-bottom: 1px solid var(--hairline);
   padding: 10px 14px;
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 1.2px;
+  font-size: var(--reg-frame-size);
+  letter-spacing: var(--reg-frame-track);
+  font-weight: var(--reg-frame-weight);
   text-transform: uppercase;
   color: var(--body);
 }
@@ -441,8 +453,9 @@
 
 .submit {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 2px;
+  font-size: var(--reg-action-size);
+  letter-spacing: var(--reg-action-track);
+  font-weight: var(--reg-action-weight);
   text-transform: uppercase;
   padding: 13px 20px;
   border: 1px solid var(--ink);
@@ -457,8 +470,9 @@
 
 .error {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 1.4px;
+  font-size: var(--reg-frame-size);
+  letter-spacing: var(--reg-frame-track);
+  font-weight: var(--reg-frame-weight);
   text-transform: uppercase;
   color: var(--restricted);
 }
@@ -482,8 +496,9 @@
 }
 
 .specKey {
-  font-size: 9px;
-  letter-spacing: 1.8px;
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
   text-transform: uppercase;
   color: var(--label);
   margin-bottom: 6px;
@@ -496,10 +511,11 @@
 
 .sectionLabel {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 2.4px;
+  font-size: var(--reg-eyebrow-size);
+  letter-spacing: var(--reg-eyebrow-track);
+  font-weight: var(--reg-eyebrow-weight);
   text-transform: uppercase;
-  color: var(--mono-2);
+  color: var(--ink);
   margin-bottom: 14px;
 }
 
@@ -530,8 +546,9 @@
 }
 
 .metaKey {
-  font-size: 9px;
-  letter-spacing: 1.4px;
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
   text-transform: uppercase;
   color: var(--label);
 }

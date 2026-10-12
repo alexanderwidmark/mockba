@@ -5,10 +5,11 @@
 
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 3px;
+  font-size: var(--reg-eyebrow-size);
+  letter-spacing: var(--reg-eyebrow-track);
+  font-weight: var(--reg-eyebrow-weight);
   text-transform: uppercase;
-  color: var(--mono-2);
+  color: var(--ink);
   margin-bottom: 26px;
 }
 
@@ -46,8 +47,9 @@
 .label {
   display: block;
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 2px;
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
   text-transform: uppercase;
   color: var(--label);
   margin-bottom: 8px;
@@ -74,8 +76,9 @@
 
 .submit {
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 2.4px;
+  font-size: var(--reg-action-size);
+  letter-spacing: var(--reg-action-track);
+  font-weight: var(--reg-action-weight);
   text-transform: uppercase;
   padding: 16px 30px;
   border: 1px solid var(--ink);
@@ -96,8 +99,9 @@
 
 .status {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 1.6px;
+  font-size: var(--reg-frame-size);
+  letter-spacing: var(--reg-frame-track);
+  font-weight: var(--reg-frame-weight);
   text-transform: uppercase;
   margin-top: 16px;
 }
