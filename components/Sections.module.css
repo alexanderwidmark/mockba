@@ -120,24 +120,49 @@
 
 /* ── Notes for the public ─────────────────────────────────────────────────── */
 
+/**
+ * The notes were a list of rows with a hairline between them — the one place
+ * on the site built as rows rather than as cells. They are a register like
+ * everything else here, so they are cut like one: rules on the cells, top and
+ * left on the container, and a partly filled last row showing no orphan line.
+ *
+ * Capped at two columns of readable measure rather than filling the section.
+ * Prose at this size wants about fifty characters a line; the catalogue can
+ * run full width because its cells hold an object, not an argument.
+ */
 .notes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
   border-top: 1px solid var(--rule);
-  max-width: 1000px;
+  border-left: 1px solid var(--hairline);
+  max-width: 900px;
 }
 
 .note {
+  display: flex;
+  flex-direction: column;
+  padding: 22px 24px 26px;
+  border-right: 1px solid var(--hairline);
   border-bottom: 1px solid var(--hairline);
-  padding: 22px 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-  gap: 12px 40px;
+}
+
+/* The register numbers its entries, as the catalogue numbers its items. */
+.noteNo {
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
+  text-transform: uppercase;
+  color: var(--label);
+  margin-bottom: 14px;
 }
 
 .question {
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 15px;
+  line-height: 1.45;
   color: var(--ink);
   font-weight: 500;
+  margin-bottom: 12px;
+  text-wrap: balance;
 }
 
 .answer {

@@ -4,6 +4,7 @@ import Empty from '@/components/Empty';
 import HomeView from '@/components/HomeView';
 import { isLive } from '@/lib/shopify/config';
 import { getSeriesContext } from '@/lib/shopify/fetch';
+import { getSources } from '@/lib/shopify/sources';
 
 /* Rendered per request so the price matches the buyer's market. */
 
@@ -15,8 +16,8 @@ export async function generateMetadata({ params }: { params: Promise<{ handle: s
 
 export default async function Page({ params }: { params: Promise<{ handle: string }> }) {
   const { handle } = await params;
-  const { series, all } = await getSeriesContext(handle);
+  const [{ series, all }, sources] = await Promise.all([getSeriesContext(handle), getSources()]);
   if (!series && all.length) notFound();
   if (!series) return <Empty />;
-  return <HomeView series={series} all={all} live={isLive()} />;
+  return <HomeView series={series} all={all} sources={sources} live={isLive()} />;
 }

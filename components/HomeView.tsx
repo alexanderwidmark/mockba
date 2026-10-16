@@ -6,15 +6,18 @@ import SeriesIndex from './SeriesIndex';
 import SourceRegister from './SourceRegister';
 import Statement from './Statement';
 import TitleBlock from './TitleBlock';
+import type { SourceRecord } from '@/lib/shopify/sources';
 import type { Series } from '@/lib/shopify/types';
 
 export default function HomeView({
   series,
   all,
+  sources,
   live,
 }: {
   series: Series;
   all: Series[];
+  sources: SourceRecord[];
   live: boolean;
 }) {
   const hero = series.products[0];
@@ -29,7 +32,11 @@ export default function HomeView({
       {hero ? <TitleBlock series={series} hero={hero} live={live} /> : null}
       <Catalogue series={series} live={live} />
       <Statement />
-      <SourceRegister items={series.products} />
+      <SourceRegister
+        sources={sources}
+        items={series.products}
+        seriesHandle={series.handle}
+      />
       <PublicNotes
         status={series.status}
         sizes={sizedItem?.sizes ?? ''}

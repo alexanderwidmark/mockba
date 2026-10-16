@@ -1,0 +1,248 @@
+/**
+ * The register of holdings.
+ *
+ * Built in the house construction: rules on the cells, top and left on the
+ * container, inversion as the only emphasis. The filter row is the same object
+ * as the size register — cells that invert when chosen — so the section is
+ * operated the way every other register on the site is operated.
+ */
+
+.section {
+  composes: section from './Sections.module.css';
+}
+
+.eyebrow {
+  composes: eyebrow from './Sections.module.css';
+  margin-bottom: 18px;
+}
+
+.standfirst {
+  font-size: 13.5px;
+  line-height: 1.9;
+  color: var(--body);
+  max-width: 62ch;
+  margin: 0 0 26px;
+}
+
+/* Off-screen rather than hidden: a hidden input cannot take focus, and the
+   labels are the only way to work the filter. */
+.radio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  border-top: 1px solid var(--hairline);
+  border-left: 1px solid var(--hairline);
+  margin-bottom: 30px;
+}
+
+.filter {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 15px;
+  border-right: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  background: var(--paper);
+  color: var(--mono-2);
+  font-size: var(--reg-frame-size);
+  letter-spacing: var(--reg-frame-track);
+  font-weight: var(--reg-frame-weight);
+  text-transform: uppercase;
+}
+
+.filter:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.tally {
+  color: var(--label);
+  font-variant-numeric: tabular-nums;
+}
+
+.filter:hover .tally {
+  color: var(--paper);
+}
+
+/**
+ * The chosen filter inverts, and the list drops everything it does not name.
+ *
+ * Selected on a data attribute rather than on the id: a CSS module hashes
+ * `#id` as readily as it hashes a class, so `#mockba-source-issued` compiled
+ * to a name no element carried and the filter silently did nothing. Attribute
+ * selectors are left alone, and `label[for]` with them.
+ *
+ * One pair per state, because CSS cannot match one attribute's value against
+ * another's.
+ */
+[data-filter='all']:checked ~ .filters label[for='mockba-source-all'],
+[data-filter='issued']:checked ~ .filters label[for='mockba-source-issued'],
+[data-filter='cleared']:checked ~ .filters label[for='mockba-source-cleared'],
+[data-filter='research']:checked ~ .filters label[for='mockba-source-research'],
+[data-filter='withheld']:checked ~ .filters label[for='mockba-source-withheld'] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+[data-filter='all']:checked ~ .filters label[for='mockba-source-all'] .tally,
+[data-filter='issued']:checked ~ .filters label[for='mockba-source-issued'] .tally,
+[data-filter='cleared']:checked ~ .filters label[for='mockba-source-cleared'] .tally,
+[data-filter='research']:checked ~ .filters label[for='mockba-source-research'] .tally,
+[data-filter='withheld']:checked ~ .filters label[for='mockba-source-withheld'] .tally {
+  color: var(--paper);
+}
+
+[data-filter='all']:focus-visible ~ .filters label[for='mockba-source-all'],
+[data-filter='issued']:focus-visible ~ .filters label[for='mockba-source-issued'],
+[data-filter='cleared']:focus-visible ~ .filters label[for='mockba-source-cleared'],
+[data-filter='research']:focus-visible ~ .filters label[for='mockba-source-research'],
+[data-filter='withheld']:focus-visible ~ .filters label[for='mockba-source-withheld'] {
+  outline: 2px solid var(--ink);
+  outline-offset: -4px;
+}
+
+[data-filter='issued']:checked ~ .list > :not([data-state='issued']),
+[data-filter='cleared']:checked ~ .list > :not([data-state='cleared']),
+[data-filter='research']:checked ~ .list > :not([data-state='research']),
+[data-filter='withheld']:checked ~ .list > :not([data-state='withheld']) {
+  display: none;
+}
+
+/* ── The rows ─────────────────────────────────────────────────────────────── */
+
+.list {
+  border-top: 1px solid var(--rule);
+}
+
+.row {
+  border-bottom: 1px solid var(--hairline);
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+  gap: 8px 30px;
+  align-items: baseline;
+  padding: 18px 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary:hover .title {
+  color: var(--mono-2);
+}
+
+.summary:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+}
+
+/* The state leads the row, because the state is what the register is for. */
+.state {
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+.state[data-state='issued'] {
+  color: var(--ink);
+}
+
+.state[data-state='withheld'] {
+  color: var(--restricted);
+}
+
+.title {
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.facts {
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--body);
+}
+
+.rights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  text-transform: uppercase;
+}
+
+.risk {
+  color: var(--label);
+}
+
+/* ── What opening reveals ─────────────────────────────────────────────────── */
+
+.expanded {
+  padding: 4px 0 26px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 22px 40px;
+  align-items: start;
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: 68px 1fr;
+  gap: 5px 12px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--body);
+  align-self: start;
+}
+
+.metaKey {
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+.note {
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--body);
+  margin: 0;
+  max-width: 62ch;
+}
+
+.consult {
+  grid-column: 1 / -1;
+  justify-self: start;
+  font-size: var(--reg-action-size);
+  letter-spacing: var(--reg-action-track);
+  font-weight: var(--reg-action-weight);
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 3px;
+}
+
+.consult:hover {
+  color: var(--mono-2);
+  border-bottom-color: var(--mono-2);
+}

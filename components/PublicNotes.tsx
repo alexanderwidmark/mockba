@@ -67,8 +67,9 @@ export default function PublicNotes({
     <section className={`${styles.section} ${styles.last}`}>
       <div className={styles.eyebrow}>Notes for the public</div>
       <div className={styles.notes}>
-        {NOTES(status, sizes, specs).map((n) => (
+        {NOTES(status, sizes, specs).map((n, i) => (
           <div className={styles.note} key={n.q}>
+            <div className={styles.noteNo}>Note {String(i + 1).padStart(2, '0')}</div>
             <div className={styles.question}>{n.q}</div>
             <div className={styles.answer}>{n.a}</div>
           </div>
