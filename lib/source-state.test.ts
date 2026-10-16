@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { byState, sourceState } from './source-state';
+import { byState, plateMayBeShown, programmeLabel, sourceState } from './source-state';
 
 describe('sourceState', () => {
   it('calls a source with a published item issued', () => {
@@ -62,5 +62,32 @@ describe('byState', () => {
       '1927',
       '1988',
     ]);
+  });
+});
+
+describe('plateMayBeShown', () => {
+  /* The one rule the register cannot break: it does not publish the sheet it
+     has just said is not offered because its rights record is restricted. */
+  it('withholds the plate of a withheld source', () => {
+    expect(plateMayBeShown('withheld')).toBe(false);
+  });
+
+  it('shows the plate everywhere else', () => {
+    expect(plateMayBeShown('issued')).toBe(true);
+    expect(plateMayBeShown('cleared')).toBe(true);
+    expect(plateMayBeShown('research')).toBe(true);
+  });
+});
+
+describe('programmeLabel', () => {
+  it('reads the recorded value whatever its casing or padding', () => {
+    expect(programmeLabel(' In Preparation ')).toBe('Item in preparation');
+    expect(programmeLabel('reserved')).toBe('Reserved for a later series');
+  });
+
+  /* An empty or unrecognised value is no marker at all, never a guess. */
+  it('says nothing for an empty or unknown value', () => {
+    expect(programmeLabel('')).toBe('');
+    expect(programmeLabel('somebody typed this')).toBe('');
   });
 });

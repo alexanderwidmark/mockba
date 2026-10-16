@@ -129,14 +129,75 @@
   border-bottom: 1px solid var(--hairline);
 }
 
+/**
+ * A row is three parts, not a table: the state, the sheet itself with its
+ * facts, and the rights position. Flex rather than grid because nothing here
+ * carries a rule — the parts simply wrap onto their own lines on a phone, and
+ * no empty track can appear between them.
+ */
 .summary {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
-  gap: 8px 30px;
-  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 30px;
+  /* Top, not baseline: the plate makes the middle column tall, and a baseline
+     would drop the state and the rights to the foot of the sheet instead of
+     setting them against the title they belong to. */
+  align-items: start;
   padding: 18px 0;
   cursor: pointer;
   list-style: none;
+}
+
+.state {
+  flex: 0 0 140px;
+  /* Optical alignment: uppercase 9px sits high in its line box. */
+  padding-top: 4px;
+}
+
+.heading {
+  flex: 1 1 320px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.rights {
+  flex: 0 0 190px;
+  padding-top: 4px;
+}
+
+/**
+ * The archive plate, at the size of a contact print.
+ *
+ * The box is always drawn, so the titles stay on one axis down the register
+ * and a missing plate reads as a fact about that row rather than as a layout
+ * failure. On a withheld source the box is empty by design: see the component.
+ */
+.plate {
+  flex: 0 0 56px;
+  width: 56px;
+  border: 1px solid var(--hairline);
+  display: block;
+  /* The box takes the sheet's own proportion. Several of these posters are
+     landscape, and a fixed portrait box would print grey under them. */
+  line-height: 0;
+  align-self: start;
+}
+
+/* No sheet to show: the box keeps its place in the column at plate height. */
+.plate[data-empty] {
+  height: 74px;
+  border-style: dashed;
+}
+
+.plateImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.summary:hover .plate {
+  border-color: var(--swatch-edge);
 }
 
 .summary::-webkit-details-marker {
@@ -170,12 +231,16 @@
 }
 
 .title {
+  display: block;
   font-size: 14.5px;
   line-height: 1.5;
   color: var(--ink);
+  text-wrap: balance;
 }
 
 .facts {
+  display: block;
+  margin-top: 6px;
   font-size: 11px;
   line-height: 1.6;
   color: var(--body);
@@ -192,6 +257,18 @@
 
 .risk {
   color: var(--label);
+}
+
+/* MOCKBA's own progress, inverted so it cannot be read as a rights value. */
+.programme {
+  flex-basis: 100%;
+  align-self: start;
+  margin-top: 2px;
+  padding: 3px 7px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
 }
 
 /* ── What opening reveals ─────────────────────────────────────────────────── */
@@ -230,9 +307,12 @@
   max-width: 62ch;
 }
 
+.note + .note {
+  margin-top: 14px;
+}
+
 .consult {
   grid-column: 1 / -1;
-  justify-self: start;
   font-size: var(--reg-action-size);
   letter-spacing: var(--reg-action-track);
   font-weight: var(--reg-action-weight);

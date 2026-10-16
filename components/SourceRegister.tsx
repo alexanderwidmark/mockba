@@ -1,7 +1,16 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 import { rightsColor } from '@/lib/rights';
-import { STATE_LABEL, STATE_NOTE, byState, sourceState, type SourceState } from '@/lib/source-state';
+import {
+  STATE_LABEL,
+  STATE_NOTE,
+  byState,
+  plateMayBeShown,
+  programmeLabel,
+  sourceState,
+  type SourceState,
+} from '@/lib/source-state';
 import type { SourceRecord } from '@/lib/shopify/sources';
 import type { Item } from '@/lib/shopify/types';
 import styles from './SourceRegister.module.css';
@@ -17,14 +26,25 @@ import styles from './SourceRegister.module.css';
  *
  * The archive source stays recorded on its own. The MOCKBA intervention is
  * named only where a source has become an item, and then as a reference to
- * that item rather than as part of this record.
+ * that item rather than as part of this record. Work in progress on a source
+ * is a third fact again, carried on its own marker and never folded into the
+ * rights position beside it.
+ *
+ * A withheld source shows no plate. The register says the sheet is not offered
+ * while its rights record is restricted, and reproducing it here would be the
+ * one act that position rules out. The empty plate is the register working.
  *
  * Filtering and expansion are CSS: radio inputs ahead of the list, and a
  * `details` per row. Nothing here needs JavaScript, so with none the register
  * is simply a fully open list — which is the correct resting state anyway.
  */
 
-type Row = SourceRecord & { state: SourceState; item: Item | null };
+type Row = SourceRecord & {
+  state: SourceState;
+  item: Item | null;
+  /** How this row's programme marker reads, or '' when there is nothing to say. */
+  programmeNote: string;
+};
 
 const key = (title: string) => title.replace(/[^\p{L}\p{N}]+/gu, '').toLowerCase();
 
@@ -52,7 +72,17 @@ export default function SourceRegister({
   const rows: Row[] = sources
     .map((source) => {
       const item = byTitle.get(key(source.originalTitle)) ?? null;
-      return { ...source, item, state: sourceState(source.rights, Boolean(item)) };
+      const state = sourceState(source.rights, Boolean(item));
+      return {
+        ...source,
+        item,
+        state,
+        /* An issued source has an item already; saying one is in preparation
+           would contradict the row above it. And the plate is dropped here, at
+           the one place that decides it, so no later edit can leak it back. */
+        programmeNote: item ? '' : programmeLabel(source.programme),
+        plate: plateMayBeShown(state) ? source.plate : null,
+      };
     })
     .sort(byState);
 
@@ -104,15 +134,34 @@ export default function SourceRegister({
                 {row.item ? `Item ${row.item.no} · ${STATE_LABEL.issued}` : STATE_LABEL[row.state]}
               </span>
 
-              <span className={styles.title}>{row.originalTitle}</span>
+              <span className={styles.heading}>
+                <span className={styles.plate} data-empty={row.plate ? undefined : ''}>
+                  {row.plate ? (
+                    <Image
+                      src={row.plate.url}
+                      alt={row.plate.alt}
+                      width={row.plate.width ?? 80}
+                      height={row.plate.height ?? 110}
+                      sizes="56px"
+                      className={styles.plateImage}
+                    />
+                  ) : null}
+                </span>
 
-              <span className={styles.facts}>
-                {[row.artist, row.year, row.origin].filter(Boolean).join(' · ')}
+                <span>
+                  <span className={styles.title}>{row.originalTitle}</span>
+                  <span className={styles.facts}>
+                    {[row.artist, row.year, row.origin].filter(Boolean).join(' · ')}
+                  </span>
+                </span>
               </span>
 
               <span className={styles.rights}>
                 <span style={{ color: rightsColor(row.rights) }}>{row.rights || 'unrecorded'}</span>
                 <span className={styles.risk}>{row.risk ? `${row.risk} risk` : ''}</span>
+                {row.programmeNote ? (
+                  <span className={styles.programme}>{row.programmeNote}</span>
+                ) : null}
               </span>
             </summary>
 
@@ -134,7 +183,20 @@ export default function SourceRegister({
                 <span>{STATE_NOTE[row.state]}</span>
               </div>
 
-              {row.note ? <p className={styles.note}>{row.note}</p> : null}
+              {/* A source note is written in paragraphs in Shopify and is kept
+                  in paragraphs here; a multi-line text field collapses into one
+                  block otherwise. */}
+              {row.note
+                ? row.note
+                    .split(/\n\s*\n/)
+                    .map((para) => para.trim())
+                    .filter(Boolean)
+                    .map((para, i) => (
+                      <p className={styles.note} key={i}>
+                        {para}
+                      </p>
+                    ))
+                : null}
 
               {row.item ? (
                 <Link href={`/series/${seriesHandle}/${row.item.handle}`} className={styles.consult}>
