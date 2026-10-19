@@ -6,7 +6,6 @@ import {
   STATE_LABEL,
   STATE_NOTE,
   byState,
-  plateMayBeShown,
   programmeLabel,
   sourceState,
   type SourceState,
@@ -30,9 +29,11 @@ import styles from './SourceRegister.module.css';
  * is a third fact again, carried on its own marker and never folded into the
  * rights position beside it.
  *
- * A withheld source shows no plate. The register says the sheet is not offered
- * while its rights record is restricted, and reproducing it here would be the
- * one act that position rules out. The empty plate is the register working.
+ * Every row shows its plate, a withheld one included. The register withholds
+ * the object, not the record: what is not offered is a garment printed with
+ * the sheet, and a catalogue entry that cannot show what it is cataloguing is
+ * not a register. A row with no plate now means the archive holds no scan of
+ * it, which is a fact about the holding rather than about its rights.
  *
  * Filtering and expansion are CSS: radio inputs ahead of the list, and a
  * `details` per row. Nothing here needs JavaScript, so with none the register
@@ -78,10 +79,8 @@ export default function SourceRegister({
         item,
         state,
         /* An issued source has an item already; saying one is in preparation
-           would contradict the row above it. And the plate is dropped here, at
-           the one place that decides it, so no later edit can leak it back. */
+           would contradict the row above it. */
         programmeNote: item ? '' : programmeLabel(source.programme),
-        plate: plateMayBeShown(state) ? source.plate : null,
       };
     })
     .sort(byState);

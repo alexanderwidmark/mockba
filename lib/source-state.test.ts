@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { byState, plateMayBeShown, programmeLabel, sourceState } from './source-state';
+import { byState, programmeLabel, sourceState } from './source-state';
 
 describe('sourceState', () => {
   it('calls a source with a published item issued', () => {
@@ -62,20 +62,6 @@ describe('byState', () => {
       '1927',
       '1988',
     ]);
-  });
-});
-
-describe('plateMayBeShown', () => {
-  /* The one rule the register cannot break: it does not publish the sheet it
-     has just said is not offered because its rights record is restricted. */
-  it('withholds the plate of a withheld source', () => {
-    expect(plateMayBeShown('withheld')).toBe(false);
-  });
-
-  it('shows the plate everywhere else', () => {
-    expect(plateMayBeShown('issued')).toBe(true);
-    expect(plateMayBeShown('cleared')).toBe(true);
-    expect(plateMayBeShown('research')).toBe(true);
   });
 });
 

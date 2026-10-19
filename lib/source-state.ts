@@ -53,22 +53,6 @@ export function byState<T extends { state: SourceState; year: string }>(a: T, b:
 }
 
 /**
- * Whether the archive may publish its scan of a source.
- *
- * The register's own position decides it. A source is withheld because the
- * rights record is restricted; reproducing the sheet on a public page is the
- * one thing that position forbids, and a register that prints what it says it
- * is not offering would be worth nothing. Those rows stay plateless, and the
- * gap is the honest part.
- *
- * Everything else — issued, cleared, or still in research with no restriction
- * found — may show its plate. An issued source is already printed on a garment
- * and photographed in the catalogue, so the scan adds no exposure that the
- * item record has not already taken.
- */
-export const plateMayBeShown = (state: SourceState): boolean => state !== 'withheld';
-
-/**
  * What MOCKBA is doing with a source, recorded apart from the source's rights
  * position because they are different facts about different things. The field
  * is free text in Shopify and may be empty, which is the normal case.
