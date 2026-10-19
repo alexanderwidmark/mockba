@@ -12,15 +12,27 @@
  *   node scripts/compose-descriptions.mjs --dry-run
  *   node scripts/compose-descriptions.mjs
  *   node scripts/compose-descriptions.mjs --force
+ *   node scripts/compose-descriptions.mjs --handle drain-the-swamp
  *
  * A description this script wrote carries a marker and is overwritten freely. A
  * description written by hand is left alone unless --force is passed.
+ *
+ * Only active products are composed. A draft is in no feed and no search
+ * result, which is the whole reason this text exists; and the store keeps
+ * retired products as drafts, whose specification is no longer the one the
+ * template now describes. Writing the current blank's facts onto last
+ * season's garment would be the same error the template exists to prevent,
+ * only pointed backwards. --handle narrows it further to one product.
  */
 
 import { readFileSync } from 'node:fs';
 
 const DRY = process.argv.includes('--dry-run');
 const FORCE = process.argv.includes('--force');
+const ONLY = (() => {
+  const i = process.argv.indexOf('--handle');
+  return i > -1 ? process.argv[i + 1] : '';
+})();
 const MARKER = '<!-- composed from the content model -->';
 
 const envFile = (() => {
@@ -77,6 +89,7 @@ const PRODUCTS = /* GraphQL */ `
         id
         handle
         title
+        status
         descriptionHtml
         category {
           name
@@ -211,8 +224,20 @@ const templates = Object.fromEntries(
     .map((t) => [t.category.trim().toLowerCase(), parseRows(t.spec)]),
 );
 
-const products = (await gql(PRODUCTS)).products.nodes;
-console.log(`\n${DOMAIN} — ${products.length} products, ${Object.keys(templates).length} spec templates\n`);
+const all = (await gql(PRODUCTS)).products.nodes;
+const products = all.filter(
+  (p) => p.status === 'ACTIVE' && (!ONLY || p.handle === ONLY),
+);
+
+console.log(
+  `\n${DOMAIN} — ${products.length} of ${all.length} products` +
+    `${ONLY ? ` (--handle ${ONLY})` : ''}, ${Object.keys(templates).length} spec templates\n`,
+);
+
+if (!products.length) {
+  console.log(ONLY ? `  No active product with handle ${ONLY}.` : '  No active products.');
+  process.exit(0);
+}
 
 let written = 0;
 let skipped = 0;
