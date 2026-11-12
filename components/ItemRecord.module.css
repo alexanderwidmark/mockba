@@ -604,6 +604,10 @@
  * edge instead.
  */
 @media (max-width: 859px) {
+  .grid {
+    border-bottom: none;
+  }
+
   .head {
     padding: 18px 4vw 0;
   }
@@ -621,7 +625,7 @@
   }
 
   .sticky {
-    width: 62%;
+    width: 56%;
     gap: 12px;
   }
 
