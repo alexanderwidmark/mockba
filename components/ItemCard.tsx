@@ -40,7 +40,8 @@ export default function ItemCard({
 
       <div className={styles.body}>
         <div className={styles.accession}>
-          Item {item.no} · {item.accession}
+          Item {item.no}
+          <span className={styles.accessionCode}> · {item.accession}</span>
         </div>
         <h3 className={styles.title}>{item.title}</h3>
         <div className={styles.contradiction}>{item.secondary}</div>
@@ -64,6 +65,11 @@ export default function ItemCard({
 
         <div className={styles.footer}>
           <span className={styles.price}>{item.price}</span>
+          {/* On a phone the hint gives way to a single fact: the sizes, or
+              that the work is catalogued but not offered. */}
+          <span className={styles.status}>
+            {live && !isRestricted(item.rights) ? item.sizes : 'Interest only'}
+          </span>
           <span className={styles.action}>
             {live && !isRestricted(item.rights) ? 'Consult the item record' : 'Register interest'}
           </span>

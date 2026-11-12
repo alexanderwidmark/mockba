@@ -9,7 +9,7 @@ import styles from './Cart.module.css';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = { title: 'Cart' };
+export const metadata = { title: 'The order' };
 
 export default async function CartPage() {
   const [cart, { series }] = await Promise.all([getCart(), getSeriesContext()]);
@@ -20,7 +20,7 @@ export default async function CartPage() {
       <Masthead series={series} />
       <section className={styles.section}>
         <div className={styles.header}>
-          <h1 className={styles.heading}>Cart</h1>
+          <h1 className={styles.heading}>The order</h1>
           <span className={styles.note}>
             Checkout, dispatch and payment are handled by Shopify
           </span>
@@ -75,7 +75,7 @@ export default async function CartPage() {
                     <form action={dropLineForm}>
                       <input type="hidden" name="lineId" value={line.id} />
                       <button type="submit" className={styles.remove}>
-                        Strike from cart
+                        Strike from the order
                       </button>
                     </form>
                   </div>

@@ -119,16 +119,141 @@
  * The hero plate and the first catalogue card are the same photograph of the
  * same object — the hero IS item 01.
  *
- * Beside the text that is a frontispiece. Stacked, it is the same shirt twice
- * inside a screen of itself, and it costs half a phone screen to say it. The
- * catalogue carries the object a few hundred pixels below, so on one column
- * the plate steps aside and the title block is what it is on a phone: the
- * document stating its own terms.
+ * Beside the text that is a frontispiece. Stacked, the side plate came after a
+ * screen of text and the register, so a phone opened on a document with no
+ * object and no price in it. On one column the side plate steps aside and the
+ * compact block below takes its place inside the text, directly under the
+ * thesis: the first object, its price, and the way to its record, in the first
+ * screen. The frame and the register follow the reader to the statement of
+ * purpose, where there is room for them.
  */
 @media (max-width: 919px) {
   .plate {
     display: none;
   }
+
+  .header {
+    border-bottom: none;
+  }
+
+  .text {
+    padding: 26px 4vw 30px;
+    border-right: none;
+  }
+
+  .eyebrow {
+    margin-bottom: 14px;
+  }
+
+  .thesis {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .frame,
+  .register {
+    display: none;
+  }
+}
+
+.compact {
+  display: none;
+}
+
+@media (max-width: 919px) {
+  .compact {
+    display: block;
+  }
+}
+
+.compactPlate {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin: 0 -4vw;
+  padding: 34px 0 16px;
+  background: var(--plate);
+  border-bottom: none;
+}
+
+.compactPlate:hover {
+  border-bottom: none;
+}
+
+.compactLabel {
+  position: absolute;
+  top: 12px;
+  left: 4vw;
+  font-family: var(--font-mono);
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+.compactMockup {
+  width: 66%;
+  max-width: 340px;
+}
+
+.compactCaption {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-top: 16px;
+}
+
+.compactNo {
+  font-family: var(--font-mono);
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+.compactTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
+  font-size: 16px;
+  line-height: 1.3;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+.compactPrice {
+  white-space: nowrap;
+}
+
+.compactLine {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--body);
+}
+
+.compactAction {
+  display: block;
+  margin-top: 16px;
+  padding: 16px;
+  text-align: center;
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--reg-action-size);
+  letter-spacing: var(--reg-action-track);
+  font-weight: var(--reg-action-weight);
+  text-transform: uppercase;
+}
+
+.compactAction:hover {
+  color: var(--paper);
+  border-bottom-color: var(--ink);
 }
 
 .plateLabel {

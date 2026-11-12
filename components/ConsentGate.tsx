@@ -118,12 +118,21 @@ export default function ConsentGate() {
   if (!open) return null;
 
   return (
-    <aside className={styles.notice} aria-label="Record of measurement">
+    <aside
+      className={styles.notice}
+      aria-label="Record of measurement"
+      data-choosing={choosing ? 'true' : 'false'}
+    >
       <div className={styles.statement}>
         <div className={styles.eyebrow}>Record of measurement</div>
         <p className={styles.body}>
-          Nothing is stored on your device for measurement or advertising until you permit it. The
-          cart keeps its own record, which it cannot work without, and so does this decision.
+          <span className={styles.long}>
+            Nothing is stored on your device for measurement or advertising until you permit it. The
+            cart keeps its own record, which it cannot work without, and so does this decision.
+          </span>
+          <span className={styles.short}>
+            Nothing is stored for measurement or advertising until you permit it.
+          </span>
         </p>
       </div>
 

@@ -5,7 +5,7 @@ import PublicNotes from './PublicNotes';
 import SeriesIndex from './SeriesIndex';
 import SourceRegister from './SourceRegister';
 import Statement from './Statement';
-import TitleBlock from './TitleBlock';
+import TitleBlock, { seriesRegister } from './TitleBlock';
 import type { SourceRecord } from '@/lib/shopify/sources';
 import type { Series } from '@/lib/shopify/types';
 
@@ -31,7 +31,7 @@ export default function HomeView({
       <SeriesIndex all={all} activeHandle={series.handle} />
       {hero ? <TitleBlock series={series} hero={hero} live={live} /> : null}
       <Catalogue series={series} live={live} />
-      <Statement />
+      <Statement register={seriesRegister(series, live)} />
       <SourceRegister
         sources={sources}
         items={series.products}

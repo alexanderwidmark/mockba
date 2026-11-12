@@ -2,17 +2,20 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState, useTransition } from 'react';
+import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 
 import { addToCart, registerInterest } from '@/app/actions';
 import { trackMockbaEvent } from '@/lib/analytics-client';
 import { announceCartChange } from '@/lib/cart-client';
 import { isRestricted, rightsColor, territoryLabel } from '@/lib/rights';
+import { sizeChartFor } from '@/lib/size-chart';
 import { isIssued } from '@/lib/status';
+import { TERMS_OF_ISSUE } from '@/lib/terms';
 import { currencyHasSymbol } from '@/lib/shopify/normalize';
 import type { Item } from '@/lib/shopify/types';
 import GarmentPlate from './GarmentPlate';
 import AnalyticsVisibilityEvent from './AnalyticsVisibilityEvent';
+import SizeChart from './SizeChart';
 import styles from './ItemRecord.module.css';
 
 /**
@@ -55,6 +58,21 @@ export default function ItemRecord({
   const [error, setError] = useState<string | null>(null);
   const [added, setAdded] = useState(false);
   const [plateIndex, setPlateIndex] = useState(0);
+  /* Whether the inline action has scrolled away above the reader. Set only by
+     an observer, so with no script the order bar never appears and the record
+     is exactly the laid-out document. */
+  const [actionGone, setActionGone] = useState(false);
+  const ctaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ctaRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(([entry]) => {
+      setActionGone(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
     trackMockbaEvent('item_record_view', { item: item.accession });
@@ -99,7 +117,7 @@ export default function ItemRecord({
       : 'sold out in this size';
 
   const ctaLabel = sellable
-    ? `Add to cart — ${price}`
+    ? `Add to order — ${variant?.title || price}`
     : restricted
       ? registered
         ? 'Interest recorded'
@@ -241,6 +259,7 @@ export default function ItemRecord({
     namedView ?? (plateIndex === 0 ? 'recto' : `plate ${String(plateIndex + 1).padStart(2, '0')}`);
 
   const total = String(siblings.length).padStart(2, '0');
+  const chart = item.hasSizeOption ? sizeChartFor(item.category, item.sizeValues) : null;
 
   return (
     <>
@@ -363,6 +382,8 @@ export default function ItemRecord({
               })}
             </div>
             ) : null}
+
+            {chart ? <SizeChart rows={chart} active={activeSize} /> : null}
           </div>
 
           <div className={styles.priceRow}>
@@ -370,7 +391,7 @@ export default function ItemRecord({
             <span className={styles.priceCaption}>{priceCaption}</span>
           </div>
 
-          <div className={styles.ctaWrap}>
+          <div className={styles.ctaWrap} ref={ctaRef}>
             <button
               type="button"
               className={styles.cta}
@@ -390,9 +411,9 @@ export default function ItemRecord({
 
           {added ? (
             <div className={styles.cartNote}>
-              Entered in the cart ·{' '}
+              Entered in the order ·{' '}
               <Link href="/cart" className={styles.cartNoteLink}>
-                Proceed to checkout
+                Proceed to the order
               </Link>
             </div>
           ) : null}
@@ -447,9 +468,29 @@ export default function ItemRecord({
 
           {error && !registering ? <div className={styles.error}>{error}</div> : null}
 
+          {/* The questions a reader has at the moment of deciding — when it
+              ships, what happens if it is wrong — answered beside the action
+              rather than at the foot of another page. Stated only once the
+              series is issued; before that the notes say dispatch is not set. */}
+          {issued ? (
+            <div className={styles.terms}>
+              <div className={styles.sectionLabel}>Terms of issue</div>
+              <div className={styles.termsList}>
+                {TERMS_OF_ISSUE.map((t) => (
+                  <div className={styles.termsRow} key={t.k}>
+                    <span className={styles.metaKey}>{t.k}</span>
+                    <span>{t.v}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
           {/* Stated only where there is a table to state; nothing is asserted
               about an object whose category has no specification template. */}
           {item.specs.length ? (
+          <>
+          <div className={`${styles.sectionLabel} ${styles.specLabel}`}>Specification</div>
           <div className={styles.specs}>
             {item.specs.map((s) => (
               <div className={styles.spec} key={s.k}>
@@ -458,8 +499,12 @@ export default function ItemRecord({
               </div>
             ))}
           </div>
+          </>
           ) : null}
 
+          {/* The archive layer, set on its own ground on a phone so it reads as
+              a separate record from the MOCKBA intervention above it. */}
+          <div className={styles.source}>
           <div className={styles.sectionLabel}>Source note</div>
           <div className={styles.sourceTitle}>{item.sourceTitle}</div>
           <p className={styles.sourceNote}>{item.sourceNote}</p>
@@ -490,8 +535,39 @@ export default function ItemRecord({
               {item.risk} enforcement risk
             </span>
           </div>
+          </div>
         </div>
       </div>
+
+      {/* The order bar: on a phone, once the inline action has scrolled away,
+          the action follows the reader into the source note. Fixed, so it
+          displaces nothing; absent without script; absent where nothing can
+          be ordered. */}
+      {sellable && actionGone ? (
+        <div className={styles.orderBar}>
+          <div className={styles.orderBarText}>
+            <span className={styles.orderBarTitle}>{item.title}</span>
+            <span className={styles.orderBarVariant}>
+              {variant?.title ? `${variant.title} · ` : ''}
+              {price}
+            </span>
+          </div>
+          {added ? (
+            <Link href="/cart" className={styles.orderBarAction}>
+              Proceed to the order
+            </Link>
+          ) : (
+            <button
+              type="button"
+              className={styles.orderBarAction}
+              onClick={onCta}
+              disabled={pending}
+            >
+              Add to order
+            </button>
+          )}
+        </div>
+      ) : null}
     </>
   );
 }

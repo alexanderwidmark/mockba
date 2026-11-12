@@ -157,3 +157,60 @@
   background: var(--ink);
   color: var(--paper);
 }
+
+.status {
+  display: none;
+}
+
+/**
+ * On a phone the catalogue is two columns, so the series is seen as a series
+ * — four objects in a screen and a half, not four screens of one. A card there
+ * is the object, its name and its price; the record holds the rest, and the
+ * whole card is the way to it.
+ */
+@media (max-width: 639px) {
+  .body {
+    padding: 12px 10px 14px;
+  }
+
+  .accession {
+    margin-bottom: 6px;
+  }
+
+  .accessionCode,
+  .contradiction,
+  .meta,
+  .mechanism,
+  .action {
+    display: none;
+  }
+
+  .title {
+    font-size: 12px;
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+
+  .footer {
+    margin-top: auto;
+    padding-top: 0;
+    border-top: none;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .price {
+    font-size: 13px;
+  }
+
+  .status {
+    display: inline;
+    font-family: var(--font-mono);
+    font-size: var(--reg-key-size);
+    letter-spacing: var(--reg-key-track);
+    font-weight: var(--reg-key-weight);
+    text-transform: uppercase;
+    color: var(--label);
+    text-align: right;
+  }
+}

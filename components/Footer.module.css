@@ -70,3 +70,23 @@
   color: var(--ink);
   border-bottom-color: var(--ink);
 }
+
+/* On a phone the document ends on the plate ground, the way its sections are
+   separated there: by a change of ground, not by another rule. Hairlines on
+   that ground take the swatch edge or they disappear. */
+@media (max-width: 919px) {
+  .footer {
+    background: var(--plate);
+    border-top: none;
+  }
+
+  .policies,
+  .label,
+  .policy {
+    border-color: var(--swatch-edge);
+  }
+
+  .link {
+    border-bottom-color: var(--swatch-edge);
+  }
+}

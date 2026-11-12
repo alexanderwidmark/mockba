@@ -174,3 +174,44 @@
   color: var(--ink);
   border-bottom-color: var(--ink);
 }
+
+/* ── Narrow screens ───────────────────────────────────────────────────────────
+ *
+ * On a phone the undecided notice was 183px — more than a fifth of the screen,
+ * on every page, above the one action the page exists for. Undecided, it is
+ * now one sentence and one row of three equal answers. The full statement, and
+ * what the cart keeps, are in the register that Choose opens, which is where a
+ * reader deciding in detail will look. Refusing remains exactly one press.
+ */
+.short {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  .notice[data-choosing='false'] .eyebrow,
+  .notice[data-choosing='false'] .long {
+    display: none;
+  }
+
+  .notice[data-choosing='false'] .short {
+    display: inline;
+  }
+
+  .notice[data-choosing='false'] .statement {
+    padding: 10px 16px 9px;
+  }
+
+  .notice[data-choosing='false'] .body {
+    font-size: 11.5px;
+    line-height: 1.5;
+  }
+
+  .actions {
+    flex-wrap: nowrap;
+  }
+
+  .action {
+    flex: 1 1 0;
+    padding: 13px 6px;
+  }
+}

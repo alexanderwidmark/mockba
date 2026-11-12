@@ -4,16 +4,13 @@ import type { Item, Series } from '@/lib/shopify/types';
 import GarmentPlate from './GarmentPlate';
 import styles from './TitleBlock.module.css';
 
-export default function TitleBlock({
-  series,
-  hero,
-  live,
-}: {
-  series: Series;
-  hero: Item;
-  live: boolean;
-}) {
-  const headMeta = [
+/**
+ * The document's record of itself. Stated in the title block where there is
+ * room beside the plate; on a phone the title block gives that room to the
+ * first object, and the statement of purpose carries the record instead.
+ */
+export function seriesRegister(series: Series, live: boolean) {
+  return [
     {
       k: 'series',
       v: series.title + (series.seriesNo ? ` · no. ${series.seriesNo}` : ''),
@@ -28,6 +25,18 @@ export default function TitleBlock({
       v: `${series.status || 'release candidate'} · ${live ? 'checkout open' : 'interest registered only'}`,
     },
   ];
+}
+
+export default function TitleBlock({
+  series,
+  hero,
+  live,
+}: {
+  series: Series;
+  hero: Item;
+  live: boolean;
+}) {
+  const headMeta = seriesRegister(series, live);
 
   const heroHref = `/series/${series.handle}/${hero.handle}`;
 
@@ -48,6 +57,34 @@ export default function TitleBlock({
                 contemporary mechanisms.
               </span>
             </span>
+          </div>
+
+          {/* On a phone: the first object, its price and the way to its record,
+              inside the first screen. Wide, the plate beside the text does
+              this and the block is not rendered visible. */}
+          <div className={styles.compact}>
+            <Link
+              href={heroHref}
+              className={styles.compactPlate}
+              tabIndex={-1}
+              aria-hidden="true"
+            >
+              <span className={styles.compactLabel}>Plate I</span>
+              <GarmentPlate className={styles.compactMockup} image={hero.image} imageAlt="" priority />
+            </Link>
+            <div className={styles.compactCaption}>
+              <span className={styles.compactNo}>
+                Item {hero.no} · {hero.accession}
+              </span>
+              <span className={styles.compactTitle}>
+                <span>{hero.title}</span>
+                <span className={styles.compactPrice}>{hero.price}</span>
+              </span>
+              <span className={styles.compactLine}>{hero.secondary}</span>
+            </div>
+            <Link href={heroHref} className={styles.compactAction}>
+              Consult the item record →
+            </Link>
           </div>
 
           <p className={styles.frame} data-enter="frame">

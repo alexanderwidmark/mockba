@@ -1,5 +1,6 @@
 import { garmentClause, type Spec } from '@/lib/garment-clause';
 import { isIssued } from '@/lib/status';
+import { DISPATCH_WINDOW } from '@/lib/terms';
 import styles from './Sections.module.css';
 
 /**
@@ -42,7 +43,7 @@ const NOTES = (status: string, sizes: string, specs: Spec[]) => [
   {
     q: isIssued(status) ? 'When is it dispatched?' : 'When will it be issued?',
     a: isIssued(status)
-      ? 'The series is issued and open for order. Because every garment is printed after the order is placed, dispatch follows production rather than stock.'
+      ? `The series is issued and open for order. Because every garment is printed after the order is placed, dispatch follows production rather than stock: ${DISPATCH_WINDOW.charAt(0).toLowerCase()}${DISPATCH_WINDOW.slice(1)}`
       : 'This document is a release candidate. Nothing is dispatched until physical samples pass review. Register interest and you will be notified when the series is issued, with the dispatch window stated at that point.',
   },
   {

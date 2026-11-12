@@ -552,3 +552,204 @@
   text-transform: uppercase;
   color: var(--label);
 }
+
+/* ── Terms of issue ───────────────────────────────────────────────────────── */
+
+.terms {
+  margin: 6px 0 30px;
+}
+
+.termsList {
+  border-top: 1px solid var(--hairline);
+}
+
+.termsRow {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 14px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--hairline);
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.specLabel {
+  margin-top: 6px;
+}
+
+.specLabel + .specs {
+  margin-top: 0;
+}
+
+/* ── Order bar ────────────────────────────────────────────────────────────── */
+
+/* Wide, the action never leaves the screen — the record column is beside a
+   sticky plate — so the bar exists only where it would. */
+.orderBar {
+  display: none;
+}
+
+/* ── Narrow screens ───────────────────────────────────────────────────────────
+ *
+ * On a phone the record has one job before all others: name the work, show
+ * it, and put its price and action within reach. The head and plate are
+ * tightened so the action arrives near the first screen; what follows the
+ * decision is separated by ground rather than by rules, because a stack of
+ * full-strength rules on a narrow column reads as stripes, not structure.
+ *
+ * The plate ground carries the two blocks that are not the intervention: the
+ * terms the order is placed on, and the archive source. On that ground a
+ * hairline all but disappears, so rules inside those blocks take the swatch
+ * edge instead.
+ */
+@media (max-width: 859px) {
+  .head {
+    padding: 18px 4vw 0;
+  }
+
+  .accession {
+    margin-bottom: 12px;
+  }
+
+  .contradiction {
+    margin-bottom: 16px;
+  }
+
+  .platePanel {
+    padding: 38px 0 14px;
+  }
+
+  .sticky {
+    width: 62%;
+    gap: 12px;
+  }
+
+  .record {
+    border-left: none;
+    /* Room for the order bar, so it never sits over the last line. */
+    padding-bottom: 88px;
+  }
+
+  .variants {
+    border-top: none;
+    padding-top: 18px;
+    margin-bottom: 18px;
+  }
+
+  .priceRow {
+    margin-bottom: 12px;
+  }
+
+  .ctaWrap {
+    margin-bottom: 14px;
+  }
+
+  /* The one action, at full width and inverted: the only emphasis the system
+     has, spent on the only thing on the page that is a decision. */
+  .cta {
+    display: block;
+    width: 100%;
+    padding: 17px 16px;
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .cta:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .terms,
+  .source {
+    background: var(--plate);
+    margin-left: -4vw;
+    margin-right: -4vw;
+    padding: 22px 4vw 26px;
+  }
+
+  .terms {
+    margin-top: 10px;
+    margin-bottom: 40px;
+  }
+
+  .termsList,
+  .termsRow {
+    border-color: var(--swatch-edge);
+  }
+
+  .source {
+    margin-top: 40px;
+    padding-bottom: 32px;
+  }
+
+  .source .sourceNote {
+    margin-bottom: 24px;
+  }
+
+  .source .meta {
+    border-top-color: var(--swatch-edge);
+  }
+
+  .orderBar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* Beneath the notice of measurement: a question about the reader's data
+       outranks a reminder to buy. */
+    z-index: 94;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    background: var(--paper);
+    border-top: 1px solid var(--rule);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .orderBarText {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 0 4vw;
+    min-width: 0;
+  }
+
+  .orderBarTitle {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--ink);
+  }
+
+  .orderBarVariant {
+    font-size: var(--reg-key-size);
+    letter-spacing: var(--reg-key-track);
+    font-weight: var(--reg-key-weight);
+    text-transform: uppercase;
+    color: var(--label);
+  }
+
+  .orderBarAction {
+    display: flex;
+    align-items: center;
+    height: 56px;
+    padding: 0 18px;
+    border: none;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-mono);
+    font-size: var(--reg-action-size);
+    letter-spacing: var(--reg-action-track);
+    font-weight: var(--reg-action-weight);
+    text-transform: uppercase;
+  }
+
+  .orderBarAction:hover {
+    color: var(--paper);
+    border-bottom: none;
+  }
+}

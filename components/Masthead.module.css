@@ -25,27 +25,46 @@
 
 /**
  * On a phone the bar was four stacked rows — 117px, 14% of the screen, and 40%
- * of it once the notice of measurement was up too. It is two rows here.
+ * of it once the notice of measurement was up too. It is a wordmark with its
+ * series line beneath, and the order beside them.
  *
- * The line of the office is the only cell carrying no data, and it already
- * stands in the page title, so it is the one that steps aside; the three that
- * are facts about the document stay. A narrower track lets two cells share a
- * row at 375px.
+ * The order is the one cell a reader needs from every page, so on a phone it
+ * is always present, holding the full height of the bar. The line of the
+ * office already stands in the page title and steps aside; the revision is a
+ * fact about the document that the colophon and the desktop bar still carry.
  */
 @media (max-width: 879px) {
   .masthead {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 165px), 1fr));
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 
-  .office {
+  .office,
+  .revision {
     display: none;
   }
 
-  /* The wordmark needs 192px of the 187px a half-width track gives it, and
-     broke onto two lines for the sake of five. It takes the row. */
   .title {
-    grid-column: 1 / -1;
+    grid-column: 1;
+    grid-row: 1;
     border-right: none;
+    padding-bottom: 2px;
+  }
+
+  .series {
+    grid-column: 1;
+    grid-row: 2;
+    border-right: none;
+    padding-top: 2px;
+  }
+
+  .cart {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    display: flex;
+    align-items: center;
+    min-width: 104px;
+    justify-content: center;
+    border-left: 1px solid var(--hairline);
   }
 
   /* Hidden on the way down, back on the way up. Set by script, so with no JS
@@ -69,6 +88,15 @@
   .cell {
     padding: 8px 16px;
   }
+
+  /* The wordmark and its series line read as one cell split in two. */
+  .title {
+    padding-bottom: 2px;
+  }
+
+  .series {
+    padding-top: 2px;
+  }
 }
 
 .title {
@@ -82,8 +110,14 @@
   border-bottom: none;
 }
 
-/* Cart cell: present only when the cart holds something, so the resting
-   masthead is the four specified cells. */
+/* The order cell. Wide, it is present only when the order holds something,
+   so the resting masthead is the four specified cells. */
+@media (min-width: 880px) {
+  .cart[data-empty] {
+    display: none;
+  }
+}
+
 .cart {
   color: var(--ink);
   border-bottom: none;

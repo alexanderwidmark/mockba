@@ -62,8 +62,8 @@ export default function Masthead({ series }: { series: Series | null }) {
         MOCKBA Art Collective
       </Link>
       <div className={`${styles.cell} ${styles.office}`}>Office of Public Information</div>
-      <div className={styles.cell}>{seriesLabel}</div>
-      <div className={styles.cell}>{revisionLabel}</div>
+      <div className={`${styles.cell} ${styles.series}`}>{seriesLabel}</div>
+      <div className={`${styles.cell} ${styles.revision}`}>{revisionLabel}</div>
       <CartCell className={`${styles.cell} ${styles.cart}`} />
     </div>
   );

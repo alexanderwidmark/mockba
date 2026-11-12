@@ -1,0 +1,114 @@
+.chart {
+  margin-top: 12px;
+}
+
+/* A link in the frame register, not a control: it reveals a table, it does
+   not change the order. */
+.summary {
+  display: inline-block;
+  list-style: none;
+  cursor: pointer;
+  padding: 6px 0;
+  font-family: var(--font-mono);
+  font-size: var(--reg-frame-size);
+  letter-spacing: var(--reg-frame-track);
+  font-weight: var(--reg-frame-weight);
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 1px solid var(--link-edge);
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary:hover,
+.summary:focus-visible {
+  border-bottom-color: var(--ink);
+}
+
+.body {
+  margin-top: 12px;
+}
+
+.unitRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 8px;
+}
+
+.key {
+  font-family: var(--font-mono);
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+.units {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(40px, 1fr));
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+
+.unit {
+  padding: 8px 10px;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--reg-action-size);
+  letter-spacing: var(--reg-action-track);
+  font-weight: var(--reg-action-weight);
+  text-transform: uppercase;
+}
+
+.unit:hover,
+.unitSelected {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink);
+  text-align: left;
+}
+
+.table th,
+.table td {
+  padding: 9px 8px 9px 0;
+  border-bottom: 1px solid var(--hairline);
+  font-weight: 400;
+}
+
+.table thead th {
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
+  text-transform: uppercase;
+  color: var(--label);
+  border-top: 1px solid var(--hairline);
+}
+
+/* The selected size, marked as the register marks it — by weight here, since
+   inverting a table row would read as a second control. */
+.table tr[data-active] th,
+.table tr[data-active] td {
+  font-weight: 600;
+}
+
+.note {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--body);
+}

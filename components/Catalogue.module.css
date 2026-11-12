@@ -29,3 +29,27 @@
   border-top: 1px solid var(--hairline);
   border-left: 1px solid var(--hairline);
 }
+
+/* Two cells to a row on a phone. The track is narrower than any cell's content
+   needs only because the card itself is cut down to the object, its name and
+   its price at this width; below 320px it is one column again. */
+@media (max-width: 639px) {
+  .section {
+    padding: 48px 4vw 56px;
+    border-bottom: none;
+  }
+
+  .header {
+    margin-bottom: 18px;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .heading {
+    font-size: 16px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  }
+}

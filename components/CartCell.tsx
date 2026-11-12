@@ -6,9 +6,10 @@ import { useEffect, useState } from 'react';
 import { CART_EVENT, readCartCount } from '@/lib/cart-client';
 
 /**
- * The cart cell is an enhancement on top of the specified four-cell masthead:
- * with no JS, or with an empty cart, the bar is exactly the document bar in the
- * design. It appears only once the cart holds something.
+ * The order cell. Always rendered, and marked empty until the order holds
+ * something: wide, an empty cell is hidden so the bar is exactly the document
+ * bar in the design; on a phone it is the way to the order from every page,
+ * and it stays. With no JS it is a plain link to the order.
  */
 export default function CartCell({ className }: { className: string }) {
   const [count, setCount] = useState<number | null>(null);
@@ -27,11 +28,14 @@ export default function CartCell({ className }: { className: string }) {
     };
   }, []);
 
-  if (!count) return null;
-
   return (
-    <Link href="/cart" className={className}>
-      Cart · {count} {count === 1 ? 'item' : 'items'}
+    <Link
+      href="/cart"
+      className={className}
+      data-empty={count ? undefined : ''}
+      aria-label={count ? `The order, ${count} ${count === 1 ? 'item' : 'items'}` : 'The order'}
+    >
+      {count ? `Order · ${count}` : 'Order'}
     </Link>
   );
 }
