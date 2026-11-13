@@ -8,7 +8,10 @@ export default function Catalogue({ series, live }: { series: Series; live: bool
     <section id="drop" className={styles.section}>
       <AnalyticsEvent name="catalogue_view" />
       <div className={styles.header}>
-        <h2 className={styles.heading}>Catalogue of items — {series.title}</h2>
+        <div className={styles.headingRow}>
+          <h2 className={styles.heading}>Catalogue of items — {series.title}</h2>
+          <span className={styles.sectionMark}>§ 01</span>
+        </div>
       </div>
 
       <div className={styles.grid}>

@@ -474,7 +474,10 @@ export default function ItemRecord({
               series is issued; before that the notes say dispatch is not set. */}
           {issued ? (
             <div className={styles.terms}>
-              <div className={styles.sectionLabel}>Terms of issue</div>
+              <div className={styles.sectionHead}>
+                <div className={styles.sectionLabel}>Terms of issue</div>
+                <span className={styles.sectionMark}>§ 01</span>
+              </div>
               <div className={styles.termsList}>
                 {TERMS_OF_ISSUE.map((t) => (
                   <div className={styles.termsRow} key={t.k}>
@@ -490,7 +493,10 @@ export default function ItemRecord({
               about an object whose category has no specification template. */}
           {item.specs.length ? (
           <>
-          <div className={`${styles.sectionLabel} ${styles.specLabel}`}>Specification</div>
+          <div className={`${styles.sectionHead} ${styles.specLabel}`}>
+            <div className={styles.sectionLabel}>Specification</div>
+            <span className={styles.sectionMark}>§ 02</span>
+          </div>
           <div className={styles.specs}>
             {item.specs.map((s) => (
               <div className={styles.spec} key={s.k}>
@@ -505,7 +511,12 @@ export default function ItemRecord({
           {/* The archive layer, set on its own ground on a phone so it reads as
               a separate record from the MOCKBA intervention above it. */}
           <div className={styles.source}>
-          <div className={styles.sectionLabel}>Source note</div>
+          <div className={styles.sectionHead}>
+            <div className={styles.sectionLabel}>Source note</div>
+            {/* The archive layer is named in the mark, not merged into the
+                heading: the source and the intervention stay separate. */}
+            <span className={styles.sectionMark}>§ 03 · archive layer</span>
+          </div>
           <div className={styles.sourceTitle}>{item.sourceTitle}</div>
           <p className={styles.sourceNote}>{item.sourceNote}</p>
           <AnalyticsVisibilityEvent

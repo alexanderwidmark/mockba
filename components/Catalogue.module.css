@@ -14,6 +14,20 @@
   border-bottom: 1px solid var(--rule);
 }
 
+/* The heading and its number share one row at every width. They are not two
+   grid cells: at a narrow width auto-fit would drop the number onto its own
+   line under the title, which reads as a stray mark rather than a reference. */
+.headingRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.sectionMark {
+  composes: sectionMark from './Sections.module.css';
+}
+
 .heading {
   font-size: clamp(18px, 2.1vw, 30px);
   line-height: 1.2;

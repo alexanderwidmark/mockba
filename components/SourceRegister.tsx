@@ -93,7 +93,10 @@ export default function SourceRegister({
 
   return (
     <section className={styles.section} id="sources">
-      <div className={styles.eyebrow}>Register of sources</div>
+      <div className={styles.sectionHead}>
+        <div className={styles.eyebrow}>Register of sources</div>
+        <span className={styles.sectionMark}>§ 03</span>
+      </div>
       <p className={styles.standfirst}>
         Every poster the archive holds, whether or not it has become an object. A source is
         entered when it is recorded and stays entered; the state says how far it has got.

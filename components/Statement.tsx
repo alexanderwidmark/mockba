@@ -10,7 +10,10 @@ export default function Statement({ register = [] }: { register?: { k: string; v
     <section className={`${styles.section} ${styles.statement}`}>
       <div className={styles.statementGrid}>
         <div>
-          <div className={styles.eyebrow}>Statement of purpose</div>
+          <div className={styles.sectionHead}>
+            <div className={styles.eyebrow}>Statement of purpose</div>
+            <span className={styles.sectionMark}>§ 02</span>
+          </div>
           <p className={styles.lead}>
             MOCKBA Art Collective uses historical propaganda to examine contemporary
             propaganda. The political systems change. The enemies change. The distribution

@@ -509,6 +509,19 @@
   color: var(--ink);
 }
 
+.sectionHead {
+  composes: sectionHead from './Sections.module.css';
+  margin-bottom: 14px;
+}
+
+.sectionHead .sectionLabel {
+  margin-bottom: 0;
+}
+
+.sectionMark {
+  composes: sectionMark from './Sections.module.css';
+}
+
 .sectionLabel {
   font-family: var(--font-mono);
   font-size: var(--reg-eyebrow-size);

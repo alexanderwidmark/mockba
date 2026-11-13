@@ -66,14 +66,23 @@ export default function PublicNotes({
 }) {
   return (
     <section className={`${styles.section} ${styles.last}`}>
-      <div className={styles.eyebrow}>Notes for the public</div>
+      <div className={styles.sectionHead}>
+        <div className={styles.eyebrow}>Notes for the public</div>
+        <span className={styles.sectionMark}>§ 04</span>
+      </div>
       <div className={styles.notes}>
         {NOTES(status, sizes, specs).map((n, i) => (
-          <div className={styles.note} key={n.q}>
-            <div className={styles.noteNo}>Note {String(i + 1).padStart(2, '0')}</div>
-            <div className={styles.question}>{n.q}</div>
+          /* The first note answers itself; the rest are asked before they are
+             answered. Open state is the same at every width, so no script is
+             needed to reconcile a phone with a desktop. */
+          <details className={styles.note} key={n.q} open={i === 0}>
+            <summary className={styles.summary}>
+              <span className={styles.noteNo}>Note {String(i + 1).padStart(2, '0')}</span>
+              <span className={styles.question}>{n.q}</span>
+              <span className={styles.noteMark} aria-hidden="true" />
+            </summary>
             <div className={styles.answer}>{n.a}</div>
-          </div>
+          </details>
         ))}
       </div>
     </section>

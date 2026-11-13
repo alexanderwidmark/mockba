@@ -17,6 +17,34 @@
   margin-bottom: 26px;
 }
 
+/*
+ * A section heading and its number. The document numbers its sections as the
+ * catalogue numbers its items, so a reader can cite one. The mark is the quiet
+ * half of the pair and takes the frame register rather than the eyebrow's ink.
+ */
+.sectionHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+/* Standing alone the eyebrow carries the heading's spacing; inside the head
+   the row owns it, or the gap is counted twice. */
+.sectionHead .eyebrow {
+  margin-bottom: 0;
+}
+
+.sectionMark {
+  font-family: var(--font-mono);
+  font-size: var(--reg-key-size);
+  letter-spacing: var(--reg-key-track);
+  font-weight: var(--reg-key-weight);
+  color: var(--label);
+  white-space: nowrap;
+}
+
 /* ── Statement of purpose ─────────────────────────────────────────────────── */
 
 .statementGrid {
@@ -130,20 +158,47 @@
  * Prose at this size wants about fifty characters a line; the catalogue can
  * run full width because its cells hold an object, not an argument.
  */
+/*
+ * The notes are a register, not a grid of cards: the note number takes a key
+ * column and the question sits beside it, as the series register does.
+ *
+ * Each note is a `details`. The first is open and the rest are closed — the
+ * same on a phone as on a desktop, which is precisely why this needs no
+ * script. There is no breakpoint at which the resting state differs, so the
+ * markup alone is the correct laid-out state, and with JavaScript off the
+ * notes still open and close.
+ */
 .notes {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
   border-top: 1px solid var(--rule);
-  border-left: 1px solid var(--hairline);
   max-width: 900px;
 }
 
 .note {
-  display: flex;
-  flex-direction: column;
-  padding: 22px 24px 26px;
-  border-right: 1px solid var(--hairline);
   border-bottom: 1px solid var(--hairline);
+}
+
+/* The whole row is the control, so the number and the question are inside the
+   summary rather than beside it. */
+.summary {
+  display: grid;
+  grid-template-columns: 54px 1fr 16px;
+  align-items: baseline;
+  padding: 16px 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.summary:hover .question {
+  color: var(--mono-2);
 }
 
 /* The register numbers its entries, as the catalogue numbers its items. */
@@ -153,22 +208,37 @@
   font-weight: var(--reg-key-weight);
   text-transform: uppercase;
   color: var(--label);
-  margin-bottom: 14px;
 }
 
 .question {
-  font-size: 15px;
-  line-height: 1.45;
+  font-size: 14px;
+  line-height: 1.5;
   color: var(--ink);
   font-weight: 500;
-  margin-bottom: 12px;
-  text-wrap: balance;
+}
+
+/* The state is drawn, not labelled: the summary already names the control, so
+   a second announcement of "expand" would only repeat it. */
+.noteMark {
+  font-size: 13px;
+  line-height: 1;
+  color: var(--label);
+  text-align: right;
+}
+
+.noteMark::after {
+  content: '+';
+}
+
+.note[open] .noteMark::after {
+  content: '\2212';
 }
 
 .answer {
   font-size: 13px;
   line-height: 1.9;
   color: var(--body);
+  margin: 0 0 18px 54px;
 }
 
 /* ── The statement's copy of the series register ──────────────────────────── */
@@ -216,47 +286,5 @@
     display: block;
     margin-top: 30px;
     border-top: 1px solid var(--swatch-edge);
-  }
-
-  /*
-   * On a phone the notes become a register rather than a grid of cards: the
-   * note number takes a key column and the question sits beside it, as the
-   * series register does. The card framing is desktop furniture — at 390px it
-   * spends 24px of padding a side on a column that is already the full width,
-   * and the cell rules box in a list that only ever has one column.
-   *
-   * The prototype toggles each answer open behind a +/− control. That is not
-   * ported: it runs on the prototype's own script, and a `details` cannot be
-   * closed on a phone and open on a desktop without script either — the
-   * resting DOM has to be the correct laid-out state. The answers stay open,
-   * per the handoff.
-   */
-  .notes {
-    border-top: none;
-    border-left: none;
-  }
-
-  .note {
-    display: grid;
-    grid-template-columns: 54px 1fr;
-    align-items: baseline;
-    padding: 12px 0 14px;
-    border-right: none;
-    border-bottom: 1px solid var(--hairline);
-  }
-
-  .noteNo {
-    margin-bottom: 0;
-  }
-
-  .question {
-    font-size: 13px;
-    line-height: 1.5;
-    margin-bottom: 0;
-  }
-
-  .answer {
-    grid-column: 2;
-    margin-top: 10px;
   }
 }
