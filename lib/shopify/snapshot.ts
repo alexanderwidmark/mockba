@@ -154,7 +154,7 @@ const SPEC: SpecEntry[] = [
           rights_status_eu: 'cleared',
           enforcement_risk_eu: 'low',
           source_note:
-            'this two-sheet poster advertised a film commissioned for the Revolution’s tenth anniversary. It was withdrawn from circulation after the political record changed around it. The date matters. The image was not corrected because its composition failed, but because the face of Leon Trotsky had become politically unacceptable.That is the mechanism: censorship presented not as an argument against the past, but as routine maintenance of the official version. The event remains. The authorised cast is revised. Modern institutions rarely announce that they are rewriting a record. They update it, replace it, or quietly withdraw the previous version. History does not disappear. It becomes unsupported.',
+            'This two-sheet poster advertised a film commissioned for the Revolution’s tenth anniversary. It was withdrawn from circulation after the political record changed around it. The date matters. The image was not corrected because its composition failed, but because the face of Leon Trotsky had become politically unacceptable. That is the mechanism: censorship presented not as an argument against the past, but as routine maintenance of the official version. The event remains. The authorised cast is revised. Modern institutions rarely announce that they are rewriting a record. They update it, replace it, or quietly withdraw the previous version. History does not disappear. It becomes unsupported.',
         },
       },
 
