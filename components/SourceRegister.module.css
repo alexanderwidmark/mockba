@@ -334,3 +334,20 @@
   color: var(--mono-2);
   border-bottom-color: var(--mono-2);
 }
+
+/*
+ * The register opens for print. A printed sheet cannot be clicked, so a closed
+ * row would publish the source's title and rights and withhold the note that
+ * explains how the rights were arrived at — which is the half that matters in
+ * a rights register.
+ *
+ * See the note in Sections.module.css: it is `content-visibility` on
+ * `::details-content` that withholds a closed row, so that is what is
+ * reversed. Forcing the children to `display: block` would flatten the
+ * metadata grid inside `.expanded`.
+ */
+@media print {
+  .row::details-content {
+    content-visibility: visible;
+  }
+}

@@ -241,6 +241,28 @@
   margin: 0 0 18px 54px;
 }
 
+/*
+ * A printed sheet cannot be clicked, so a closed register would print as a
+ * list of questions with no answers — a table of contents for a document that
+ * is not attached. Every note opens for print.
+ *
+ * `content-visibility` on `::details-content` is what the browser uses to
+ * withhold a closed note, so it is what has to be reversed. Forcing the
+ * children to `display: block` instead reaches past the mechanism and flattens
+ * the registers inside them, which measurably breaks their layout.
+ *
+ * The +/- mark goes: with everything open it states the opposite of the page.
+ */
+@media print {
+  .note::details-content {
+    content-visibility: visible;
+  }
+
+  .noteMark {
+    display: none;
+  }
+}
+
 /* ── The statement's copy of the series register ──────────────────────────── */
 
 .statementRegister {
