@@ -217,4 +217,46 @@
     margin-top: 30px;
     border-top: 1px solid var(--swatch-edge);
   }
+
+  /*
+   * On a phone the notes become a register rather than a grid of cards: the
+   * note number takes a key column and the question sits beside it, as the
+   * series register does. The card framing is desktop furniture — at 390px it
+   * spends 24px of padding a side on a column that is already the full width,
+   * and the cell rules box in a list that only ever has one column.
+   *
+   * The prototype toggles each answer open behind a +/− control. That is not
+   * ported: it runs on the prototype's own script, and a `details` cannot be
+   * closed on a phone and open on a desktop without script either — the
+   * resting DOM has to be the correct laid-out state. The answers stay open,
+   * per the handoff.
+   */
+  .notes {
+    border-top: none;
+    border-left: none;
+  }
+
+  .note {
+    display: grid;
+    grid-template-columns: 54px 1fr;
+    align-items: baseline;
+    padding: 12px 0 14px;
+    border-right: none;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .noteNo {
+    margin-bottom: 0;
+  }
+
+  .question {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 0;
+  }
+
+  .answer {
+    grid-column: 2;
+    margin-top: 10px;
+  }
 }
